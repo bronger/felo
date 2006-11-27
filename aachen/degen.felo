@@ -1,0 +1,40 @@
+# Parameter
+
+Einzeltreffer Einsteiger	100
+Elo-Zahl Top-Fechter		2400
+Gewichtung 10-er Gefecht	1.73
+Gewichtung 15-er Gefecht	3.0
+Gruppenname			Degen
+k-Faktor Einsteiger		40
+k-Faktor Rest			32
+k-Faktor Top-Fechter		25
+Minimum Elo-Zahl		1200
+
+====================================================
+# Anfangswerte
+# Namen der Fechter, die versteckt bleiben wollen,
+# in Klammern
+
+Christian		1612
+Georg			1564
+Jens			1582
+Michael			1522
+Nora			1500
+Sabine			1621
+Ulrike			1400
+Volker			1600
+
+====================================================
+# Gefechte
+
+2006/11/16.1	Sabine -- Jens		10:8
+2006/11/16.2	Georg -- Jens		9:10
+2006/11/16.3	Christian -- Jens	15:9
+
+2006/11/23.1	Jens -- Christian	5:4
+2006/11/23.2	Jens -- Christian	3:5
+2006/11/23.3	Jens -- Christian	5:4
+2006/11/23.4	Jens -- Michael		5:3
+2006/11/23.5	Jens -- Michael		5:3
+2006/11/23.6	Christian -- Michael	5:4
+2006/11/23.7	Christian -- Michael	5:3
