@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import codecs
+__version__ = "$Revision:  $"
+# $Source:  $
+
+import codecs, os
 from felo_rating import parse_felo_file, calculate_felo_ratings, write_felo_file
 from subprocess import call
 import shutil
 
+os.chdir("../aachen")
+
 def datei_zeitstempel(pfade):
-    import os, time
+    import time
     timestamp = 0
     for pfad in pfade:
         timestamp = max(timestamp, os.stat(pfad).st_mtime)
@@ -37,7 +42,7 @@ print>>ausgabedatei, u"""<html>
 <table cellspacing="10" style="font-size: large">
 <tbody>""" % datei_zeitstempel(("florett.felo", "degen.felo"))
 parameters, fencers, bouts = parse_felo_file("florett.felo")
-write_felo_file("florett_.felo", parameters, fencers, bouts)
+# write_felo_file("florett_.felo", parameters, fencers, bouts)
 for fechter in calculate_felo_ratings(parameters, fencers, bouts, plot=mache_plots):
     felo_zahl = str(fechter.felo_rating)
     if fechter.fenced_points < 50:
