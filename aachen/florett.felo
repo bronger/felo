@@ -8,7 +8,7 @@ Gruppenname			Florett
 k-Faktor Einsteiger		40
 k-Faktor Rest			32
 k-Faktor Top-Fechter		25
-Minimal-Gewichtung Einsteiger	0
+Minimal-Gewichtung Einsteiger	10
 Minimum Elo-Zahl		1200
 
 ====================================================
@@ -32,6 +32,7 @@ Michael			1580
 Ming			1603
 Moritz			1583
 Niki			1321
+Nora			0
 Paul			1512
 Sebastian J		1549
 Simone			1680
@@ -192,3 +193,13 @@ Yves			1773
 2006/11/16.3	Franzi -- Niki		10:4
 2006/11/16.4	Franzi -- Katrin	10:6
 2006/11/16.5	Franzi -- Moritz	5:3
+
+2006/11/23.1	Moritz -- Simone	5:3/0
+2006/11/23.1	Franzi -- Stefan	3:7/0
+2006/11/23.1	Nora -- Niki		8:0/0
+2006/11/23.1	Franzi -- Simone	2:10/0
+2006/11/23.1	Moritz -- Niki		8:2/0
+2006/11/23.1	Nora -- Stefan		5:5/0
+2006/11/23.1	Franzi -- Niki		5:2/0
+2006/11/23.1	Nora -- Simone		5:2/0
+2006/11/23.1	Moritz -- Stefan	5:9/0
