@@ -198,7 +198,7 @@ def calendar_date(daynumber):
     year = d - 4715 - int((7 + month) / 10.0)
     return year, month, day
 
-def set_preliminary_felo_ratings(fencers, bout, parameters, estimate_freshmen=False):
+def set_preliminary_felo_ratings(fencers, bout, parameters):
     """Calculates the new Felo numbers of the two fencers of a given bout and
     stores them at preliminary places in the fencer objects.  More accurately,
     the new Felo numbers are stored in the felo_rating_preliminary attribute of
@@ -211,8 +211,6 @@ def set_preliminary_felo_ratings(fencers, bout, parameters, estimate_freshmen=Fa
         which take part in the bout are modified.
     bout -- the bout that is to be calculated.
     parameters -- a dictionary with all Felo parameters.
-    estimate_freshmen -- if True, try to calculate estimates for freshmen.  If
-        False, generate an error if a fencer is unknown.
 
     Result: None
     """
@@ -226,30 +224,21 @@ def set_preliminary_felo_ratings(fencers, bout, parameters, estimate_freshmen=Fa
         result_first = 0.5
     else:
         result_first = float(points_first) / total_points
-    if estimate_freshmen:
-        if first_fencer not in fencers and second_fencer not in fencers:
-            # Two freshmen, so the bout cannot be counted at all
-            return
-        if first_fencer not in fencers:
-            freshman_name = first_fencer
-        elif second_fencer not in fencers:
-            freshman_name = second_fencer
-        else:
-            # No freshman, just two known fencers
-            freshman_name = None
-        if freshman_name:
-            if freshman_name not in Freshman.freshmen:
-                Freshman.freshmen[freshman_name] = Freshman(freshman_name, parameters)
-            Freshman.freshmen[freshman_name].total_weighting += weighting
-            if freshman_name == first_fencer:
-                Freshman.freshmen[freshman_name].total_result += (result_first - 0.5) * weighting
-                Freshman.freshmen[freshman_name].total_felo_rating_opponents += \
-                    fencers[second_fencer].felo_rating_exact * weighting
-            else:
-                Freshman.freshmen[freshman_name].total_result += (0.5 - result_first) * weighting
-                Freshman.freshmen[freshman_name].total_felo_rating_opponents += \
-                    fencers[first_fencer].felo_rating_exact * weighting
-            return
+    if fencers[first_fencer].freshman and fencers[second_fencer].freshman:
+        # Two freshmen, so the bout cannot be counted at all
+        return
+    if fencers[first_fencer].freshman:
+        fencers[first_fencer].total_weighting += weighting
+        fencers[first_fencer].total_result += (result_first - 0.5) * weighting
+        fencers[first_fencer].total_felo_rating_opponents += \
+            fencers[second_fencer].felo_rating_exact * weighting
+        return
+    elif fencers[second_fencer].freshman:
+        fencers[second_fencer].total_weighting += weighting
+        Freshman.freshmen[second_fencer].total_result += (0.5 - result_first) * weighting
+        Freshman.freshmen[second_fencer].total_felo_rating_opponents += \
+            fencers[first_fencer].felo_rating_exact * weighting
+        return
     # Use current (rather than preliminary) numbers for the calculation.  Just
     # don't *store* the results in the real attributes.
     felo_first = fencers[first_fencer].felo_rating_exact
@@ -264,7 +253,7 @@ def set_preliminary_felo_ratings(fencers, bout, parameters, estimate_freshmen=Fa
     fencers[first_fencer].fenced_points_preliminary += total_points
     fencers[second_fencer].fenced_points_preliminary += total_points
 
-def parse_bouts(input_file, linenumber, parameters):
+def parse_bouts(input_file, linenumber, fencers, parameters):
     """Reads bouts from a Felo file, starting at the current position in that file.
     It reads till the end of the file since the bouts are the last section in a
     Felo file.
@@ -272,6 +261,7 @@ def parse_bouts(input_file, linenumber, parameters):
     Parameters:
     input_file -- an open file object where the items are read from.
     linenumber -- number of already read lines in the input_file.
+    fencers -- a dictionary with all fencers.  It remains untouched.
     parameters -- a dictionary with all Felo parameters.
 
     Return values:
@@ -302,6 +292,10 @@ def parse_bouts(input_file, linenumber, parameters):
             raise Error("Gefecht wurde nicht auf 5, 10 oder 15 gefochten", input_file.name, linenumber)
         if fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
             raise Error("Einer hat mehr Punkte als die Siegerpunktezahl", input_file.name, linenumber)
+        if first_fencer not in fencers:
+            raise Error('Fencer "%s" is unknown' % first_fencer, input_file.name, linenumber)
+        if second_fencer not in fencers:
+            raise Error('Fencer "%s" is unknown' % second_fencer, input_file.name, linenumber)
         bouts.append(Bout(year, month, day, first_fencer, second_fencer,
                                 points_first, points_second, fenced_to))
     return bouts
@@ -314,7 +308,7 @@ def parse_felo_file(filename):
 
     Return values:
     Felo parameters as a dictionary, fencers as a dictionary (name: Fencer
-        object), bouts as a chronoligically sorted list.
+        object), bouts as a list.
     """
     felo_file = codecs.open(filename, "r", "utf-8")
 
@@ -327,7 +321,7 @@ def parse_felo_file(filename):
     parameters.setdefault(u"Minimum Elo-Zahl", 1200)
     parameters.setdefault(u"Gewichtung 10-er Gefecht", 1.73)
     parameters.setdefault(u"Gewichtung 15-er Gefecht", 3.0)
-    parameters.setdefault(u"Minimal-Gewichtung Einsteiger", 5.0)
+    parameters.setdefault(u"Minimal-Gewichtung Einsteiger", 10.0)
     # The groupname is used e.g. for the file names of the plots.  It defaults
     # to the name of the Felo file.
     parameters.setdefault(u"Gruppenname", os.path.splitext(os.path.split(filename)[1])[0].capitalize())
@@ -338,7 +332,7 @@ def parse_felo_file(filename):
         aktueller_fechter = Fencer(name, initial_felo_rating, parameters)
         fencers[aktueller_fechter.name] = aktueller_fechter
 
-    bouts = parse_bouts(felo_file, linenumber, parameters)
+    bouts = parse_bouts(felo_file, linenumber, fencers, parameters)
     felo_file.close()
     return parameters, fencers, bouts
 
@@ -426,6 +420,7 @@ class Error(Exception):
             if linenumber:
                 supplement += ", Zeile " + unicode(linenumber)
             description = supplement  + ": " + description
+        self.description = description
         Exception.__init__(self, description)
 
 def adopt_preliminary_felo_ratings():
@@ -468,15 +463,33 @@ class Fencer(object):
             self.parameters = parameters
         self.fenced_points = self.fenced_points_preliminary = 0
         self.__k_factor = self.parameters[u"k-Faktor Rest"]
-        self.felo_rating = self.initial_felo_rating = self.felo_rating_preliminary = felo_rating
+        self.freshman = felo_rating == 0
+        if not self.freshman:
+            self.felo_rating = self.initial_felo_rating = self.felo_rating_preliminary = felo_rating
+        else:
+            self.total_weighting = 0.0
+            self.total_felo_rating_opponents = 0.0
+            self.total_result = 0.0
     def __get_felo_rating_exact(self):
-        return self.__felo_rating
+        if not self.freshman:
+            return self.__felo_rating
+        else:
+            # Estimate initial Felo number according to the Austrian Method,
+            # see http://www.chess.at/bundesspielleitung/OESB/oesb_tuwo_06.pdf
+            # section 5.1 on page 43.
+            if self.total_weighting < self.parameters[u"Minimal-Gewichtung Einsteiger"]:
+                return 0.0
+            A = self.total_result / self.total_weighting
+            B = self.total_weighting / (self.total_weighting + 2)
+            average_felo_rating_opponents = self.total_felo_rating_opponents / self.total_weighting
+            return average_felo_rating_opponents + (A * B * 700)
     def __get_felo_rating(self):
-        return int(round(self.__felo_rating))
+        return int(round(self.felo_rating_exact))
     def __set_felo_rating(self, felo_rating):
-        self.__felo_rating = max(felo_rating, self.parameters[u"Minimum Elo-Zahl"])
-        if self.__felo_rating >= self.parameters[u"Elo-Zahl Top-Fechter"]:
-            self.__k_factor = self.parameters[u"k-Faktor Top-Fechter"]
+        if not self.freshman:
+            self.__felo_rating = max(felo_rating, self.parameters[u"Minimum Elo-Zahl"])
+            if self.__felo_rating >= self.parameters[u"Elo-Zahl Top-Fechter"]:
+                self.__k_factor = self.parameters[u"k-Faktor Top-Fechter"]
     felo_rating_exact = property(__get_felo_rating_exact, __set_felo_rating,
                                  doc="""Felo rating with decimal fraction.""")
     felo_rating = property(__get_felo_rating, __set_felo_rating, doc="""Felo rating, rounded to integer.""")
@@ -488,33 +501,6 @@ class Fencer(object):
     def __cmp__(self, other):
         """Sort by Felo rating, descending."""
         return -cmp(self.felo_rating_exact, other.felo_rating_exact)
-
-class Freshman(Fencer):
-    freshmen = {}
-    """Dictionary with all fencers without a Felo number, in particular,
-    without an initial Felo number."""
-    def __init__(self, name, parameters):
-        Fencer.__init__(self, name, parameters[u"Minimum Elo-Zahl"], parameters)
-        self.total_weighting = 0.0
-        self.total_felo_rating_opponents = 0.0
-        self.total_result = 0.0
-    def __get_felo_rating_exact(self):
-        if self.total_weighting < self.parameters[u"Minimal-Gewichtung Einsteiger"]:
-            return 0.0
-        # Estimate initial Felo number according to the Austrian Method, see
-        # http://www.chess.at/bundesspielleitung/OESB/oesb_tuwo_06.pdf section
-        # 5.1 on page 43
-        A = self.total_result / self.total_weighting
-        B = self.total_weighting / (self.total_weighting + 2)
-        average_felo_rating_opponents = self.total_felo_rating_opponents / self.total_weighting
-        return average_felo_rating_opponents + (A * B * 700)
-    def __get_felo_rating(self):
-        return int(round(self.felo_rating_exact))
-    def __set_felo_rating(self, felo_rating):
-        # Ignore any initialisation of this value
-        pass
-    felo_rating_exact = property(__get_felo_rating_exact, doc="""Felo rating with decimal fraction.""")
-    felo_rating = property(__get_felo_rating, __set_felo_rating, doc="""Felo rating, rounded to integer.""")
 
 def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_freshmen=False,
                            bootstrapping=False, maxcycles=1000):
@@ -533,12 +519,13 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         starting numbers, until the numbers have converged.
     maxcycles -- the maximal number of cycles in the bootstrapping process.  If
         it is not enough, an exception is raised.
+    estimate_freshmen -- if True, try to calculate estimates for freshmen.
 
     Return values: A list (not a dictionary!) of all visible fencers, sorted by
-        descending Felo number.
+    descending Felo number.
+    If estimate_fresmen is True, a list with all freshmen.    
     """
-    def calculate_felo_ratings_core(parameters, fencers, bouts, plot,
-                                    bouts_base_filename=None, estimate_freshmen=False):
+    def calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename=None):
         """Calculate the new Felo ratings, taking a whole bunch of bouts into
         account.  If wanted, generate plots with the development of the Felo
         numbers.  Some things that are necessary before and after are not done
@@ -563,7 +550,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             xtics = ""
             last_xtics_daynumber = 0
         for i, bout in enumerate(bouts):
-            set_preliminary_felo_ratings(fencers, bout, parameters, estimate_freshmen)
+            set_preliminary_felo_ratings(fencers, bout, parameters)
             if i == len(bouts) - 1 or bout.date != bouts[i+1].date:
                 # Not one *day* is over but one set of bouts which took place with
                 # unknown order.
@@ -588,7 +575,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             data_file.close()
             return xtics
 
-    visible_fencers = [fencer for fencer in fencers.values() if not fencer.hidden]
+    visible_fencers = [fencer for fencer in fencers.values() if not fencer.hidden and not fencer.freshman]
     for index, fencer in enumerate(visible_fencers):
         # Store the column index of the data file in the fencer object.  Needed
         # by Gnuplot.
@@ -599,7 +586,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         for i in range(maxcycles):
             for fencer in fencers.values():
                 fencer.old_felo_rating = fencer.felo_rating_exact
-            calculate_felo_ratings_core(parameters, fencers, bouts, plot=False, estimate_freshmen=False)
+            calculate_felo_ratings_core(parameters, fencers, bouts, plot=False)
             for fencer in fencers.values():
                 if abs(fencer.old_felo_rating - fencer.felo_rating_exact) > 0.001:
                     break
@@ -607,7 +594,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                 break
         if i == maxcycles - 1:
             raise Error("Das Bootstrapping ist nicht konvergiert.")
-    xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename, estimate_freshmen)
+    xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename)
     visible_fencers.sort()    # Descending by Felo rating
     if plot:
         # Call Gnuplot, convert, and ps2pdf to generate the PNG and PDF plots.
@@ -629,8 +616,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         call(["ps2pdf", bouts_base_filename+".ps"])
 
     if estimate_freshmen:
-        visible_fencers.extend(Freshman.freshmen.values())
-        visible_fencers.sort()    # Descending by Felo rating
+        return [fencer for fencer in fencers.values() if fencer.freshman]
     return visible_fencers
 
 def expectation_value(first_fencer, second_fencer):
@@ -688,7 +674,7 @@ if __name__ == '__main__':
     the result lists on the screen or writes them to a file.  It's a quick and
     simple way to calculate numbers, and it may be enough for many purposes.
     """
-    import sys, optparse
+    import sys, optparse, shutil
     option_parser = optparse.OptionParser()
     option_parser.add_option("-p", "--plots", action="store_true", dest="plots",
                              help=u"Erzeuge Plots der Felo-Zahlen", default=False)
@@ -698,6 +684,8 @@ if __name__ == '__main__':
                              dest="max_cycles", help=u"Maximale Iterationsschritte beim "
                              "Bootstrapping.  Default: 1000",
                              default=1000, metavar="NUMMER")
+    option_parser.add_option("--estimate-freshmen", action="store_true", dest="estimate_freshmen",
+                             help=u"Versuche, Neueinsteiger zu bewerten", default=False)
     option_parser.add_option("--write-back", action="store_true", dest="write_back",
                              help=u"Schreibe die neuen Startzahlen zurueck in die Felo-Datei",
                              default=False)
@@ -707,21 +695,33 @@ if __name__ == '__main__':
                              default=None, metavar="DATEINAME")
     options, felo_filenames = option_parser.parse_args()
 
-    if options.output_file:
-        output_file = codecs.open(options.output_file, "w")
-    else:
-        output_file = sys.stdout
-    for i, felo_filename in enumerate(felo_filenames):
-        parameters, fencers, bouts = parse_felo_file(felo_filename)
-        resultslist = calculate_felo_ratings(parameters, fencers, bouts, options.plots,
-                                             options.bootstrap, options.max_cycles)
-        if options.bootstrap and options.write_back:
-            for fencer in fencers.values():
-                fencer.initial_felo_rating = fencer.felo_rating
-            write_felo_file(felo_filename, parameters, fencers, bouts)
-        if len(felo_filenames) > 1:
-            if i >= 1: print>>output_file
-            print>>output_file, parameters["Gruppenname"] + ":"
-        for fencer in resultslist:
-            print>>output_file, "    " + fencer.name + (19-len(fencer.name))*" " + "\t" + \
-                unicode(fencer.felo_rating)
+    try:
+        if options.estimate_freshmen and options.bootstrap:
+            raise Error("Man kann nicht gleichzeitig bootstrappen und Neueinsteiger bewerten.")
+        if options.output_file:
+            output_file = codecs.open(options.output_file, "w")
+        else:
+            output_file = sys.stdout
+        for i, felo_filename in enumerate(felo_filenames):
+            parameters, fencers, bouts = parse_felo_file(felo_filename)
+            resultslist = calculate_felo_ratings(parameters, fencers, bouts, options.plots,
+                                                 options.estimate_freshmen,
+                                                 options.bootstrap, options.max_cycles)
+            if (options.estimate_freshmen or options.bootstrap) and options.write_back:
+                for fencer in fencers.values():
+                    if options.bootstrap or fencer.freshman:
+                        fencer.initial_felo_rating = fencer.felo_rating
+                filename_backup = os.path.splitext(felo_filename)[0] + ".bak"
+                if os.path.isfile(filename_backup):
+                    raise Error(u"Bitte erst die Sicherungskopie (Endung .bak) löschen.")
+                shutil.copyfile(felo_filename, filename_backup)
+                write_felo_file(felo_filename, parameters, fencers, bouts)
+            if len(felo_filenames) > 1:
+                if i >= 1: print>>output_file
+                print>>output_file, parameters["Gruppenname"] + ":"
+            for fencer in resultslist:
+                print>>output_file, "    " + fencer.name + (19-len(fencer.name))*" " + "\t" + \
+                    unicode(fencer.felo_rating)
+    except Error, e:
+        print>>sys.stderr, "felo_rating:", e.description.encode("utf-8")
+        
