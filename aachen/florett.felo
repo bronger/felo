@@ -4,10 +4,12 @@ Einzeltreffer Einsteiger	100
 Elo-Zahl Top-Fechter		2400
 Gewichtung 10-er Gefecht	1.73
 Gewichtung 15-er Gefecht	3.0
-Minimum Elo-Zahl		1200
+Gruppenname			Florett
 k-Faktor Einsteiger		40
 k-Faktor Rest			32
 k-Faktor Top-Fechter		25
+Minimal-Gewichtung Einsteiger	0
+Minimum Elo-Zahl		1200
 
 ====================================================
 # Anfangswerte
