@@ -1,0 +1,181 @@
+% -*- mode: texinfo; coding: latin-1; ispell-local-dictionary: "deutsch8" -*-
+\def\niceracronym#1{#1}
+%\def\rmdefault{ppl}\def\ne{\mathrel{\not{}\mskip-8mu=}}\input pstexinfo
+\input texinfo
+@c@let@acronym@niceracronym
+
+@c      $Id: zml.texi,v 1.8 2006/11/14 19:34:15 bronger Exp $  
+
+@c======================================================================@>
+@c    felo-de.texi - Deutsche Anleitung zum Felo-Programm               @>
+@c    Copyright 2006 Torsten Bronger                                    @>
+@c                   <bronger@physik.rwth-aachen.de>                    @>
+@c                                                                      @>
+@c  This program may be distributed and/or modified under the           @>
+@c  conditions of the MIT licence with the following constraint:        @>
+@c  If you copy or distribute a modified version of this Software, the  @>
+@c  entire resulting derived work must be given a different name and    @>
+@c  distributed under the terms of a permission notice identical to     @>
+@c  this one.                                                           @>
+@c                                                                      @>
+@c  Permission is hereby granted, free of charge, to any person         @>
+@c  obtaining a copy of this software and associated documentation      @>
+@c  files (the ``Software''), to deal in the Software without           @>
+@c  restriction, including without limitation the rights to use, copy,  @>
+@c  modify, merge, publish, distribute, sublicense, and/or sell copies  @>
+@c  of the Software, and to permit persons to whom the Software is      @>
+@c  furnished to do so, subject to the following conditions:            @>
+@c                                                                      @>
+@c      The above copyright notice and this permission notice shall be  @>
+@c      included in all copies or substantial portions of the           @>
+@c      Software.                                                       @>
+@c                                                                      @>
+@c      If you copy or distribute a modified version of this Software,  @>
+@c      the entire resulting derived work must be given a different     @>
+@c      name and distributed under the terms of a permission notice     @>
+@c      identical to this one.                                          @>
+@c                                                                      @>
+@c  The Software is provided ``as is'', without warranty of any kind,   @>
+@c  express or implied, including but not limited to the warranties of  @>
+@c  merchantability, fitness for a particular purpose and               @>
+@c  noninfringement.  In no event shall the authors or copyright        @>
+@c  holders be liable for any claim, damages or other liability,        @>
+@c  whether in an action of contract, tort or otherwise, arising from,  @>
+@c  out of or in connection with the Software or the use or other       @>
+@c  dealings in the Software.                                           @>
+@c======================================================================@>
+
+@c %**start of header
+@setchapternewpage odd
+@setfilename felo-de.info
+
+@set VERSION 1.0
+@set SHORTVERSION 10
+
+@settitle Felo @value{VERSION}
+@documentencoding ISO-8859-1
+@documentlanguage de
+@c %**end of header
+
+@defindex kw
+@syncodeindex kw cp
+
+@macro HTML {}
+@acronym{HTML}
+@end macro
+
+@macro RSS {}
+@acronym{RSS}
+@end macro
+
+@macro PDF {}
+@acronym{PDF}
+@end macro
+
+@macro PNG {}
+@acronym{PNG}
+@end macro
+
+@macro RWTH {}
+@acronym{RWTH}
+@end macro
+
+@macro s {}
+@tex
+@kern0.1667em%
+@end tex
+@end macro
+
+@macro xmarksthespot {}
+@tex
+`@math{@times{}}'@ignorespaces
+@end tex
+@ifnottex
+`x'@c
+@end ifnottex
+@end macro
+
+@copying
+Die Anleitung erläutert das Felo-Programm, mit dem eine objektive
+Einschätzung der Spielstärke von Fechtern möglich ist.  Es lehnt sich
+dabei an das Elo-System beim Schach an.
+
+Copyright @copyright{} 2006 Torsten Bronger
+@t{<}@email{bronger@@physik.rwth-aachen.de}@t{>}.
+
+
+@quotation
+Diese Dokumentation ist freie Software; du kannst sie frei verteilen
+oder modifizieren unter den Bedingungen der @acronym{MIT}-Lizenz.
+@end quotation
+@end copying
+
+@finalout
+@titlepage
+@title Felo
+@subtitle Objektive Spielstärken beim Fechten
+@subtitle Version @value{VERSION}
+@sp 2
+@author Torsten Bronger
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@dircategory Miscellaneous
+@direntry
+* Felo: (Felo).           Das Felo-Zahlen-Programm
+@end direntry
+
+@iftex
+@hyphenation{ca-ta-logue ca-ta-logues}
+@end iftex
+
+
+@ifnottex
+@node Top
+@top Das Felo-Programm zum objektiven Einschätzen der Spielstärke beim Fechten
+
+@ZML{} ist eigentlich der Name für eine XML-Auszeichnungssprache, mit
+der man eine Ausgabe einer gedruckten Zeitung beschreiben kann.  Ich
+nenne allerdings das ganze System, das die Online-Publikation
+einschließt, @ZML{}@.
+
+Alle Artikel der Zeitung werden als @acronym{XHTML}-Dateien abgelegt.
+Für den Druck werden diese Dateien in @LaTeX{} umgewandelt.  Die Website
+der Zeitung wird vollautomatisch generiert.  Sie erfüllt in strenger
+Weise die besten Internetstandards.
+
+@ZML{} ist für die Veröffentlichung der
+@uref{http://www.karman-aachen.de/,Kármán Hochschulzeitung} programmiert
+worden und in vielerlei Hinsicht darauf optimiert.  Will man es für
+einen anderen Zweck benutzen, muß man einige Dinge modifizieren.
+Allerdings ist das ganze System so angelegt, daß ein direktes Ändern des
+@ZML{}-Quellcodes nicht nötig ist.  Vielmehr werden im lokalen
+Verzeichnisbaum der jeweiligen Zeitung einige Konfigurationsdateien
+angepaßt.
+
+@menu
+* Überblick::                   Was sind Felo-Zahlen?
+@end menu
+@end ifnottex
+
+@ifhtml
+Diese Anleitung existiert auch als
+@uref{http://felo.sourceforge.net/de/,Sammlung von @HTML{}-Dateien} (auch in
+@uref{http://felo.sourceforge.net/felo-de.zip,gezippter Form}), als
+@uref{http://felo.sourceforge.net/felo-de.html,einzelne @HTML{}-Seite} und als
+@uref{http://felo.sourceforge.net/felo-de.pdf,@PDF{}-Datei}.
+@end ifhtml
+
+@c Output the table of the contents at the beginning.
+@contents
+
+@ifnottex
+@insertcopying
+@end ifnottex
+
+
+@node Überblick
+@chapter Überblick
+
