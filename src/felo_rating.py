@@ -57,6 +57,8 @@ __version__ = "$Revision:  $"
 import codecs, re, os.path
 from subprocess import call, Popen, PIPE
 
+datapath = os.path.abspath(os.path.dirname(__file__))
+
 separator = "\s*\t+\s*"
 """Column separator in a Felo file"""
 
@@ -655,7 +657,7 @@ def prognosticate_bout(first_fencer, second_fencer, fenced_to):
     else:
         points_first = int(round(fenced_to / (1/expectation_first - 1)))
         points_second = fenced_to
-    for line in file(os.path.join(os.path.dirname(__file__), "auf%d.dat" % fenced_to)):
+    for line in file(datapath+"/auf%d.dat" % fenced_to):
         if line[0] != "#":
             result_first, winning_chance_first, _ = line.split()
             result_first, winning_chance_first = float(result_first), float(winning_chance_first)
