@@ -633,7 +633,7 @@ def expectation_value(first_fencer, second_fencer):
     Return value:
     Expected winning value, with 0 <= value <= 1.
     """
-    return 1 / (1 + 10**((first_fencer.felo_rating_exact - second_fencer.felo_rating_exact)/400.0))
+    return 1 / (1 + 10**((second_fencer.felo_rating_exact - first_fencer.felo_rating_exact)/400.0))
 
 def prognosticate_bout(first_fencer, second_fencer, fenced_to):
     """Estimates the most probable result of a bout.
@@ -655,7 +655,7 @@ def prognosticate_bout(first_fencer, second_fencer, fenced_to):
     else:
         points_first = int(round(fenced_to / (1/expectation_first - 1)))
         points_second = fenced_to
-    for line in file("auf%d.dat" % fenced_to):
+    for line in file(os.path.join(os.path.dirname(__file__), "auf%d.dat" % fenced_to)):
         if line[0] != "#":
             result_first, winning_chance_first, _ = line.split()
             result_first, winning_chance_first = float(result_first), float(winning_chance_first)
@@ -679,7 +679,7 @@ if __name__ == '__main__':
     option_parser.add_option("-p", "--plots", action="store_true", dest="plots",
                              help=u"Erzeuge Plots der Felo-Zahlen", default=False)
     option_parser.add_option("-b", "--bootstrap", action="store_true", dest="bootstrap",
-                             help=u"Versuche, gute Start-Felo-Zahlen zu berechnen", default=False)
+                             help=u"Versuche, gute Start-Felo-Zahlen fuer alle zu berechnen", default=False)
     option_parser.add_option("--max-cycles", type="int",
                              dest="max_cycles", help=u"Maximale Iterationsschritte beim "
                              "Bootstrapping.  Default: 1000",
