@@ -5,9 +5,11 @@ __version__ = "$Revision:  $"
 # $Source:  $
 
 import codecs, os
-from felo_rating import parse_felo_file, calculate_felo_ratings, write_felo_file
 from subprocess import call
 import shutil, time
+import sys
+sys.path.append("../src")
+from felo_rating import parse_felo_file, calculate_felo_ratings, write_felo_file
 
 os.chdir("../aachen")
 
