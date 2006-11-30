@@ -25,8 +25,8 @@ def convert_date(date):
 mache_plots = True
 ausgabedatei = codecs.open("/home/bronger/aktuell/fechten/Intern/felo-zahlen.html",
                            "w", "iso-8859-1")
-foil_parameters, foil_fencers, foil_bouts = parse_felo_file("florett.felo")
-epee_parameters, epee_fencers, epee_bouts = parse_felo_file("degen.felo")
+foil_parameters, _, foil_fencers, foil_bouts = parse_felo_file("florett.felo")
+epee_parameters, _, epee_fencers, epee_bouts = parse_felo_file("degen.felo")
 foil_bouts.sort()
 epee_bouts.sort()
 
