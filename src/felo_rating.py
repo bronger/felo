@@ -54,7 +54,7 @@ __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_fe
 __version__ = "$Revision:  $"
 # $Source:  $
 
-import codecs, re, os.path
+import codecs, re, os.path, time
 from subprocess import call, Popen, PIPE
 
 datapath = os.path.abspath(os.path.dirname(__file__))
@@ -172,12 +172,15 @@ class Bout(object):
 
     def daynumber(self):
         """The Julian day of the bout, not counting the sub-day fraction."""
-        month, year = self.month, self.year
+        return julian_date(self.year, self.month, self.day)
+
+def julian_date(year, month, day):
+        """The Julian day of the date, not counting the sub-day fraction."""
         if month <= 2:
             month += 12
             year -= 1
         B = int(year/400) - int(year/100)
-        return int(365.25*year) + int(30.6001*(month+1)) + B + 1720996 + int(self.day)
+        return int(365.25*year) + int(30.6001*(month+1)) + B + 1720996 + int(day)
 
 def calendar_date(daynumber):
     """The calendar date of a Julian day.  This function is the inverse of
@@ -309,12 +312,13 @@ def parse_felo_file(filename):
     filename -- path of the Felo file.
 
     Return values:
-    Felo parameters as a dictionary, fencers as a dictionary (name: Fencer
-        object), bouts as a list.
+    Felo parameters as a dictionary, a list with all really in the file given
+    parameters, fencers as a dictionary (name: Fencer object), bouts as a list.
     """
     felo_file = codecs.open(filename, "r", "utf-8")
 
     parameters, linenumber = parse_items(felo_file)
+    given_parameters = list(parameters)
     parameters.setdefault(u"k-Faktor Top-Fechter", 25)
     parameters.setdefault(u"Elo-Zahl Top-Fechter", 2400)
     parameters.setdefault(u"k-Faktor Rest", 32)
@@ -327,6 +331,10 @@ def parse_felo_file(filename):
     # The groupname is used e.g. for the file names of the plots.  It defaults
     # to the name of the Felo file.
     parameters.setdefault(u"Gruppenname", os.path.splitext(os.path.split(filename)[1])[0].capitalize())
+    parameters.setdefault(u"Ausgabeverzeichnis", os.path.abspath(os.path.dirname(filename)))
+    parameters.setdefault(u"Plot-Tics Mindestabstand", 7)
+    parameters.setdefault(u"Plot Mindestdatum", "1500/00/00")
+    parameters.setdefault(u"Plot maximale Tage", "366")
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
     fencers = {}
@@ -336,7 +344,7 @@ def parse_felo_file(filename):
 
     bouts = parse_bouts(felo_file, linenumber, fencers, parameters)
     felo_file.close()
-    return parameters, fencers, bouts
+    return parameters, given_parameters, fencers, bouts
 
 def fill_with_tabs(text, tab_col):
     """Adds tabs to a string until a certain column is reached.
@@ -557,19 +565,21 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                 # Not one *day* is over but one set of bouts which took place with
                 # unknown order.
                 adopt_preliminary_felo_ratings()
-            current_daynumber = bout.daynumber()
-            if plot and (i == len(bouts) - 1 or bouts[i+1].daynumber() != current_daynumber) and \
-                    bout.year > 1500:
+            current_bout_daynumber = bout.daynumber()
+            year, month, day, _, _, _, _, _, _ = time.localtime()
+            current_daynumber = julian_date(year, month, day)
+            if plot and (i == len(bouts) - 1 or bouts[i+1].daynumber() != current_bout_daynumber) and \
+                    bout.date[:10] >= parameters[u"Plot Mindestdatum"] and current_daynumber - current_bout_daynumber <= parameters[u"Plot maximale Tage"]:
                 # Okay, we must generate new data points because one day is over.
                 # BTW, the stange thing with "1500" is a cheap way to exclude too
                 # old bouts from the plot.  FixMe: It should be removed, because
                 # bouts without date can be used for bootstrapping only anyway.
-                data_file.write(str(current_daynumber))
-                if current_daynumber - last_xtics_daynumber >= 7:
-                    # Generate tic marks not too densely; labels must be at least 7
-                    # days apart.
-                    last_xtics_daynumber = current_daynumber
-                    xtics += "'%d.%d.%d' %d," % (bout.day, bout.month, bout.year, current_daynumber)
+                data_file.write(str(current_bout_daynumber))
+                if current_bout_daynumber - last_xtics_daynumber >= parameters[u"Plot-Tics Mindestabstand"]:
+                    # Generate tic marks not too densely; labels must be at
+                    # least the the minimal tic distance apart.
+                    last_xtics_daynumber = current_bout_daynumber
+                    xtics += "'%d.%d.%d' %d," % (bout.day, bout.month, bout.year, current_bout_daynumber)
                 for fencer in visible_fencers:
                     data_file.write("\t" + str(fencer.felo_rating_exact))
                 data_file.write(os.linesep)
@@ -614,8 +624,9 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         gnuplot = Popen(["gnuplot", "-"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
         gnuplot.communicate(gnuplot_script)
         call(["convert", bouts_base_filename+".ps", "-rotate", "90",
-                         bouts_base_filename+".png"])
-        call(["ps2pdf", bouts_base_filename+".ps"])
+              parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".png"])
+        call(["ps2pdf", bouts_base_filename+".ps",
+              parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".pdf"])
 
     if estimate_freshmen:
         return [fencer for fencer in fencers.values() if fencer.freshman]
@@ -705,7 +716,7 @@ if __name__ == '__main__':
         else:
             output_file = sys.stdout
         for i, felo_filename in enumerate(felo_filenames):
-            parameters, fencers, bouts = parse_felo_file(felo_filename)
+            parameters, given_parameters, fencers, bouts = parse_felo_file(felo_filename)
             resultslist = calculate_felo_ratings(parameters, fencers, bouts, options.plots,
                                                  options.estimate_freshmen,
                                                  options.bootstrap, options.max_cycles)
@@ -717,6 +728,9 @@ if __name__ == '__main__':
                 if os.path.isfile(filename_backup):
                     raise Error(u"Bitte erst die Sicherungskopie (Endung .bak) löschen.")
                 shutil.copyfile(felo_filename, filename_backup)
+                for parameter in parameters.keys():
+                    if parameter not in given_parameters:
+                        del parameters[parameter]
                 write_felo_file(felo_filename, parameters, fencers, bouts)
             if len(felo_filenames) > 1:
                 if i >= 1: print>>output_file
