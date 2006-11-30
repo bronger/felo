@@ -568,12 +568,15 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             current_bout_daynumber = bout.daynumber()
             year, month, day, _, _, _, _, _, _ = time.localtime()
             current_daynumber = julian_date(year, month, day)
+            # There are three conditions so that plot points are created: We
+            # must have a new day, so we don't generate points within one day
+            # (too fine-grained, and no real times are known within one day
+            # anyway); the Felo ratings must be after the minimal date given in
+            # the parameters section; *and* the Felo ratings must not be older
+            # than the maximal days in the plot.
             if plot and (i == len(bouts) - 1 or bouts[i+1].daynumber() != current_bout_daynumber) and \
-                    bout.date[:10] >= parameters[u"Plot Mindestdatum"] and current_daynumber - current_bout_daynumber <= parameters[u"Plot maximale Tage"]:
-                # Okay, we must generate new data points because one day is over.
-                # BTW, the stange thing with "1500" is a cheap way to exclude too
-                # old bouts from the plot.  FixMe: It should be removed, because
-                # bouts without date can be used for bootstrapping only anyway.
+                    bout.date[:10] >= parameters[u"Plot Mindestdatum"] and \
+                    current_daynumber - current_bout_daynumber <= parameters[u"Plot maximale Tage"]:
                 data_file.write(str(current_bout_daynumber))
                 if current_bout_daynumber - last_xtics_daynumber >= parameters[u"Plot-Tics Mindestabstand"]:
                     # Generate tic marks not too densely; labels must be at
