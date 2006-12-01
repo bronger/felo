@@ -2,8 +2,6 @@
 
 Einzeltreffer Einsteiger	100
 Elo-Zahl Top-Fechter		2400
-Gewichtung 10-er Gefecht	1.73
-Gewichtung 15-er Gefecht	3.0
 Gruppenname			Florett
 k-Faktor Einsteiger		40
 k-Faktor Rest			32
@@ -16,30 +14,30 @@ Minimum Elo-Zahl		1200
 # Namen der Fechter, die versteckt bleiben wollen,
 # in Klammern
 
-Alexander		1619
-Alp			1410
-Christian		1669
-Doro			1317
-Franzi			1477
-Georg			1476
-Harald			1684
-Katrin			1347
-Liska			1732
-Marcel			1444
-Maxim			1508
+Alexander		1614
+Alp			1408
+Christian		1661
+Doro			1313
+Franzi			1475
+Georg			1474
+Harald			1680
+Katrin			1349
+Liska			1735
+Marcel			1443
+Maxim			1502
 Melanie			1407
-Michael			1580
-Ming			1603
+Michael			1577
+Ming			1600
 Moritz			1583
-Niki			1321
+Niki			1322
 Nora			0
-Paul			1512
-Sebastian J		1549
-Simone			1680
-Stefan			1607
-Thomas			1750
-Torsten			1305
-Yves			1773
+Paul			1514
+Sebastian J		1544
+Simone			1677
+Stefan			1605
+Thomas			1745
+Torsten			1303
+Yves			1769
 
 ====================================================
 # Gefechte
@@ -203,3 +201,27 @@ Yves			1773
 2006/11/23.1	Franzi -- Niki		5:2/0
 2006/11/23.1	Nora -- Simone		5:2/0
 2006/11/23.1	Moritz -- Stefan	5:9/0
+
+2006/11/30	Katrin -- Doro		3:0
+2006/11/30	Katrin -- Alp		3:0
+2006/11/30	Katrin -- Christian	1:3
+2006/11/30	Katrin -- Niki		2:3
+2006/11/30	Katrin -- Ming		1:3
+2006/11/30	Katrin -- Stefan	1:3
+2006/11/30	Doro -- Alp		0:3
+2006/11/30	Doro -- Christian	3:2
+2006/11/30	Doro -- Niki		3:2
+2006/11/30	Doro -- Ming		0:3
+2006/11/30	Doro -- Stefan		2:3
+2006/11/30	Alp -- Niki		3:2
+2006/11/30	Alp -- Franzi		2:3
+2006/11/30	Alp -- Ming		3:2
+2006/11/30	Alp -- Stefan		2:3
+2006/11/30	Christian -- Niki	3:2
+2006/11/30	Christian -- Ming	3:1
+2006/11/30	Niki -- Franzi		2:3
+2006/11/30	Niki -- Ming		0:3
+2006/11/30	Niki -- Stefan		0:3
+2006/11/30	Franzi -- Ming		1:3
+2006/11/30	Franzi -- Stefan	1:3
+2006/11/30	Ming -- Stefan		1:3
