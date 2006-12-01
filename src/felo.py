@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import wx, wx.grid
+import wx, wx.grid, wx.py.editor
 import felo_rating
 import re
 
-parameters, fencers, bouts = felo_rating.parse_felo_file("florett.felo")
+parameters, _, fencers, bouts = felo_rating.parse_felo_file("../aachen/florett.felo")
 
 class BoutTable(wx.grid.PyGridTableBase):
     def __init__(self):
@@ -116,6 +116,11 @@ class BoutTable(wx.grid.PyGridTableBase):
     def CanSetValueAs(self, row, col, typeName):
         return self.CanGetValueAs(row, col, typeName)
 
+class Editor(wx.py.editor.EditWindow):
+    def __init__(self, parent):
+        wx.stc.StyledTextCtrl.__init__(self, parent, wx.ID_ANY)
+        self.setStyles()
+
 class Frame(wx.Frame):
     def __init__(self, *args, **keyw):
         wx.Frame.__init__(self, None, wx.ID_ANY, size=(700, 200), title="Felo-Zahlen", *args, **keyw)
@@ -139,9 +144,10 @@ class Frame(wx.Frame):
 
         self.SetMenuBar(menu_bar)
 
-        self.table = BoutTable()
-        self.grid = wx.grid.Grid(self)
-        self.grid.SetTable(self.table, True, selmode=wx.grid.Grid.SelectRows)
+        self.editor = Editor(self)
+#         self.table = BoutTable()
+#         self.grid = wx.grid.Grid(self)
+#         self.grid.SetTable(self.table, True, selmode=wx.grid.Grid.SelectRows)
 
     def OnExit(self, event):
         self.Close()

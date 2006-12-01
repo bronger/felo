@@ -125,8 +125,8 @@ class Bout(object):
         second_fencer -- name of the second fencer.
         points_first -- points won by the first fencer.
         points_second -- points won by the second fencer.
-        fenced_to -- winning points of the bout.  May be 0, 5, 10, or 15.  "0"
-            means that the bout was part of a relay team competition.
+        fenced_to -- winning points of the bout.  May be e.g. 5, 10, or 15.
+            "0" means that the bout was part of a relay team competition.
         """
         self.year = int(year)
         self.month = int(month)
@@ -222,8 +222,12 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     first_fencer, second_fencer, points_first, points_second = \
         bout.first_fencer, bout.second_fencer, \
         bout.points_first, bout.points_second
-    weightings = [1.0, 1.0, parameters["Gewichtung 10-er Gefecht"], parameters["Gewichtung 15-er Gefecht"]]
-    weighting = weightings[bout.fenced_to/5]
+    if bout.fenced_to > 0:
+        weighting = bout.fenced_to / 5.0
+    else:
+        # Single match in a team competition is weighted as if fenced to 5
+        # points
+        weighting = 1.0
     total_points = points_first + points_second
     if total_points == 0:
         result_first = 0.5
@@ -255,8 +259,8 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     Fencer.fencers_with_preliminary_felo_rating.add(fencers[first_fencer])
     Fencer.fencers_with_preliminary_felo_rating.add(fencers[second_fencer])
 
-    fencers[first_fencer].fenced_points_preliminary += total_points
-    fencers[second_fencer].fenced_points_preliminary += total_points
+    fencers[first_fencer].total_weighting_preliminary += weighting
+    fencers[second_fencer].total_weighting_preliminary += weighting
 
 def parse_bouts(input_file, linenumber, fencers, parameters):
     """Reads bouts from a Felo file, starting at the current position in that file.
@@ -293,8 +297,6 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
             fenced_to = max(points_first, points_second)
         else:
             fenced_to = int(fenced_to)
-        if fenced_to not in (0, 5, 10, 15):
-            raise Error("Gefecht wurde nicht auf 5, 10 oder 15 gefochten", input_file.name, linenumber)
         if fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
             raise Error("Einer hat mehr Punkte als die Siegerpunktezahl", input_file.name, linenumber)
         if first_fencer not in fencers:
@@ -323,11 +325,9 @@ def parse_felo_file(filename):
     parameters.setdefault(u"Elo-Zahl Top-Fechter", 2400)
     parameters.setdefault(u"k-Faktor Rest", 32)
     parameters.setdefault(u"k-Faktor Einsteiger", 40)
-    parameters.setdefault(u"Einzeltreffer Einsteiger", 100)
+    parameters.setdefault(u"5er-Gefechte Einsteiger", 15)
     parameters.setdefault(u"Minimum Elo-Zahl", 1200)
-    parameters.setdefault(u"Gewichtung 10-er Gefecht", 1.73)
-    parameters.setdefault(u"Gewichtung 15-er Gefecht", 3.0)
-    parameters.setdefault(u"Minimal-Gewichtung Einsteiger", 10.0)
+    parameters.setdefault(u"5er-Gefechte für Schätzung", 10)
     # The groupname is used e.g. for the file names of the plots.  It defaults
     # to the name of the Felo file.
     parameters.setdefault(u"Gruppenname", os.path.splitext(os.path.split(filename)[1])[0].capitalize())
@@ -446,7 +446,7 @@ def adopt_preliminary_felo_ratings():
     """
     for fencer in Fencer.fencers_with_preliminary_felo_rating:
         fencer.felo_rating = fencer.felo_rating_preliminary
-        fencer.fenced_points = fencer.fenced_points_preliminary
+        fencer.total_weighting = fencer.total_weighting_preliminary
     Fencer.fencers_with_preliminary_felo_rating.clear()
 
 class Fencer(object):
@@ -471,13 +471,14 @@ class Fencer(object):
         else:
             self.name = name
             self.parameters = parameters
-        self.fenced_points = self.fenced_points_preliminary = 0
+        # total_weighting is the number of bouts that the fencers has fenced,
+        # in units of "bout to 5 points"-equivalents.
+        self.total_weighting = self.total_weighting_preliminary = 0.0
         self.__k_factor = self.parameters[u"k-Faktor Rest"]
         self.freshman = felo_rating == 0
         if not self.freshman:
             self.felo_rating = self.initial_felo_rating = self.felo_rating_preliminary = felo_rating
         else:
-            self.total_weighting = 0.0
             self.total_felo_rating_opponents = 0.0
             self.total_result = 0.0
     def __get_felo_rating_exact(self):
@@ -487,7 +488,7 @@ class Fencer(object):
             # Estimate initial Felo number according to the Austrian Method,
             # see http://www.chess.at/bundesspielleitung/OESB/oesb_tuwo_06.pdf
             # section 5.1 on page 43.
-            if self.total_weighting < self.parameters[u"Minimal-Gewichtung Einsteiger"]:
+            if self.total_weighting < self.parameters[u"5er-Gefechte für Schätzung"]:
                 return 0.0
             A = self.total_result / self.total_weighting
             B = self.total_weighting / (self.total_weighting + 2)
@@ -504,7 +505,7 @@ class Fencer(object):
                                  doc="""Felo rating with decimal fraction.""")
     felo_rating = property(__get_felo_rating, __set_felo_rating, doc="""Felo rating, rounded to integer.""")
     def __get_k_factor(self):
-        if self.fenced_points < self.parameters[u"Einzeltreffer Einsteiger"]:
+        if self.total_weighting < self.parameters[u"5er-Gefechte Einsteiger"]:
             return self.parameters[u"k-Faktor Einsteiger"]
         return self.__k_factor
     k_factor = property(__get_k_factor)
@@ -608,7 +609,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             else:
                 break
         if i == maxcycles - 1:
-            raise Error("Das Bootstrapping ist nicht konvergiert.")
+            pass
+#            raise Error("Das Bootstrapping ist nicht konvergiert.")
     xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename)
     visible_fencers.sort()    # Descending by Felo rating
     if plot:
@@ -658,7 +660,8 @@ def prognosticate_bout(first_fencer, second_fencer, fenced_to):
     first_fencer -- first fencer, for whom the winning chance is to be
         calculated.
     second_fencer -- second fencer, opponent in the bout.
-    fenced_to -- number of winning points in the bout.  Must be 5, 10, or 15.
+    fenced_to -- number of winning points in the bout.  Can be e.g. 5, 10, or
+        15.
 
     Return values:
     Points of the first fencer, points of the second fencer, and the winning
