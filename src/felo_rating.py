@@ -417,7 +417,14 @@ def correct_result_value(measured_result_value, fenced_to):
     not used currently, because in set_preliminary_felo_ratings(), adjusting
     the expectation value is faster than adjusting the result value due to the
     mapping direction in the array apparent_expectation_values.  However, both
-    methods are pretty much equivalent."""
+    methods are pretty much equivalent.
+
+    Parameters:
+    measured_result_value -- the result value calculated from the bout score.
+    fenced_to -- number of points the bout was fenced to.
+
+    Result value:
+    The real result value, freed from the winning-hit bias."""
     if measured_result_value == 0.0:
         return 0.0
     for i in range(1, len(apparent_expectation_values)):
@@ -453,7 +460,7 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     if bout.fenced_to == 0:
         weighting = 1.0
     else:
-        # so that weighting roughly is the number of bouts fenced to 5 points
+        # weighting roughly is the number of bouts fenced to 5 points
         weighting = total_points / 6.76
     if total_points == 0:
         result_first = 0.5
