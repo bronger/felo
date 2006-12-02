@@ -203,7 +203,7 @@ def calendar_date(daynumber):
     year = d - 4715 - int((7 + month) / 10.0)
     return year, month, day
 
-apparent_result_values = \
+actual_expectation_values = \
     [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
      [0.01, 0.006766, 0.00751687, 0.00801342, 0.00834527, 0.00858217, 0.00875974, 0.00889779,
       0.0090082, 0.0090985, 0.00917373, 0.00923737, 0.00929191, 0.00933917, 0.00938052],
@@ -407,12 +407,12 @@ apparent_result_values = \
 def correct_result_value(measured_result_value, fenced_to):
     if measured_result_value == 0.0:
         return 0.0
-    for i in range(1, len(apparent_result_values)):
-        if apparent_result_values[i][fenced_to-1]+1e-6 >= measured_result_value:
-            return 0.01 / (apparent_result_values[i][fenced_to-1] -
-                           apparent_result_values[i-1][fenced_to-1]) * \
-                (measured_result_value - apparent_result_values[i-1][fenced_to-1]) + \
-                apparent_result_values[i-1][0]
+    for i in range(1, len(actual_expectation_values)):
+        if actual_expectation_values[i][fenced_to-1]+1e-6 >= measured_result_value:
+            return 0.01 / (actual_expectation_values[i][fenced_to-1] -
+                           actual_expectation_values[i-1][fenced_to-1]) * \
+                (measured_result_value - actual_expectation_values[i-1][fenced_to-1]) + \
+                actual_expectation_values[i-1][0]
                 
         
 def set_preliminary_felo_ratings(fencers, bout, parameters):
@@ -463,7 +463,11 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     felo_first = fencers[first_fencer].felo_rating_exact
     felo_second = fencers[second_fencer].felo_rating_exact
     expectation_first = 1 / (1 + 10**((felo_second - felo_first)/400.0))
-    result_first = correct_result_value(result_first, fenced_to)
+    if expectation_first < 1.0:
+        expectation_first = (actual_expectation_values[int(expectation_first*100)+1][fenced_to-1] -
+                             actual_expectation_values[int(expectation_first*100)][fenced_to-1]) * \
+                             (expectation_first*100 - int(expectation_first*100)) + \
+                             actual_expectation_values[int(expectation_first*100)][fenced_to-1]
     improvement_first = (result_first - expectation_first) * weighting
     fencers[first_fencer].felo_rating_preliminary += fencers[first_fencer].k_factor * improvement_first
     fencers[second_fencer].felo_rating_preliminary -= fencers[second_fencer].k_factor * improvement_first
