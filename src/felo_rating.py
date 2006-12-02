@@ -583,7 +583,16 @@ def parse_felo_file(filename):
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
     fencers = {}
     for name, initial_felo_rating in initial_felo_ratings.items():
-        aktueller_fechter = Fencer(name, initial_felo_rating, parameters)
+        initial_total_weighting = 0.0
+        if isinstance(initial_felo_rating, basestring):
+            try:
+                # An initial total weighting is also available, in parenthesis
+                position_opening_parenthesis = initial_felo_rating.index("(")
+                initial_total_weighting = float(initial_felo_rating[position_opening_parenthesis+1:-1])
+                initial_felo_rating = int(initial_felo_rating[:position_opening_parenthesis])
+            except ValueError:
+                raise Error(u"Felo Zahl von %s war ungültig." % name)
+        aktueller_fechter = Fencer(name, initial_felo_rating, parameters, initial_total_weighting)
         fencers[aktueller_fechter.name] = aktueller_fechter
 
     bouts = parse_bouts(felo_file, linenumber, fencers, parameters)
@@ -671,9 +680,25 @@ def write_back_fencers(filename, fencers):
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
         raise Error(u"Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
-    
+    fencer_lines = [u"# Anfangswerte"+os.linesep,
+                    u"# Namen der Fechter, die versteckt bleiben wollen,"+os.linesep,
+                    u"# in Klammern"+os.linesep,
+                    os.linesep]
+    fencerslist = fencers.items()
+    fencerslist.sort()
+    for fencer in [entry[1] for entry in fencerslist]:
+        if fencer.hidden:
+            name = "(" + fencer.name + ")"
+        else:
+            name = fencer.name
+        line = fill_with_tabs(name, 3) + str(fencer.initial_felo_rating)
+        if fencer.initial_total_weighting != 0:
+            line += " (%g)" % fencer.initial_total_weighting
+        line += os.linesep
+        fencer_lines.append(line)
+    fencer_lines.append(os.linesep)
     felo_file = codecs.open(filename, "w", encoding="utf-8")
-    felo_file.writelines(lines)
+    felo_file.writelines(lines[:fencer_limits[0]+1] + fencer_lines + lines[fencer_limits[1]:])
     felo_file.close()
 
 class Error(Exception):
@@ -745,6 +770,7 @@ class Fencer(object):
             self.felo_rating = self.initial_felo_rating = self.felo_rating_preliminary = felo_rating
         else:
             self.total_felo_rating_opponents = 0.0
+            self.initial_felo_rating = 0
             self.total_result = 0.0
     def __get_felo_rating_exact(self):
         if not self.freshman:
@@ -753,7 +779,8 @@ class Fencer(object):
             # Estimate initial Felo number according to the Austrian Method,
             # see http://www.chess.at/bundesspielleitung/OESB/oesb_tuwo_06.pdf
             # section 5.1 on page 43.
-            if self.total_weighting < self.parameters[u"5er-Gefechte für Schätzung"]:
+            if self.total_weighting < self.parameters[u"5er-Gefechte für Schätzung"] or \
+                    self.total_weighting == 0:
                 return 0.0
             A = self.total_result / self.total_weighting
             B = self.total_weighting / (self.total_weighting + 2)
@@ -990,18 +1017,12 @@ if __name__ == '__main__':
             resultslist = calculate_felo_ratings(parameters, fencers, bouts, options.plots,
                                                  options.estimate_freshmen,
                                                  options.bootstrap, options.max_cycles)
-            if (options.estimate_freshmen or options.bootstrap) and options.write_back:
+            if options.write_back and (options.bootstrap or options.estimate_freshmen):
                 for fencer in fencers.values():
-                    if options.bootstrap or fencer.freshman:
+                    if (options.bootstrap and not fencer.freshman) or \
+                            (options.estimate_freshmen and fencer.freshman):
                         fencer.initial_felo_rating = fencer.felo_rating
-                filename_backup = os.path.splitext(felo_filename)[0] + ".bak"
-                if os.path.isfile(filename_backup):
-                    raise Error(u"Bitte erst die Sicherungskopie (Endung .bak) löschen.")
-                shutil.copyfile(felo_filename, filename_backup)
-                for parameter in parameters.keys():
-                    if parameter not in given_parameters:
-                        del parameters[parameter]
-                write_felo_file(felo_filename, parameters, fencers, bouts)
+                write_back_fencers(felo_filename, fencers)
             if len(felo_filenames) > 1:
                 if i >= 1: print>>output_file
                 print>>output_file, parameters["Gruppenname"] + ":"
