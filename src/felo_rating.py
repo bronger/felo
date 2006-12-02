@@ -203,7 +203,7 @@ def calendar_date(daynumber):
     year = d - 4715 - int((7 + month) / 10.0)
     return year, month, day
 
-actual_expectation_values = \
+apparent_expectation_values = \
     [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
      [0.01, 0.006766, 0.00751687, 0.00801342, 0.00834527, 0.00858217, 0.00875974, 0.00889779,
       0.0090082, 0.0090985, 0.00917373, 0.00923737, 0.00929191, 0.00933917, 0.00938052],
@@ -403,16 +403,30 @@ actual_expectation_values = \
      [0.99, 0.993234, 0.992483, 0.991987, 0.991655, 0.991418, 0.99124, 0.991102,
       0.990992, 0.990902, 0.990826, 0.990763, 0.990708, 0.990661, 0.990619],
      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+"""This list of lists is the solution for the winning-hit problem.  The winner
+of a bout is rated too highly because he ends the bout with his point.  This
+array contains the actually "measured" result values if the ideal expected
+result value is known (e.g. by using Elo's formula).
+
+The list contains 101 lists, for result values 0, 0.01, 0.02, ... 1.  (This
+happens to be the first element of each list, too.)  Every list contains 15
+values, for bouts fenced to 1, 2, ... 15 points."""
 
 def correct_result_value(measured_result_value, fenced_to):
+    """This function is part of the solution for the winning-hit problem.  It is
+    not used currently, because in set_preliminary_felo_ratings(), adjusting
+    the expectation value is faster than adjusting the result value due to the
+    mapping direction in the array apparent_expectation_values.  However, both
+    methods are pretty much equivalent."""
     if measured_result_value == 0.0:
         return 0.0
-    for i in range(1, len(actual_expectation_values)):
-        if actual_expectation_values[i][fenced_to-1]+1e-6 >= measured_result_value:
-            return 0.01 / (actual_expectation_values[i][fenced_to-1] -
-                           actual_expectation_values[i-1][fenced_to-1]) * \
-                (measured_result_value - actual_expectation_values[i-1][fenced_to-1]) + \
-                actual_expectation_values[i-1][0]
+    for i in range(1, len(apparent_expectation_values)):
+        if apparent_expectation_values[i][fenced_to-1]+1e-6 >= measured_result_value:
+            # Interpolate between two adjactent points
+            return 0.01 / (apparent_expectation_values[i][fenced_to-1] -
+                           apparent_expectation_values[i-1][fenced_to-1]) * \
+                (measured_result_value - apparent_expectation_values[i-1][fenced_to-1]) + \
+                apparent_expectation_values[i-1][0]
                 
         
 def set_preliminary_felo_ratings(fencers, bout, parameters):
@@ -434,11 +448,13 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     first_fencer, second_fencer, points_first, points_second = \
         bout.first_fencer, bout.second_fencer, \
         bout.points_first, bout.points_second
-    fenced_to = bout.fenced_to
-    if fenced_to == 0:
-        fenced_to = 5
-    weighting = fenced_to / 5.0
+    max_points = max(points_first, points_second)
     total_points = points_first + points_second
+    if bout.fenced_to == 0:
+        weighting = 1.0
+    else:
+        # so that weighting roughly is the number of bouts fenced to 5 points
+        weighting = total_points / 6.76
     if total_points == 0:
         result_first = 0.5
     else:
@@ -463,11 +479,17 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     felo_first = fencers[first_fencer].felo_rating_exact
     felo_second = fencers[second_fencer].felo_rating_exact
     expectation_first = 1 / (1 + 10**((felo_second - felo_first)/400.0))
-    if expectation_first < 1.0:
-        expectation_first = (actual_expectation_values[int(expectation_first*100)+1][fenced_to-1] -
-                             actual_expectation_values[int(expectation_first*100)][fenced_to-1]) * \
+    if (bout.fenced_to == 0 or bout.fenced_to == max_points) and max_points <= 15 and expectation_first < 1.0:
+        # Adjusting the expectation value to eliminate the bias due to the
+        # winning-hit problem.  I interpolate between two adjactent points in
+        # the value array apparent_expectation_values.  Interpolating is
+        # necessary, otherwise the bootstrapping doesn't converge.  Even with
+        # this simple linear interpolating, convergence is significantly more
+        # difficult than without the winning-hit adjustment at all.
+        expectation_first = (apparent_expectation_values[int(expectation_first*100)+1][max_points-1] -
+                             apparent_expectation_values[int(expectation_first*100)][max_points-1]) * \
                              (expectation_first*100 - int(expectation_first*100)) + \
-                             actual_expectation_values[int(expectation_first*100)][fenced_to-1]
+                             apparent_expectation_values[int(expectation_first*100)][max_points-1]
     improvement_first = (result_first - expectation_first) * weighting
     fencers[first_fencer].felo_rating_preliminary += fencers[first_fencer].k_factor * improvement_first
     fencers[second_fencer].felo_rating_preliminary -= fencers[second_fencer].k_factor * improvement_first
