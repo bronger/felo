@@ -6,36 +6,37 @@ k-Faktor Einsteiger		40
 k-Faktor Rest			32
 k-Faktor Top-Fechter		25
 Minimum Elo-Zahl		1200
+Plot Mindestdatum		2006/11/02
 
 ====================================================
 # Anfangswerte
 # Namen der Fechter, die versteckt bleiben wollen,
 # in Klammern
 
-Alexander		1614
-Alp			1408
-Christian		1661
-Doro			1313
-Franzi			1475
-Georg			1474
-Harald			1680
-Katrin			1349
-Liska			1735
-Marcel			1443
-Maxim			1502
-Melanie			1407
-Michael			1577
-Ming			1600
-Moritz			1583
-Niki			1322
+Alexander		1600
+Alp			1418
+Christian		1656
+Doro			1342
+Franzi			1477
+Georg			1479
+Harald			1668
+Katrin			1361
+Liska			1721
+Marcel			1444
+Maxim			1506
+Melanie			1415
+Michael			1574
+Ming			1602
+Moritz			1577
+Niki			1333
 Nora			0
-Paul			1514
-Sebastian J		1544
-Simone			1677
-Stefan			1605
-Thomas			1745
-Torsten			1303
-Yves			1769
+Paul			1515
+Sebastian J		1545
+Simone			1668
+Stefan			1597
+Thomas			1730
+Torsten			1312
+Yves			1742
 
 ====================================================
 # Gefechte
