@@ -25,8 +25,8 @@ def convert_date(date):
 mache_plots = True
 ausgabedatei = codecs.open("/home/bronger/aktuell/fechten/Intern/felo-zahlen.html",
                            "w", "iso-8859-1")
-foil_parameters, _, foil_fencers, foil_bouts = parse_felo_file("florett.felo")
-epee_parameters, _, epee_fencers, epee_bouts = parse_felo_file("degen.felo")
+foil_parameters, _, foil_fencers, foil_bouts = parse_felo_file(codecs.open("florett.felo", encoding="utf-8"))
+epee_parameters, _, epee_fencers, epee_bouts = parse_felo_file(codecs.open("degen.felo", encoding="utf-8"))
 foil_bouts.sort()
 epee_bouts.sort()
 
@@ -56,7 +56,7 @@ print>>ausgabedatei, u"""<html>
 # write_felo_file("florett_.felo", foil_parameters, foil_fencers, foil_bouts)
 for fechter in calculate_felo_ratings(foil_parameters, foil_fencers, foil_bouts, plot=mache_plots):
     felo_zahl = str(fechter.felo_rating)
-    if fechter.fenced_points < 50:
+    if fechter.total_weighting < 7:
         felo_zahl = "&asymp;&nbsp;" + felo_zahl
     print>>ausgabedatei, u"<tr><td>%s</td><td style='text-align:right'>%s</td></tr>" % (fechter.name, felo_zahl)
 shutil.copy2("florett.png", "/home/bronger/aktuell/fechten/Intern/")
@@ -71,7 +71,7 @@ print>>ausgabedatei, u"""</tbody>
 <tbody>""" % convert_date(epee_bouts[-1].date[:10])
 for fechter in calculate_felo_ratings(epee_parameters, epee_fencers, epee_bouts, plot=mache_plots):
     felo_zahl = str(fechter.felo_rating)
-    if fechter.fenced_points < 50:
+    if fechter.total_weighting < 7:
         felo_zahl = "&asymp;&nbsp;" + felo_zahl
     print>>ausgabedatei, u"<tr><td>%s</td><td style='text-align:right'>%s</td></tr>" % (fechter.name, felo_zahl)
 shutil.copy2("degen.png", "/home/bronger/aktuell/fechten/Intern/")
