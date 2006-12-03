@@ -52,7 +52,9 @@ Exported variables: None
 """
 
 __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_felo_ratings",
-           "expectation_value", "prognosticate_bout", "write_back_fencers", "write_back_fencers_to_file"]
+           "expectation_value", "prognosticate_bout", "write_back_fencers",
+           "write_back_fencers_to_file",
+           "Error", "LineError", "BootstrappingError"]
 
 __version__ = "$Revision:  $"
 # $Source:  $
@@ -97,7 +99,7 @@ def parse_items(input_file, linenumber=0):
         if line[0] in u"-=._:;,+*'~\"`´/\\%$!": break
         match = line_pattern.match(line)
         if not match:
-            raise Error('Zeile muss nach dem Muster "Name <TAB> Wert" sein', input_file.name, linenumber)
+            raise LineError('Zeile muss nach dem Muster "Name <TAB> Wert" sein', input_file.name, linenumber)
         name, value = match.groups()
         try:
             items[name] = value
@@ -161,7 +163,7 @@ class Bout(object):
         date_pattern = re.compile("\s*(?P<year>\\d{4})/(?P<month>\\d{1,2})/(?P<day>[\\d.]{1,5})\s*\\Z")
         match = date_pattern.match(date)
         if not match:
-            raise Error("Ungueltiger Datumsstring")
+            raise ValueError("Ungueltiger Datumsstring")
         year, month, day = match.groups()
         self.year, self.month = int(year), int(month)
         self.day = float(day)
@@ -534,7 +536,8 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
         if not line: continue
         match = line_pattern.match(line)
         if not match:
-            raise Error('Zeile muss nach dem Muster "JJJJ/MM/TT <TAB> Name1 -- Name2 <TAB> Punkte1:Punkte2" sein',
+            raise LineError('Zeile muss nach dem Muster "JJJJ/MM/TT <TAB> Name1 '
+                            '-- Name2 <TAB> Punkte1:Punkte2" sein',
                         input_file.name, linenumber)
         year, month, day, first_fencer, second_fencer, points_first, points_second, fenced_to = \
             match.groups()
@@ -544,11 +547,11 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
         else:
             fenced_to = int(fenced_to)
         if fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
-            raise Error("Einer hat mehr Punkte als die Siegerpunktezahl", input_file.name, linenumber)
+            raise LineError("Einer hat mehr Punkte als die Siegerpunktezahl", input_file.name, linenumber)
         if first_fencer not in fencers:
-            raise Error('Fencer "%s" is unknown' % first_fencer, input_file.name, linenumber)
+            raise LineError('Fencer "%s" is unknown' % first_fencer, input_file.name, linenumber)
         if second_fencer not in fencers:
-            raise Error('Fencer "%s" is unknown' % second_fencer, input_file.name, linenumber)
+            raise LineError('Fencer "%s" is unknown' % second_fencer, input_file.name, linenumber)
         bouts.append(Bout(year, month, day, first_fencer, second_fencer,
                                 points_first, points_second, fenced_to))
     return bouts
@@ -592,7 +595,7 @@ def parse_felo_file(felo_file):
                 initial_total_weighting = float(initial_felo_rating[position_opening_parenthesis+1:-1])
                 initial_felo_rating = int(initial_felo_rating[:position_opening_parenthesis])
             except ValueError:
-                raise Error(u"Felo Zahl von %s war ungültig." % name)
+                raise ValueError(u"Felo Zahl von %s war ungültig." % name)
         aktueller_fechter = Fencer(name, initial_felo_rating, parameters, initial_total_weighting)
         fencers[aktueller_fechter.name] = aktueller_fechter
 
@@ -673,7 +676,7 @@ def write_back_fencers(felo_file_contents, fencers):
         if cleaned_line and cleaned_line[0] in u"-=._:;,+*'~\"`´/\\%$!":
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
-        raise Error(u"Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
+        raise ValueError(u"Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
     fencer_lines = [u"# Anfangswerte",
                     u"# Namen der Fechter, die versteckt bleiben wollen,",
                     u"# in Klammern",
@@ -707,9 +710,20 @@ def write_back_fencers_to_file(filename, fencers):
 class Error(Exception):
     """Standard error class.
     """
+    def __init__(self, description):
+        """Class constructor.
+
+        Parameters:
+        description -- error message.
+        """
+        self.description = description
+        Exception.__init__(self, description)
+
+class LineError(Error):
+    """Error class for parsing errors in a Felo file.
+    """
     def __init__(self, description, filename="", linenumber=0):
-        """Class constructor.  Filename and linenumber are only given if it is
-        about a parsing error in a Felo file.
+        """Class constructor.
 
         Parameters:
         description -- error message.
@@ -722,8 +736,18 @@ class Error(Exception):
             if linenumber:
                 supplement += ", Zeile " + unicode(linenumber)
             description = supplement  + ": " + description
-        self.description = description
-        Exception.__init__(self, description)
+        Error.__init__(self, description)
+
+class BootstrappingError(Error):
+    """Error class for non-converging bootstrapping processes.
+    """
+    def __init__(self, description):
+        """Class constructor.
+
+        Parameters:
+        description -- error message.
+        """
+        Error.__init__(self, description)
 
 def adopt_preliminary_felo_ratings():
     """Take all preliminary numbers (Felo and fenced points) and write them over
@@ -910,8 +934,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             else:
                 break
         if i == maxcycles - 1:
-            raise Error("Das Bootstrapping ist nicht konvergiert.")
-        print i
+            raise BootstrappingError("Das Bootstrapping ist nicht konvergiert.")
     xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename)
     visible_fencers.sort()    # Descending by Felo rating
     if plot:
