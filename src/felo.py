@@ -3,9 +3,7 @@
 
 import wx, wx.grid, wx.py.editor, wx.py.editwindow
 import felo_rating
-import re, os, codecs, sys, time
-
-parameters, _, fencers, bouts = felo_rating.parse_felo_file("../aachen/florett.felo")
+import re, os, codecs, sys, time, StringIO
 
 class Editor(wx.py.editor.EditWindow):
     def __init__(self, parent):
@@ -49,10 +47,14 @@ class Frame(wx.Frame):
         menu_bar.Append(menu_file, u"&Datei")
 
         menu_numbers = wx.Menu()
-        calculate_felo_numbers = menu_numbers.Append(wx.ID_ANY, u"Felo-Zahlen &berechnen")
+        calculate_felo_numbers = menu_numbers.Append(wx.ID_ANY, u"&Felo-Zahlen berechnen")
         self.Bind(wx.EVT_MENU, self.OnCalculateFeloNumbers, calculate_felo_numbers)
         generate_html = menu_numbers.Append(wx.ID_ANY, u"&HTML erzeugen")
         self.Bind(wx.EVT_MENU, self.OnGenerateHTML, generate_html)
+        bootstrapping = menu_numbers.Append(wx.ID_ANY, u"&Bootstrapping")
+        self.Bind(wx.EVT_MENU, self.OnBootstrapping, bootstrapping)
+        estimate_freshmen = menu_numbers.Append(wx.ID_ANY, u"&Neulinge einschätzen")
+        self.Bind(wx.EVT_MENU, self.OnEstimateFreshmen, estimate_freshmen)
         menu_bar.Append(menu_numbers, u"&Bearbeiten")
 
         self.SetMenuBar(menu_bar)
@@ -116,12 +118,19 @@ class Frame(wx.Frame):
                 self.felo_filename = dialog.GetPath()
                 dialog.Destroy()
                 self.save_felo_file()
-    def OnCalculateFeloNumbers(self, event):
-        if not self.save_felo_file():
+    
+    def assure_open_felo_file(self):
+        if not self.editor:
             wx.MessageBox(u"Bitte öffne erst eine Felo-Datei." ,
                           u"Hinweis", wx.OK | wx.ICON_INFORMATION, self)
+            return False
+        return True
+    def OnCalculateFeloNumbers(self, event):
+        if not self.assure_open_felo_file():
             return
-        parameters, _, fencers, bouts = felo_rating.parse_felo_file(self.felo_filename)
+        felo_file_contents = StringIO.StringIO(self.editor.GetText())
+        felo_file_contents.name = self.felo_filename
+        parameters, _, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts)
         results = u""
         for fencer in fencerlist:
@@ -129,13 +138,11 @@ class Frame(wx.Frame):
         result_frame = ResultFrame(results)
         result_frame.Show()
     def OnGenerateHTML(self, event):
-        if not self.save_felo_file():
-            wx.MessageBox(u"Bitte öffne erst eine Felo-Datei." ,
-                          u"Hinweis", wx.OK | wx.ICON_INFORMATION, self)
+        if not self.assure_open_felo_file():
             return
-        if self.AssureSave() == wx.CANCEL:
-            return
-        parameters, _, fencers, bouts = felo_rating.parse_felo_file(self.felo_filename)
+        felo_file_contents = StringIO.StringIO(self.editor.GetText())
+        felo_file_contents.name = self.felo_filename
+        parameters, _, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         bouts.sort()
         last_date = time.strftime(u"%d.&nbsp;%B&nbsp;%Y", time.strptime(bouts[-1].date[:10], "%Y/%m/%d"))
         base_filename = parameters[u"Gruppenname"].lower()
@@ -145,8 +152,10 @@ class Frame(wx.Frame):
         html_dialog.Destroy()
         if result != wx.ID_OK:
             return
+        file_list = u""
         html_file = codecs.open(os.path.join(parameters[u"Ausgabeverzeichnis"], base_filename+".html"),
                                 "w", "utf-8")
+        file_list += base_filename+".html\n"
         print>>html_file, u"""<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -162,12 +171,52 @@ class Frame(wx.Frame):
                 (fencer.name, fencer.felo_rating)
         print>>html_file, u"</tbody></table>"
         if make_plot:
-            print>>html_file, u"<img class='felo-plot' src='%s.png' alt='%s' />" % \
+            print>>html_file, u"<p class='felo-plot'><img class='felo-plot' src='%s.png' alt='%s' /></p>" % \
                 (base_filename, u"Felo-Zahlen-Plot für "+parameters[u"Gruppenname"])
             print>>html_file, u"<p class='printable-notice'>Auch in einer <a href='%s.pdf'>" \
-                "ausdruckbaren Version</a>.<p>" % base_filename
+                "ausdruckbaren Version</a>.</p>" % base_filename
+            file_list += base_filename+".png\n"
+            file_list += base_filename+".pdf\n"
         print>>html_file, u"</body></html>"
         html_file.close()
+        wx.MessageBox(u"Die folgenden Dateien müssen nun auf den Webserver kopiert werden:\n\n"+file_list,
+                      u"Datei modifiziert", wx.OK | wx.ICON_INFORMATION, self)
+    def OnBootstrapping(self, event):
+        if not self.assure_open_felo_file():
+            return
+        answer = wx.MessageBox(u"Das Bootstrapping wird die Fechter-Daten verändern.  "
+                               "Willst du wirklich fortfahren?",
+                               u"Bootstrapping", wx.YES_NO | wx.NO_DEFAULT |
+                               wx.ICON_QUESTION, self)
+        if answer != wx.YES:
+            return
+        felo_file_contents = StringIO.StringIO(self.editor.GetText())
+        felo_file_contents.name = self.felo_filename
+        parameters, _, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
+        felo_rating.calculate_felo_ratings(parameters, fencers, bouts, bootstrapping=True)
+        for fencer in fencers.values():
+            if not fencer.freshman:
+                fencer.initial_felo_rating = fencer.felo_rating
+        self.editor.SetText(felo_rating.write_back_fencers(self.editor.GetText(), fencers))
+        self.felo_file_modified = True
+    def OnEstimateFreshmen(self, event):
+        if not self.assure_open_felo_file():
+            return
+        answer = wx.MessageBox(u"Das Einschätzen der Neulinge wird u.U. deren Fechter-Daten verändern.  "
+                               "Willst du wirklich fortfahren?",
+                               u"Einschätzen der Neulinge", wx.YES_NO | wx.NO_DEFAULT |
+                               wx.ICON_QUESTION, self)
+        if answer != wx.YES:
+            return
+        felo_file_contents = StringIO.StringIO(self.editor.GetText())
+        felo_file_contents.name = self.felo_filename
+        parameters, _, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
+        felo_rating.calculate_felo_ratings(parameters, fencers, bouts, estimate_freshmen=True)
+        for fencer in fencers.values():
+            if fencer.freshman:
+                fencer.initial_felo_rating = fencer.felo_rating
+        self.editor.SetText(felo_rating.write_back_fencers(self.editor.GetText(), fencers))
+        self.felo_file_modified = True
 
 class App(wx.App):
     def OnInit(self):
