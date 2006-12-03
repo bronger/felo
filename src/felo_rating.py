@@ -35,6 +35,9 @@ Exported functions:
 
 parse_felo_file() -- reads from a Felo file parameters, fencers, and bouts
 write_felo_file() -- writes parameters, fencers, and bouts to a Felo file
+write_back_fencers() -- write only the fencers data back into a Felo buffer
+write_back_fencers_to_file() -- write only the fencers data back into a Felo
+    file
 calculate_felo_ratings() -- update the Felo ratings of fencers
 expectation_value() -- returns the mean winning value of a fencer in a bout
 prognosticate_bout() -- calculates the winning chance and the result in a bout
@@ -49,7 +52,7 @@ Exported variables: None
 """
 
 __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_felo_ratings",
-           "expectation_value", "prognosticate_bout"]
+           "expectation_value", "prognosticate_bout", "write_back_fencers", "write_back_fencers_to_file"]
 
 __version__ = "$Revision:  $"
 # $Source:  $
@@ -68,8 +71,7 @@ def clean_up_line(line):
     hash_position = line.find("#")
     if hash_position != -1:
         line = line[:hash_position]
-    line = line.strip()
-    return line
+    return line.strip()
     
 def parse_items(input_file, linenumber=0):
     """Parses key--value pairs in the input_file.  It stops parsing if a line
@@ -572,8 +574,9 @@ def parse_felo_file(felo_file):
     parameters.setdefault(u"5er-Gefechte für Schätzung", 10)
     # The groupname is used e.g. for the file names of the plots.  It defaults
     # to the name of the Felo file.
-    parameters.setdefault(u"Gruppenname", os.path.splitext(os.path.split(filename)[1])[0].capitalize())
-    parameters.setdefault(u"Ausgabeverzeichnis", os.path.abspath(os.path.dirname(filename)))
+    parameters.setdefault(u"Gruppenname",
+                          os.path.splitext(os.path.split(felo_file.name)[1])[0].capitalize())
+    parameters.setdefault(u"Ausgabeverzeichnis", os.path.abspath(os.path.dirname(felo_file.name)))
     parameters.setdefault(u"Plot-Tics Mindestabstand", 7)
     parameters.setdefault(u"Plot Mindestdatum", "1500/00/00")
     parameters.setdefault(u"Plot maximale Tage", "366")
@@ -662,14 +665,8 @@ def write_felo_file(filename, parameters, fencers, bouts):
         print>>felo_file, line
     felo_file.close()
 
-def write_back_fencers(filename, fencers):
-    filename_backup = os.path.splitext(filename)[0] + ".bak"
-    if os.path.isfile(filename_backup):
-        raise Error(u"Erst die Sicherungskopie (Endung .bak) löschen.")
-    shutil.copyfile(filename, filename_backup)
-    felo_file = codecs.open(filename, encoding="utf-8")
-    lines = felo_file.readlines()
-    felo_file.close()
+def write_back_fencers(felo_file_contents, fencers):
+    lines = felo_file_contents.splitlines()
     fencer_limits = []
     for linenumber, line in enumerate(lines):
         cleaned_line = clean_up_line(line)
@@ -677,10 +674,10 @@ def write_back_fencers(filename, fencers):
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
         raise Error(u"Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
-    fencer_lines = [u"# Anfangswerte"+os.linesep,
-                    u"# Namen der Fechter, die versteckt bleiben wollen,"+os.linesep,
-                    u"# in Klammern"+os.linesep,
-                    os.linesep]
+    fencer_lines = [u"# Anfangswerte",
+                    u"# Namen der Fechter, die versteckt bleiben wollen,",
+                    u"# in Klammern",
+                    u""]
     fencerslist = fencers.items()
     fencerslist.sort()
     for fencer in [entry[1] for entry in fencerslist]:
@@ -691,11 +688,20 @@ def write_back_fencers(filename, fencers):
         line = fill_with_tabs(name, 3) + str(fencer.initial_felo_rating)
         if fencer.initial_total_weighting != 0:
             line += " (%g)" % fencer.initial_total_weighting
-        line += os.linesep
         fencer_lines.append(line)
-    fencer_lines.append(os.linesep)
+    fencer_lines.append(u"")
+    return "\n".join(lines[:fencer_limits[0]+1] + fencer_lines + lines[fencer_limits[1]:]) + "\n"
+
+def write_back_fencers_to_file(filename, fencers):
+    filename_backup = os.path.splitext(filename)[0] + ".bak"
+    if os.path.isfile(filename_backup):
+        raise Error(u"Erst die Sicherungskopie (Endung .bak) löschen.")
+    shutil.copyfile(filename, filename_backup)
+    felo_file = codecs.open(filename, encoding="utf-8")
+    contents = felo_file.read()
+    felo_file.close()
     felo_file = codecs.open(filename, "w", encoding="utf-8")
-    felo_file.writelines(lines[:fencer_limits[0]+1] + fencer_lines + lines[fencer_limits[1]:])
+    felo_file.write(write_back_fencers(contents, fencers))
     felo_file.close()
 
 class Error(Exception):
@@ -801,6 +807,12 @@ class Fencer(object):
     def __cmp__(self, other):
         """Sort by Felo rating, descending."""
         return -cmp(self.felo_rating_exact, other.felo_rating_exact)
+    def __repr__(self):
+        """No formal representation available yet, thus I call __str__()."""
+        return self.__str__()
+    def __str__(self):
+        """Informal string representation of the fencer."""
+        return self.name + " (" + unicode(self.felo_rating) + ")"
 
 def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_freshmen=False,
                            bootstrapping=False, maxcycles=1000):
@@ -899,6 +911,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                 break
         if i == maxcycles - 1:
             raise Error("Das Bootstrapping ist nicht konvergiert.")
+        print i
     xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename)
     visible_fencers.sort()    # Descending by Felo rating
     if plot:
@@ -1010,7 +1023,8 @@ if __name__ == '__main__':
         else:
             output_file = sys.stdout
         for i, felo_filename in enumerate(felo_filenames):
-            parameters, given_parameters, fencers, bouts = parse_felo_file(felo_filename)
+            parameters, given_parameters, fencers, bouts = \
+                parse_felo_file(codecs.open(felo_filename, encoding="utf-8"))
             resultslist = calculate_felo_ratings(parameters, fencers, bouts, options.plots,
                                                  options.estimate_freshmen,
                                                  options.bootstrap, options.max_cycles)
@@ -1019,7 +1033,7 @@ if __name__ == '__main__':
                     if (options.bootstrap and not fencer.freshman) or \
                             (options.estimate_freshmen and fencer.freshman):
                         fencer.initial_felo_rating = fencer.felo_rating
-                write_back_fencers(felo_filename, fencers)
+                write_back_fencers_to_file(felo_filename, fencers)
             if len(felo_filenames) > 1:
                 if i >= 1: print>>output_file
                 print>>output_file, parameters["Gruppenname"] + ":"
