@@ -551,18 +551,16 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
                                 points_first, points_second, fenced_to))
     return bouts
 
-def parse_felo_file(filename):
+def parse_felo_file(felo_file):
     """Reads from a Felo file parameters, fencers, and bouts.
 
     Parameters:
-    filename -- path of the Felo file.
+    felo_file -- an open file object.
 
     Return values:
     Felo parameters as a dictionary, a list with all really in the file given
     parameters, fencers as a dictionary (name: Fencer object), bouts as a list.
     """
-    felo_file = codecs.open(filename, "r", "utf-8")
-
     parameters, linenumber = parse_items(felo_file)
     given_parameters = list(parameters)
     parameters.setdefault(u"k-Faktor Top-Fechter", 25)
@@ -596,7 +594,6 @@ def parse_felo_file(filename):
         fencers[aktueller_fechter.name] = aktueller_fechter
 
     bouts = parse_bouts(felo_file, linenumber, fencers, parameters)
-    felo_file.close()
     return parameters, given_parameters, fencers, bouts
 
 def fill_with_tabs(text, tab_col):
