@@ -163,7 +163,7 @@ class Bout(object):
         date_pattern = re.compile("\s*(?P<year>\\d{4})/(?P<month>\\d{1,2})/(?P<day>[\\d.]{1,5})\s*\\Z")
         match = date_pattern.match(date)
         if not match:
-            raise ValueError("Ungueltiger Datumsstring")
+            raise ValueError("Ungültiger Datumsstring".encode("utf-8"))
         year, month, day = match.groups()
         self.year, self.month = int(year), int(month)
         self.day = float(day)
@@ -595,7 +595,7 @@ def parse_felo_file(felo_file):
                 initial_total_weighting = float(initial_felo_rating[position_opening_parenthesis+1:-1])
                 initial_felo_rating = int(initial_felo_rating[:position_opening_parenthesis])
             except ValueError:
-                raise ValueError(u"Felo Zahl von %s war ungültig." % name)
+                raise ValueError((u"Felo-Zahl von \"%s\" war ungültig." % name).encode("utf-8"))
         aktueller_fechter = Fencer(name, initial_felo_rating, parameters, initial_total_weighting)
         fencers[aktueller_fechter.name] = aktueller_fechter
 
@@ -676,7 +676,7 @@ def write_back_fencers(felo_file_contents, fencers):
         if cleaned_line and cleaned_line[0] in u"-=._:;,+*'~\"`´/\\%$!":
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
-        raise ValueError(u"Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
+        raise ValueError("Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
     fencer_lines = [u"# Anfangswerte",
                     u"# Namen der Fechter, die versteckt bleiben wollen,",
                     u"# in Klammern",
@@ -722,7 +722,7 @@ class Error(Exception):
 class LineError(Error):
     """Error class for parsing errors in a Felo file.
     """
-    def __init__(self, description, filename="", linenumber=0):
+    def __init__(self, description, filename, linenumber):
         """Class constructor.
 
         Parameters:
@@ -731,6 +731,8 @@ class LineError(Error):
         linenumber -- number of the line in the Felo file where the error
            occured.
         """
+        self.linenumber = linenumber
+        self.naked_description = description
         if filename:
             supplement = filename
             if linenumber:
@@ -740,6 +742,17 @@ class LineError(Error):
 
 class BootstrappingError(Error):
     """Error class for non-converging bootstrapping processes.
+    """
+    def __init__(self, description):
+        """Class constructor.
+
+        Parameters:
+        description -- error message.
+        """
+        Error.__init__(self, description)
+
+class ExternalProgramError(Error):
+    """Error class for external programs that were not found.
     """
     def __init__(self, description):
         """Class constructor.
@@ -952,11 +965,22 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                 gnuplot_script += ", "
         gnuplot = Popen(["gnuplot", "-"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
         gnuplot.communicate(gnuplot_script)
-        call(["convert", bouts_base_filename+".ps", "-rotate", "90",
-              parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".png"])
-        call(["ps2pdf", bouts_base_filename+".ps",
-              parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".pdf"])
-
+        try:
+            call(["convert", bouts_base_filename+".ps", "-rotate", "90",
+                  parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".png"])
+        except OSError:
+            raise ExternalProgramError(u'Das Programm "convert" von ImageMagick wurde nicht gefunden.  '
+                                       u'Das ist aber notwendig für die Plots.  '
+                                       u'Bitte von http://www.imagemagick.org/ installieren und '
+                                       u'in den PATH setzen.'.encode("utf-8"))
+        try:
+            call(["ps2pdf", bouts_base_filename+".ps",
+                  parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".pdf"])
+        except OSError:
+            raise ExternalProgramError(u'Das Programm "ps2pdf" von Ghostscript wurde nicht gefunden.  '
+                                       u'Das ist aber notwendig für die Plots.  '
+                                       u'Bitte von http://www.cs.wisc.edu/~ghost/ installieren und '
+                                       u'in den PATH setzen.'.encode("utf-8"))
     if estimate_freshmen:
         return [fencer for fencer in fencers.values() if fencer.freshman]
     return visible_fencers
