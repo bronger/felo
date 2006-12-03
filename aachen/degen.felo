@@ -1,14 +1,10 @@
 # Parameter
 
-Einzeltreffer Einsteiger	100
 Elo-Zahl Top-Fechter		2400
-Gewichtung 10-er Gefecht	1.73
-Gewichtung 15-er Gefecht	3.0
 Gruppenname			Degen
 k-Faktor Einsteiger		40
 k-Faktor Rest			32
 k-Faktor Top-Fechter		25
-Minimal-Gewichtung Einsteiger	10.0
 Minimum Elo-Zahl		1200
 
 ====================================================
@@ -16,17 +12,32 @@ Minimum Elo-Zahl		1200
 # Namen der Fechter, die versteckt bleiben wollen,
 # in Klammern
 
-Christian		1612
-Georg			1564
-Jens			1582
-Michael			1522
-Nora			1500
-Sabine			1621
-Ulrike			1400
-Volker			1600
+Christian		1626
+Christopher		1453
+Elenora			1462
+Georg			1520
+Jens			1619
+Melanie			1498
+Michael			1546
+Nora			1526
+Sabine			1665
+Stefan			1450
+(Torsten)		1549
+Ulrike			1580
+Volker			1642
 
 ====================================================
 # Gefechte
+
+2005/07/01.1	Georg -- Stefan		3:4/0
+2005/07/01.2	Ulrike -- Volker	6:6/0
+2005/07/01.3	Jens -- Elenora		6:1/0
+2005/07/01.4	Georg -- Volker		3:9/0
+2005/07/01.5	Ulrike -- Elenora	6:5/0
+2005/07/01.6	Jens -- Stefan		6:1/0
+2005/07/01.7	Georg -- Elenora	5:4/0
+2005/07/01.8	Ulrike -- Stefan	5:2/0
+2005/07/01.9	Jens -- Volker		5:7/0
 
 2006/11/16.1	Sabine -- Jens		10:8
 2006/11/16.2	Georg -- Jens		9:10
@@ -39,3 +50,13 @@ Volker			1600
 2006/11/23.5	Jens -- Michael		5:3
 2006/11/23.6	Christian -- Michael	5:4
 2006/11/23.7	Christian -- Michael	5:3
+
+2006/11/30.1	Jens -- Christopher	5:0/0
+2006/11/30.2	Torsten -- Christian	5:4/0
+2006/11/30.3	Volker -- Melanie	6:0/0
+2006/11/30.4	Torsten -- Christopher	5:5/0
+2006/11/30.5	Jens -- Melanie		4:6/0
+2006/11/30.6	Volker -- Nora		5:6/0
+2006/11/30.7	Torsten -- Melanie	5:4/0
+2006/11/30.8	Volker -- Christopher	5:3/0
+2006/11/30.9	Jens -- Nora		5:1/0
