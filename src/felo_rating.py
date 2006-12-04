@@ -163,7 +163,7 @@ class Bout(object):
         date_pattern = re.compile("\s*(?P<year>\\d{4})/(?P<month>\\d{1,2})/(?P<day>[\\d.]{1,5})\s*\\Z")
         match = date_pattern.match(date)
         if not match:
-            raise ValueError("Ungültiger Datumsstring".encode("utf-8"))
+            raise FeloFormatError("Ungültiger Datumsstring")
         year, month, day = match.groups()
         self.year, self.month = int(year), int(month)
         self.day = float(day)
@@ -526,7 +526,7 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
     """
     line_pattern = re.compile("\s*(?P<year>\\d{4})/(?P<month>\\d{1,2})/(?P<day>[\\d.]{1,5})"
                                +separator+
-                               "(?P<erster>.+?)\s*--\s*(?P<zweiter>.+?)"+separator+
+                               "(?P<first>.+?)\s*--\s*(?P<second>.+?)"+separator+
                                "(?P<points_first>\\d+):(?P<points_second>\\d+)"+
                                "(?:/(?P<fenced_to>\\d+))?\s*\\Z")
     bouts = []
@@ -595,7 +595,7 @@ def parse_felo_file(felo_file):
                 initial_total_weighting = float(initial_felo_rating[position_opening_parenthesis+1:-1])
                 initial_felo_rating = int(initial_felo_rating[:position_opening_parenthesis])
             except ValueError:
-                raise ValueError((u"Felo-Zahl von \"%s\" war ungültig." % name).encode("utf-8"))
+                raise FeloFormatError((u"Felo-Zahl von \"%s\" war ungültig." % name))
         aktueller_fechter = Fencer(name, initial_felo_rating, parameters, initial_total_weighting)
         fencers[aktueller_fechter.name] = aktueller_fechter
 
@@ -676,7 +676,7 @@ def write_back_fencers(felo_file_contents, fencers):
         if cleaned_line and cleaned_line[0] in u"-=._:;,+*'~\"`´/\\%$!":
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
-        raise ValueError("Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
+        raise FeloFormatError("Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
     fencer_lines = [u"# Anfangswerte",
                     u"# Namen der Fechter, die versteckt bleiben wollen,",
                     u"# in Klammern",
@@ -717,6 +717,9 @@ class Error(Exception):
         description -- error message.
         """
         self.description = description
+        if isinstance(description, unicode):
+            # FixMe: The following must be made OS-dependent
+            description = description.encode("utf-8")
         Exception.__init__(self, description)
 
 class LineError(Error):
@@ -738,6 +741,17 @@ class LineError(Error):
             if linenumber:
                 supplement += ", Zeile " + unicode(linenumber)
             description = supplement  + ": " + description
+        Error.__init__(self, description)
+
+class FeloFormatError(Error):
+    """Error class for invalid values in the Felo file.
+    """
+    def __init__(self, description):
+        """Class constructor.
+
+        Parameters:
+        description -- error message.
+        """
         Error.__init__(self, description)
 
 class BootstrappingError(Error):
@@ -963,7 +977,13 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                 (bouts_base_filename, fencer.columnindex, fencer.name)
             if i < len(visible_fencers) - 1:
                 gnuplot_script += ", "
-        gnuplot = Popen(["gnuplot", "-"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        try:
+            gnuplot = Popen(["gnuplot", "-"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        except OSError:
+            raise ExternalProgramError(u'Das Programm "gnuplot" wurde nicht gefunden.  '
+                                       u'Das ist aber notwendig für die Plots.  '
+                                       u'Bitte von http://www.gnuplot.info/ installieren und '
+                                       u'in den PATH setzen.')
         gnuplot.communicate(gnuplot_script)
         try:
             call(["convert", bouts_base_filename+".ps", "-rotate", "90",
@@ -972,7 +992,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             raise ExternalProgramError(u'Das Programm "convert" von ImageMagick wurde nicht gefunden.  '
                                        u'Das ist aber notwendig für die Plots.  '
                                        u'Bitte von http://www.imagemagick.org/ installieren und '
-                                       u'in den PATH setzen.'.encode("utf-8"))
+                                       u'in den PATH setzen.')
         try:
             call(["ps2pdf", bouts_base_filename+".ps",
                   parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".pdf"])
@@ -980,7 +1000,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             raise ExternalProgramError(u'Das Programm "ps2pdf" von Ghostscript wurde nicht gefunden.  '
                                        u'Das ist aber notwendig für die Plots.  '
                                        u'Bitte von http://www.cs.wisc.edu/~ghost/ installieren und '
-                                       u'in den PATH setzen.'.encode("utf-8"))
+                                       u'in den PATH setzen.')
     if estimate_freshmen:
         return [fencer for fencer in fencers.values() if fencer.freshman]
     return visible_fencers
@@ -1088,5 +1108,5 @@ if __name__ == '__main__':
                 print>>output_file, "    " + fencer.name + (19-len(fencer.name))*" " + "\t" + \
                     unicode(fencer.felo_rating)
     except Error, e:
-        print>>sys.stderr, "felo_rating:", e.description.encode("utf-8")
+        print>>sys.stderr, "felo_rating:", e.description
         
