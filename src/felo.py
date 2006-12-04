@@ -23,19 +23,35 @@ class Editor(wx.py.editor.EditWindow):
         self.SetMarginWidth(0, self.TextWidth(wx.stc.STC_STYLE_LINENUMBER, "00000"))
         self.SetMarginWidth(1, 10)
         self.Bind(wx.stc.EVT_STC_STYLENEEDED, self.OnStyling)
+        self.bout_line_pattern = re.compile("\\s*(?P<date>\\d{4}/\\d{1,2}/[\\d.]{1,5})"
+                                            "\\s*\t+\\s*"
+                                            "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)\\s*\t+\\s*"
+                                            "(?P<score>\\d+:\\d+(?P<fenced_to>/\\d+)?)\\s*\\Z")
+        self.item_line_pattern = re.compile("\s*(?P<name>[^\t]+?)\\s*\t+\\s*(?P<value>.+?)\s*\\Z")
     def OnStyling(self, event):
-        return
+        def apply_style(span, style):
+            start, end = span
+            self.StartStyling(position+start, 0xff)
+            self.SetStyling(end-start, style)
         start, end = self.PositionFromLine(self.LineFromPosition(self.GetEndStyled())), event.GetPosition()
         text = self.GetTextRange(start, end)
-        position = 0
+        position = start
         lines = text.splitlines(True)
         for line in lines:
-            cleaned_line = line.lstrip()
-            if cleaned_line[0].isdigit():
-                # A bout line
-                pass
-        self.StartStyling(start, 0xff)
-        self.SetStyling(end-start, 5)
+            if line.lstrip().startswith("#"):
+                apply_style((0, len(line)), 6)
+            else:
+                match = self.bout_line_pattern.match(line)
+                if match:
+                    apply_style(match.span(1), 3)
+                    apply_style(match.span(2), 5)
+                    apply_style(match.span(3), 5)
+                    apply_style(match.span(5), 1)
+                else:
+                    match = self.item_line_pattern.match(line)
+                    if match:
+                        apply_style(match.span(1), 5)
+            position += len(line)
 
 class ResultFrame(wx.Frame):
     def __init__(self, results, *args, **keyw):
@@ -71,21 +87,21 @@ class Frame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnExit, exit)
         menu_bar.Append(menu_file, u"&Datei")
 
-        menu_edit = wx.Menu()
-        calculate_felo_numbers = menu_edit.Append(wx.ID_ANY, u"&Felo-Zahlen berechnen")
+        menu_calculate = wx.Menu()
+        calculate_felo_numbers = menu_calculate.Append(wx.ID_ANY, u"&Felo-Zahlen berechnen")
         self.Bind(wx.EVT_MENU, self.OnCalculateFeloRatings, calculate_felo_numbers)
-        generate_html = menu_edit.Append(wx.ID_ANY, u"&HTML erzeugen")
+        generate_html = menu_calculate.Append(wx.ID_ANY, u"&HTML erzeugen")
         self.Bind(wx.EVT_MENU, self.OnGenerateHTML, generate_html)
-        bootstrapping = menu_edit.Append(wx.ID_ANY, u"&Bootstrapping")
+        bootstrapping = menu_calculate.Append(wx.ID_ANY, u"&Bootstrapping")
         self.Bind(wx.EVT_MENU, self.OnBootstrapping, bootstrapping)
-        estimate_freshmen = menu_edit.Append(wx.ID_ANY, u"&Neulinge einschätzen")
+        estimate_freshmen = menu_calculate.Append(wx.ID_ANY, u"&Neulinge einschätzen")
         self.Bind(wx.EVT_MENU, self.OnEstimateFreshmen, estimate_freshmen)
-        menu_bar.Append(menu_edit, u"&Bearbeiten")
+        menu_bar.Append(menu_calculate, u"&Berechnen")
 
-        menu_edit = wx.Menu()
-        about = menu_edit.Append(wx.ID_ANY, u"Ü&ber")
+        menu_help = wx.Menu()
+        about = menu_help.Append(wx.ID_ANY, u"Ü&ber")
         self.Bind(wx.EVT_MENU, self.OnAbout, about)
-        menu_bar.Append(menu_edit, u"&Hilfe")
+        menu_bar.Append(menu_help, u"&Hilfe")
 
         self.SetMenuBar(menu_bar)
 
@@ -112,6 +128,7 @@ class Frame(wx.Frame):
             self.editor.SetScrollWidth(self.editor.TextWidth(wx.stc.STC_STYLE_DEFAULT, 68*"0"))
             self.editor.SetLexer(wx.stc.STC_LEX_CONTAINER)
             self.editor.Bind(wx.stc.EVT_STC_CHANGE, self.OnChange)
+            self.SendSizeEvent()
         self.editor.LoadFile(self.felo_filename)
         self.felo_file_changed = False
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
@@ -159,7 +176,7 @@ class Frame(wx.Frame):
         return True
     def parse_editor_contents(self):
         if not self.assure_open_felo_file():
-            return
+            return {}, {}, []
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
         try:
@@ -168,16 +185,17 @@ class Frame(wx.Frame):
             self.editor.GotoLine(e.linenumber - 1)
             wx.MessageBox(u"Fehler in Zeile %d: %s" % (e.linenumber, e.naked_description),
                           u"Parsefehler", wx.OK | wx.ICON_ERROR, self)
-            return
         except felo_rating.FeloFormatError, e:
             wx.MessageBox(e.description, u"Parsefehler", wx.OK | wx.ICON_ERROR, self)
-            return
         except Exception, e:
             wx.MessageBox(e.description, u"Allgemeiner Fehler", wx.OK | wx.ICON_ERROR, self)
-            return
-        return parameters, fencers, bouts
+        else:
+            return parameters, fencers, bouts
+        return {}, {}, []
     def OnCalculateFeloRatings(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
+        if not parameters:
+            return
         fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts)
         results = u""
         for fencer in fencerlist:
@@ -190,6 +208,8 @@ class Frame(wx.Frame):
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
         parameters, fencers, bouts = self.parse_editor_contents()
+        if not parameters:
+            return
         bouts.sort()
         last_date = time.strftime(u"%d.&nbsp;%B&nbsp;%Y", time.strptime(bouts[-1].date[:10], "%Y/%m/%d"))
         base_filename = parameters[u"Gruppenname"].lower()
