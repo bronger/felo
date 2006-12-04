@@ -23,7 +23,7 @@ def convert_date(date):
     return time.strftime(u"%d.&nbsp;%B&nbsp;%Y", time.strptime(date, "%Y/%m/%d"))
 
 mache_plots = True
-ausgabedatei = codecs.open("/home/bronger/aktuell/fechten/Intern/felo-zahlen.html",
+ausgabedatei = codecs.open("/home/bronger/aktuell/fechten/Statistics/felo-zahlen.html",
                            "w", "iso-8859-1")
 foil_parameters, _, foil_fencers, foil_bouts = parse_felo_file(codecs.open("florett.felo", encoding="utf-8"))
 epee_parameters, _, epee_fencers, epee_bouts = parse_felo_file(codecs.open("degen.felo", encoding="utf-8"))
@@ -59,11 +59,11 @@ for fechter in calculate_felo_ratings(foil_parameters, foil_fencers, foil_bouts,
     if fechter.total_weighting < 7:
         felo_zahl = "&asymp;&nbsp;" + felo_zahl
     print>>ausgabedatei, u"<tr><td>%s</td><td style='text-align:right'>%s</td></tr>" % (fechter.name, felo_zahl)
-shutil.copy2("florett.png", "/home/bronger/aktuell/fechten/Intern/")
-shutil.copy2("florett.pdf", "/home/bronger/aktuell/fechten/Intern/")
+shutil.copy2("florett.png", "/home/bronger/aktuell/fechten/Statistics/")
+shutil.copy2("florett.pdf", "/home/bronger/aktuell/fechten/Statistics/")
 print>>ausgabedatei, u"""</tbody>
 </table></p>
-</td><!--td style="text-align:center">
+</td><td style="text-align:center">
 <h2 id="degen">Degen</h2>
 <p style="font-size: medium;margin-top:-1ex">vom %s</p>
 <p style="font-size:large"><a href="felo-plots.html#degen">Zur Grafik &rarr;</a></p>
@@ -74,8 +74,8 @@ for fechter in calculate_felo_ratings(epee_parameters, epee_fencers, epee_bouts,
     if fechter.total_weighting < 7:
         felo_zahl = "&asymp;&nbsp;" + felo_zahl
     print>>ausgabedatei, u"<tr><td>%s</td><td style='text-align:right'>%s</td></tr>" % (fechter.name, felo_zahl)
-shutil.copy2("degen.png", "/home/bronger/aktuell/fechten/Intern/")
-shutil.copy2("degen.pdf", "/home/bronger/aktuell/fechten/Intern/")
+shutil.copy2("degen.png", "/home/bronger/aktuell/fechten/Statistics/")
+shutil.copy2("degen.pdf", "/home/bronger/aktuell/fechten/Statistics/")
 print>>ausgabedatei, u"""</tbody>
 </table>
 </td-->
@@ -84,7 +84,7 @@ print>>ausgabedatei, u"""</tbody>
 </table>
 </div>
 <p id="referenztabelle" style="max-width:30%">Als Orientierung:<!-- (Aber bitte nicht zu ernst nehmen, weil sich das
-auf internationale Wettkämpfe bezieht.)--></p>
+auf internationale Wettkämpfe bezieht.) --></p>
 <table cellspacing="5"><tbody>
 <tr><td>ab</td></tr>
 <tr><td>2500</td><td>Fechten wie ein junger Gott</td></tr>
@@ -99,6 +99,6 @@ auf internationale Wettkämpfe bezieht.)--></p>
 </html>
 """
 
-shutil.copy2("felo-plots.html", "/home/bronger/aktuell/fechten/Intern/")
-shutil.copy2("felo-faq.html", "/home/bronger/aktuell/fechten/Intern/")
+shutil.copy2("felo-plots.html", "/home/bronger/aktuell/fechten/Statistics/")
+shutil.copy2("felo-faq.html", "/home/bronger/aktuell/fechten/Statistics/")
 call(["sitecopy", "-u", "fechten"])
