@@ -39,7 +39,7 @@ datapath = os.path.abspath(os.path.dirname(__file__))
 
 class HtmlFrame(wx.Frame):
     def __init__(self, parent, file):
-        wx.Frame.__init__(self, parent, wx.ID_ANY, u"HTML Vorschau", size=(400, 600))
+        wx.Frame.__init__(self, parent, wx.ID_ANY, _(u"Preview HTML"), size=(400, 600))
         html = wx.html.HtmlWindow(self)
         if "gtk2" in wx.PlatformInfo:
             html.SetStandardFonts()
@@ -53,7 +53,7 @@ class Editor(wx.py.editor.EditWindow):
         self.SetMarginWidth(0, self.TextWidth(wx.stc.STC_STYLE_LINENUMBER, "00000"))
         self.SetMarginWidth(1, 10)
         self.Bind(wx.stc.EVT_STC_STYLENEEDED, self.OnStyling)
-        self.bout_line_pattern = re.compile("\\s*(?P<date>\\d{4}-\\d{1,2}-[\\d.]{1,5})"
+        self.bout_line_pattern = re.compile("\\s*(?P<date>\\d{4}-\\d{1,2}-\\d{1,2}(?:\\.\\d+)?)"
                                             "\\s*\t+\\s*"
                                             "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)\\s*\t+\\s*"
                                             "(?P<score>\\d+:\\d+(?P<fenced_to>/\\d+)?)\\s*\\Z")
@@ -210,15 +210,13 @@ class Frame(wx.Frame):
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
         try:
-            parameters, _, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
+            parameters, __, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         except felo_rating.LineError, e:
             self.editor.GotoLine(e.linenumber - 1)
             wx.MessageBox(_(u"Error in line %d: %s") % (e.linenumber, e.naked_description),
                           _(u"Parsing error"), wx.OK | wx.ICON_ERROR, self)
         except felo_rating.FeloFormatError, e:
             wx.MessageBox(e.description, _(u"Parsing error"), wx.OK | wx.ICON_ERROR, self)
-        except Exception, e:
-            wx.MessageBox(e.description, _(u"General error"), wx.OK | wx.ICON_ERROR, self)
         else:
             return parameters, fencers, bouts
         return {}, {}, []
@@ -241,7 +239,7 @@ class Frame(wx.Frame):
         if not parameters:
             return
         bouts.sort()
-        last_date = time.strftime(_(u"%d.&nbsp;%B&nbsp;%Y"), time.strptime(bouts[-1].date[:10], "%Y-%m-%d"))
+        last_date = time.strftime(_(u"%d.&nbsp;%B&nbsp;%Y"), time.strptime(bouts[-1].date_string[:10], "%Y-%m-%d"))
         base_filename = parameters["groupname"].lower()
         html_dialog = HTMLDialog(parameters[u"Ausgabeverzeichnis"])
         result = html_dialog.ShowModal()
@@ -295,7 +293,7 @@ class Frame(wx.Frame):
             return
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
-        parameters, _, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
+        parameters, __, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         felo_rating.calculate_felo_ratings(parameters, fencers, bouts, bootstrapping=True)
         for fencer in fencers.values():
             if not fencer.freshman:
@@ -305,15 +303,15 @@ class Frame(wx.Frame):
     def OnEstimateFreshmen(self, event):
         if not self.assure_open_felo_file():
             return
-        answer = wx.MessageBox(u"Das Einschätzen der Neulinge wird u.U. deren Fechter-Daten verändern.  "
-                               "Willst du wirklich fortfahren?",
-                               u"Einschätzen der Neulinge", wx.YES_NO | wx.NO_DEFAULT |
+        answer = wx.MessageBox(_(u"Estimating the freshmen will change their initial Felo numbers.  "
+                                 u"Are you sure that you wish to continue?"),
+                               _(u"Estimating freshmen"), wx.YES_NO | wx.NO_DEFAULT |
                                wx.ICON_QUESTION, self)
         if answer != wx.YES:
             return
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
-        parameters, _, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
+        parameters, __, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         felo_rating.calculate_felo_ratings(parameters, fencers, bouts, estimate_freshmen=True)
         for fencer in fencers.values():
             if fencer.freshman:
