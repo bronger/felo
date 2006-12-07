@@ -61,6 +61,9 @@ __version__ = "$Revision:  $"
 
 import codecs, re, os.path, datetime, time, shutil
 from subprocess import call, Popen, PIPE
+import gettext
+t = gettext.translation('felo', '/home/bronger/src/felo/src')
+_ = t.ugettext
 
 datapath = os.path.abspath(os.path.dirname(__file__))
 
@@ -915,10 +918,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                     # Generate tic marks not too densely; labels must be at
                     # least the the minimal tic distance apart.
                     last_xtics_daynumber = current_bout_daynumber
-                    # FixMe: Must be better translatable
-                    xtics += _("'%(year)d/%(month)d/%(day)d'") % {"day": bout.day, "month": bout.month,
-                                                                  "year": bout.year} + \
-                        " %d," % current_bout_daynumber
+                    xtics += bout.date.strftime(str(_(u"'%Y-%m-%d'"))) + " %d," % current_bout_daynumber
                 for fencer in visible_fencers:
                     data_file.write("\t" + str(fencer.felo_rating_exact))
                 data_file.write(os.linesep)
