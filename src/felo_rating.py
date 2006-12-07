@@ -99,7 +99,7 @@ def parse_items(input_file, linenumber=0):
         if line[0] in u"-=._:;,+*'~\"`´/\\%$!": break
         match = line_pattern.match(line)
         if not match:
-            raise LineError('Zeile muss nach dem Muster "Name <TAB> Wert" sein', input_file.name, linenumber)
+            raise LineError(_('Line must follow the pattern "name <TAB> value".'), input_file.name, linenumber)
         name, value = match.groups()
         try:
             items[name] = value
@@ -154,16 +154,16 @@ class Bout(object):
 
     def __get_date(self):
         if self.day - int(self.day) < 0.001:
-            return "%04d/%02d/%02d" % (self.year, self.month, self.day)
+            return "%04d-%02d-%02d" % (self.year, self.month, self.day)
         elif 10*self.day - int(10*self.day) < 0.01:
-            return "%04d/%02d/%04.1f" % (self.year, self.month, self.day)
+            return "%04d-%02d-%04.1f" % (self.year, self.month, self.day)
         else:
-            return "%04d/%02d/%05.2f" % (self.year, self.month, self.day)
+            return "%04d-%02d-%05.2f" % (self.year, self.month, self.day)
     def __set_date(self, date):
-        date_pattern = re.compile("\s*(?P<year>\\d{4})/(?P<month>\\d{1,2})/(?P<day>[\\d.]{1,5})\s*\\Z")
+        date_pattern = re.compile("\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>[\\d.]{1,5})\s*\\Z")
         match = date_pattern.match(date)
         if not match:
-            raise FeloFormatError("Ungültiger Datumsstring")
+            raise FeloFormatError(_("Invalid date string."))
         year, month, day = match.groups()
         self.year, self.month = int(year), int(month)
         self.day = float(day)
@@ -171,9 +171,11 @@ class Bout(object):
             self.day = int(day)
         except:
             pass
+    # FixMe: Should be changed to YYYY-MM-TT.II
     date = property(__get_date, __set_date, doc="""The date of the bout in its
-        string representation YYYY/MM/TT.II, where ".II" is the optional index.""")
+        string representation YYYY-MM-TT.II, where ".II" is the optional index.""")
 
+    # FixMe: Should be changed to datetime.date.toordinal()
     def daynumber(self):
         """The Julian day of the bout, not counting the sub-day fraction."""
         return julian_date(self.year, self.month, self.day)
@@ -524,7 +526,7 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
     Return values:
     A list with all bouts that were read.
     """
-    line_pattern = re.compile("\s*(?P<year>\\d{4})/(?P<month>\\d{1,2})/(?P<day>[\\d.]{1,5})"
+    line_pattern = re.compile("\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>[\\d.]{1,5})"
                                +separator+
                                "(?P<first>.+?)\s*--\s*(?P<second>.+?)"+separator+
                                "(?P<points_first>\\d+):(?P<points_second>\\d+)"+
@@ -536,8 +538,8 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
         if not line: continue
         match = line_pattern.match(line)
         if not match:
-            raise LineError('Zeile muss nach dem Muster "JJJJ/MM/TT <TAB> Name1 '
-                            '-- Name2 <TAB> Punkte1:Punkte2" sein',
+            raise LineError(_('Line must follow the pattern "YYYY-MM-DD <TAB> name1 '
+                              '-- name2 <TAB> points1:points2".'),
                         input_file.name, linenumber)
         year, month, day, first_fencer, second_fencer, points_first, points_second, fenced_to = \
             match.groups()
@@ -547,11 +549,11 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
         else:
             fenced_to = int(fenced_to)
         if fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
-            raise LineError("Einer hat mehr Punkte als die Siegerpunktezahl", input_file.name, linenumber)
+            raise LineError(_("One fencer has more points than the winning points."), input_file.name, linenumber)
         if first_fencer not in fencers:
-            raise LineError('Fencer "%s" is unknown' % first_fencer, input_file.name, linenumber)
+            raise LineError(_('Fencer "%s" is unknown.') % first_fencer, input_file.name, linenumber)
         if second_fencer not in fencers:
-            raise LineError('Fencer "%s" is unknown' % second_fencer, input_file.name, linenumber)
+            raise LineError(_('Fencer "%s" is unknown.') % second_fencer, input_file.name, linenumber)
         bouts.append(Bout(year, month, day, first_fencer, second_fencer,
                                 points_first, points_second, fenced_to))
     return bouts
@@ -566,23 +568,38 @@ def parse_felo_file(felo_file):
     Felo parameters as a dictionary, a list with all really in the file given
     parameters, fencers as a dictionary (name: Fencer object), bouts as a list.
     """
-    parameters, linenumber = parse_items(felo_file)
+    english_parameter_names = {_(u"k factor top fencers"): "k factor top fencers",
+                               _(u"felo rating top fencers"): "felo rating top fencers",
+                               _(u"k factor others"): "k factor others",
+                               _(u"k factor freshmen"): "k factor freshmen",
+                               _(u"5 point bouts freshmen"): "5 points bouts freshmen",
+                               _(u"minimal felo rating"): "minimal felo rating",
+                               _(u"5 point bouts for estimate"): "5 point bouts for estimate",
+                               _(u"groupname"): "groupname",
+                               _(u"output folder"): "output folder",
+                               _(u"min distance of plot tics"): "min distance of plot tics",
+                               _(u"minimal date in plot"): "minimal date in plot",
+                               _(u"maximal days in plot"): "maximal days in plot"}
+    parameters_native_language, linenumber = parse_items(felo_file)
+    parameters = {}
+    for native_name, value in parameters_native_language.items():
+        parameters[english_parameter_names[native_name]] = value
     given_parameters = list(parameters)
-    parameters.setdefault(u"k-Faktor Top-Fechter", 25)
-    parameters.setdefault(u"Elo-Zahl Top-Fechter", 2400)
-    parameters.setdefault(u"k-Faktor Rest", 32)
-    parameters.setdefault(u"k-Faktor Einsteiger", 40)
-    parameters.setdefault(u"5er-Gefechte Einsteiger", 15)
-    parameters.setdefault(u"Minimum Elo-Zahl", 1200)
-    parameters.setdefault(u"5er-Gefechte für Schätzung", 10)
+    parameters.setdefault("k factor top fencers", 25)
+    parameters.setdefault("felo rating top fencers", 2400)
+    parameters.setdefault("k factor others", 32)
+    parameters.setdefault("k factor freshmen", 40)
+    parameters.setdefault("5 points bouts freshmen", 15)
+    parameters.setdefault("minimal felo rating", 1200)
+    parameters.setdefault("5 point bouts for estimate", 10)
     # The groupname is used e.g. for the file names of the plots.  It defaults
     # to the name of the Felo file.
-    parameters.setdefault(u"Gruppenname",
+    parameters.setdefault("groupname",
                           os.path.splitext(os.path.split(felo_file.name)[1])[0].capitalize())
-    parameters.setdefault(u"Ausgabeverzeichnis", os.path.abspath(os.path.dirname(felo_file.name)))
-    parameters.setdefault(u"Plot-Tics Mindestabstand", 7)
-    parameters.setdefault(u"Plot Mindestdatum", "1500/00/00")
-    parameters.setdefault(u"Plot maximale Tage", "366")
+    parameters.setdefault("output folder", os.path.abspath(os.path.dirname(felo_file.name)))
+    parameters.setdefault("min distance of plot tics", 7)
+    parameters.setdefault("minimal date in plot", "1500-00-00")
+    parameters.setdefault("maximal days in plot", "366")
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
     fencers = {}
@@ -595,7 +612,7 @@ def parse_felo_file(felo_file):
                 initial_total_weighting = float(initial_felo_rating[position_opening_parenthesis+1:-1])
                 initial_felo_rating = int(initial_felo_rating[:position_opening_parenthesis])
             except ValueError:
-                raise FeloFormatError((u"Felo-Zahl von \"%s\" war ungültig." % name))
+                raise FeloFormatError(_(u"Felo rating of \"%s\" is invalid.") % name)
         aktueller_fechter = Fencer(name, initial_felo_rating, parameters, initial_total_weighting)
         fencers[aktueller_fechter.name] = aktueller_fechter
 
@@ -638,9 +655,9 @@ def write_felo_file(filename, parameters, fencers, bouts):
         print>>felo_file, fill_with_tabs(name, 4) + str(value)
     print>>felo_file
     print>>felo_file, 52 * "="
-    print>>felo_file, "# Anfangswerte"
-    print>>felo_file, "# Namen der Fechter, die versteckt bleiben wollen,"
-    print>>felo_file, "# in Klammern"
+    print>>felo_file, _("# Initial Felo ratings")
+    print>>felo_file, _("# Names of fencers who want to be hidden")
+    print>>felo_file, _("# in parentheses")
     print>>felo_file
     fencerslist = fencers.items()
     fencerslist.sort()
@@ -652,7 +669,7 @@ def write_felo_file(filename, parameters, fencers, bouts):
         print>>felo_file, fill_with_tabs(name, 3) + str(fencer.initial_felo_rating)
     print>>felo_file
     print>>felo_file, 52 * "="
-    print>>felo_file, "# Gefechte"
+    print>>felo_file, _("# Bouts")
     print>>felo_file
     bouts.sort()
     for i, bout in enumerate(bouts):
@@ -676,10 +693,10 @@ def write_back_fencers(felo_file_contents, fencers):
         if cleaned_line and cleaned_line[0] in u"-=._:;,+*'~\"`´/\\%$!":
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
-        raise FeloFormatError("Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien.")
-    fencer_lines = [u"# Anfangswerte",
-                    u"# Namen der Fechter, die versteckt bleiben wollen,",
-                    u"# in Klammern",
+        raise FeloFormatError(_("Felo file invalid because there are not exactly two boundary lines."))
+    fencer_lines = [u_("# Initial Felo ratings"),
+                    u_("# Names of fencers who want to be hidden"),
+                    u_("# in parentheses"),
                     u""]
     fencerslist = fencers.items()
     fencerslist.sort()
@@ -698,7 +715,7 @@ def write_back_fencers(felo_file_contents, fencers):
 def write_back_fencers_to_file(filename, fencers):
     filename_backup = os.path.splitext(filename)[0] + ".bak"
     if os.path.isfile(filename_backup):
-        raise Error(u"Erst die Sicherungskopie (Endung .bak) löschen.")
+        raise Error(_(u"First delete the backup (.bak) file."))
     shutil.copyfile(filename, filename_backup)
     felo_file = codecs.open(filename, encoding="utf-8")
     contents = felo_file.read()
@@ -739,7 +756,7 @@ class LineError(Error):
         if filename:
             supplement = filename
             if linenumber:
-                supplement += ", Zeile " + unicode(linenumber)
+                supplement += _(u", line ") + unicode(linenumber)
             description = supplement  + ": " + description
         Error.__init__(self, description)
 
@@ -818,7 +835,7 @@ class Fencer(object):
         # in units of "bout to 5 points"-equivalents.
         self.total_weighting = self.initial_total_weighting = self.total_weighting_preliminary = \
             initial_total_weighting
-        self.__k_factor = self.parameters[u"k-Faktor Rest"]
+        self.__k_factor = self.parameters["k factor others"]
         self.freshman = felo_rating == 0
         if not self.freshman:
             self.felo_rating = self.initial_felo_rating = self.felo_rating_preliminary = felo_rating
@@ -833,7 +850,7 @@ class Fencer(object):
             # Estimate initial Felo number according to the Austrian Method,
             # see http://www.chess.at/bundesspielleitung/OESB/oesb_tuwo_06.pdf
             # section 5.1 on page 43.
-            if self.total_weighting < self.parameters[u"5er-Gefechte für Schätzung"] or \
+            if self.total_weighting < self.parameters["5 point bouts for estimate"] or \
                     self.total_weighting == 0:
                 return 0.0
             A = self.total_result / self.total_weighting
@@ -844,15 +861,15 @@ class Fencer(object):
         return int(round(self.felo_rating_exact))
     def __set_felo_rating(self, felo_rating):
         if not self.freshman:
-            self.__felo_rating = max(felo_rating, self.parameters[u"Minimum Elo-Zahl"])
-            if self.__felo_rating >= self.parameters[u"Elo-Zahl Top-Fechter"]:
-                self.__k_factor = self.parameters[u"k-Faktor Top-Fechter"]
+            self.__felo_rating = max(felo_rating, self.parameters["minimal felo rating"])
+            if self.__felo_rating >= self.parameters["felo rating top fencers"]:
+                self.__k_factor = self.parameters["k factor top fencers"]
     felo_rating_exact = property(__get_felo_rating_exact, __set_felo_rating,
                                  doc="""Felo rating with decimal fraction.""")
     felo_rating = property(__get_felo_rating, __set_felo_rating, doc="""Felo rating, rounded to integer.""")
     def __get_k_factor(self):
-        if self.total_weighting < self.parameters[u"5er-Gefechte Einsteiger"]:
-            return self.parameters[u"k-Faktor Einsteiger"]
+        if self.total_weighting < self.parameters["5 point bouts freshmen"]:
+            return self.parameters["k factor freshmen"]
         return self.__k_factor
     k_factor = property(__get_k_factor)
     def __cmp__(self, other):
@@ -928,14 +945,17 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             # the parameters section; *and* the Felo ratings must not be older
             # than the maximal days in the plot.
             if plot and (i == len(bouts) - 1 or bouts[i+1].daynumber() != current_bout_daynumber) and \
-                    bout.date[:10] >= parameters[u"Plot Mindestdatum"] and \
-                    current_daynumber - current_bout_daynumber <= parameters[u"Plot maximale Tage"]:
+                    bout.date[:10] >= parameters["minimal date in plot"] and \
+                    current_daynumber - current_bout_daynumber <= parameters["maximal days in plot"]:
                 data_file.write(str(current_bout_daynumber))
-                if current_bout_daynumber - last_xtics_daynumber >= parameters[u"Plot-Tics Mindestabstand"]:
+                if current_bout_daynumber - last_xtics_daynumber >= parameters["min distance of plot tics"]:
                     # Generate tic marks not too densely; labels must be at
                     # least the the minimal tic distance apart.
                     last_xtics_daynumber = current_bout_daynumber
-                    xtics += "'%d.%d.%d' %d," % (bout.day, bout.month, bout.year, current_bout_daynumber)
+                    # FixMe: Must be better translatable
+                    xtics += _("'%(year)d/%(month)d/%(day)d'") % {"day": bout.day, "month": bout.month,
+                                                                  "year": bout.year} + \
+                        " %d," % current_bout_daynumber
                 for fencer in visible_fencers:
                     data_file.write("\t" + str(fencer.felo_rating_exact))
                 data_file.write(os.linesep)
@@ -948,7 +968,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         # Store the column index of the data file in the fencer object.  Needed
         # by Gnuplot.
         fencer.columnindex = index + 2
-    bouts_base_filename = parameters[u"Gruppenname"].lower()
+    bouts_base_filename = parameters["groupname"].lower()
     bouts.sort()
     if bootstrapping:
         for i in range(maxcycles):
@@ -961,7 +981,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             else:
                 break
         if i == maxcycles - 1:
-            raise BootstrappingError("Das Bootstrapping ist nicht konvergiert.")
+            raise BootstrappingError(_("The bootstrapping didn't converge."))
     xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename)
     visible_fencers.sort()    # Descending by Felo rating
     if plot:
@@ -980,27 +1000,27 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         try:
             gnuplot = Popen(["gnuplot", "-"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except OSError:
-            raise ExternalProgramError(u'Das Programm "gnuplot" wurde nicht gefunden.  '
-                                       u'Das ist aber notwendig für die Plots.  '
-                                       u'Bitte von http://www.gnuplot.info/ installieren und '
-                                       u'in den PATH setzen.')
+            raise ExternalProgramError(_(u'The program "gnuplot" wasn\'t found.  '
+                                         u'However, it is needed for the plots.  '
+                                         u'Please install it from http://www.gnuplot.info/ and '
+                                         u'set it into the PATH.'))
         gnuplot.communicate(gnuplot_script)
         try:
             call(["convert", bouts_base_filename+".ps", "-rotate", "90",
-                  parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".png"])
+                  parameters["output folder"] + "/" + bouts_base_filename+".png"])
         except OSError:
-            raise ExternalProgramError(u'Das Programm "convert" von ImageMagick wurde nicht gefunden.  '
-                                       u'Das ist aber notwendig für die Plots.  '
-                                       u'Bitte von http://www.imagemagick.org/ installieren und '
-                                       u'in den PATH setzen.')
+            raise ExternalProgramError(_(u'The program "convert" of ImageMagick wasn\'t found.  '
+                                         u'However, it is needed for the plots.  '
+                                         u'Please install it from http://www.imagemagick.org/ and '
+                                         u'set it into the PATH.'))
         try:
             call(["ps2pdf", bouts_base_filename+".ps",
-                  parameters[u"Ausgabeverzeichnis"] + "/" + bouts_base_filename+".pdf"])
+                  parameters["output folder"] + "/" + bouts_base_filename+".pdf"])
         except OSError:
-            raise ExternalProgramError(u'Das Programm "ps2pdf" von Ghostscript wurde nicht gefunden.  '
-                                       u'Das ist aber notwendig für die Plots.  '
-                                       u'Bitte von http://www.cs.wisc.edu/~ghost/ installieren und '
-                                       u'in den PATH setzen.')
+            raise ExternalProgramError(_(u'The program "ps2pdf" of Ghostscript wasn\'t found.  '
+                                         u'However, it is needed for the plots.  '
+                                         u'Please install it from http://www.cs.wisc.edu/~ghost/ and '
+                                         u'set it into the PATH.'))
     if estimate_freshmen:
         return [fencer for fencer in fencers.values() if fencer.freshman]
     return visible_fencers
@@ -1064,27 +1084,27 @@ if __name__ == '__main__':
     import sys, optparse
     option_parser = optparse.OptionParser()
     option_parser.add_option("-p", "--plots", action="store_true", dest="plots",
-                             help=u"Erzeuge Plots der Felo-Zahlen", default=False)
+                             help=_(u"Generate plots with the Felo ratings"), default=False)
     option_parser.add_option("-b", "--bootstrap", action="store_true", dest="bootstrap",
-                             help=u"Versuche, gute Start-Felo-Zahlen fuer alle zu berechnen", default=False)
+                             help=_(u"Try to estimage good initial values for all fencers"), default=False)
     option_parser.add_option("--max-cycles", type="int",
-                             dest="max_cycles", help=u"Maximale Iterationsschritte beim "
-                             "Bootstrapping.  Default: 1000",
-                             default=1000, metavar="NUMMER")
+                             dest="max_cycles", help=_(u"Maximal iteration steps during bootstrapping."
+                                                       "  Default: 1000"),
+                             default=1000, metavar=_(u"NUMBER"))
     option_parser.add_option("--estimate-freshmen", action="store_true", dest="estimate_freshmen",
-                             help=u"Versuche, Neueinsteiger zu bewerten", default=False)
+                             help=_(u"Try to estimate freshmen"), default=False)
     option_parser.add_option("--write-back", action="store_true", dest="write_back",
-                             help=u"Schreibe die neuen Startzahlen zurueck in die Felo-Datei",
+                             help=_(u"Write the new initial values back into the Felo file"),
                              default=False)
     option_parser.add_option("-o", "--output", type="string",
-                             dest="output_file", help=u"Name der Ausgabedatei.  "
-                             "Default: Ausgabe auf dem Bildschirm (stdout)",
-                             default=None, metavar="DATEINAME")
+                             dest="output_file",
+                             help=_(u"Name of the output file.  Default: output to the screen (stdout)"),
+                             default=None, metavar=_(u"FILENAME"))
     options, felo_filenames = option_parser.parse_args()
 
     try:
         if options.estimate_freshmen and options.bootstrap:
-            raise Error("Man kann nicht gleichzeitig bootstrappen und Neueinsteiger bewerten.")
+            raise Error(_(u"You cannot bootstrap and estimate freshmen at the same time."))
         if options.output_file:
             output_file = codecs.open(options.output_file, "w")
         else:
@@ -1103,7 +1123,7 @@ if __name__ == '__main__':
                 write_back_fencers_to_file(felo_filename, fencers)
             if len(felo_filenames) > 1:
                 if i >= 1: print>>output_file
-                print>>output_file, parameters["Gruppenname"] + ":"
+                print>>output_file, parameters["groupname"] + ":"
             for fencer in resultslist:
                 print>>output_file, "    " + fencer.name + (19-len(fencer.name))*" " + "\t" + \
                     unicode(fencer.felo_rating)
