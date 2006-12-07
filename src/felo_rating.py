@@ -59,7 +59,7 @@ __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_fe
 __version__ = "$Revision:  $"
 # $Source:  $
 
-import codecs, re, os.path, time, shutil
+import codecs, re, os.path, datetime, time, shutil
 from subprocess import call, Popen, PIPE
 
 datapath = os.path.abspath(os.path.dirname(__file__))
@@ -115,16 +115,15 @@ class Bout(object):
     It is not very active in the sense that is has many methods.  Actually it's
     just a container for the attributes of a bout.
     """
-    def __init__(self, year, month, day, first_fencer="", second_fencer="",
+    def __init__(self, year, month, day, index=0, first_fencer="", second_fencer="",
                  points_first=0, points_second=0, fenced_to=10):
         """Class constructor.
 
         Parameters:
         year -- year of the bout.
         month -- month of the bout.
-        day -- day of te bout.  This is a float because it may contain some
-            sort of sub-index in order to bring the bouts of a day in an
-            order.  It may have two digits after the decimal point.
+        day -- day of the bout.
+        index -- a number for bringing the bouts of a day in an order.
         first_fencer -- name of the first fencer.
         second_fencer -- name of the second fencer.
         points_first -- points won by the first fencer.
@@ -132,82 +131,38 @@ class Bout(object):
         fenced_to -- winning points of the bout.  May be e.g. 5, 10, or 15.
             "0" means that the bout was part of a relay team competition.
         """
-        self.year = int(year)
-        self.month = int(month)
-        self.day = float(day)
+        self.date = datetime.date(year, month, day)
+        self.index = index
         self.first_fencer = first_fencer
         self.second_fencer = second_fencer
         self.points_first = int(points_first)
         self.points_second = int(points_second)
         self.fenced_to = int(fenced_to)
-
     def __cmp__(self, other):
         """If bouts are sorted with "sort()", they are sorted by their date,
         with early bouts first.
         """
-        if cmp(self.year, other.year):
-            return cmp(self.year, other.year)
-        elif cmp(self.month, other.month):
-            return cmp(self.month, other.month)
+        if cmp(self.date, other.date):
+            return cmp(self.date, other.date)
         else:
-            return cmp(self.day, other.day)
-
-    def __get_date(self):
-        if self.day - int(self.day) < 0.001:
-            return "%04d-%02d-%02d" % (self.year, self.month, self.day)
-        elif 10*self.day - int(10*self.day) < 0.01:
-            return "%04d-%02d-%04.1f" % (self.year, self.month, self.day)
-        else:
-            return "%04d-%02d-%05.2f" % (self.year, self.month, self.day)
-    def __set_date(self, date):
-        date_pattern = re.compile("\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>[\\d.]{1,5})\s*\\Z")
-        match = date_pattern.match(date)
-        if not match:
-            raise FeloFormatError(_("Invalid date string."))
-        year, month, day = match.groups()
-        self.year, self.month = int(year), int(month)
-        self.day = float(day)
+            return cmp(self.index, other.index)
+    def __get_date_string(self):
+        result = self.date.isoformat()
+        if self.index != 0:
+            result += "." + str(self.index)
+        return result
+    def __set_date_string(self, date_string):
         try:
-            self.day = int(day)
-        except:
-            pass
-    # FixMe: Should be changed to YYYY-MM-TT.II
-    date = property(__get_date, __set_date, doc="""The date of the bout in its
+            dot_position = date_string.find(".")
+            if dot_position == -1:
+                self.index = 0
+            else:
+                self.index = int(date_string[dot_position+1:])
+            self.date = datetime.date(date_string[:4], date_string[5:7], date_string[8:10])
+        except (ValueError, TypeError):
+            raise FeloFormatError(_("Invalid date string."))
+    date_string = property(__get_date_string, __set_date_string, doc="""The date of the bout in its
         string representation YYYY-MM-TT.II, where ".II" is the optional index.""")
-
-    # FixMe: Should be changed to datetime.date.toordinal()
-    def daynumber(self):
-        """The Julian day of the bout, not counting the sub-day fraction."""
-        return julian_date(self.year, self.month, self.day)
-
-def julian_date(year, month, day):
-        """The Julian day of the date, not counting the sub-day fraction."""
-        if month <= 2:
-            month += 12
-            year -= 1
-        B = int(year/400) - int(year/100)
-        return int(365.25*year) + int(30.6001*(month+1)) + B + 1720996 + int(day)
-
-def calendar_date(daynumber):
-    """The calendar date of a Julian day.  This function is the inverse of
-    Bout.daynumber().
-
-    Parameters:
-    daynumber -- the Julian day of the date in question.
-
-    Result:
-    year, month, and day for the given date.  All integers.
-    """
-    a = int(daynumber + 0.5)
-    b = int((a - 1867216.25) / 36524.25)
-    c = a + b - int(b/4.0) + 1525
-    d = int((c - 122.1) / 365.25)
-    e = int(365.25 * d)
-    f = int((c - e) / 30.6001)
-    day = c - e - int(30.6001 * f)
-    month = f - 1 - 12 * int(f/14.0)
-    year = d - 4715 - int((7 + month) / 10.0)
-    return year, month, day
 
 apparent_expectation_values = \
     [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -674,9 +629,9 @@ def write_felo_file(filename, parameters, fencers, bouts):
     bouts.sort()
     for i, bout in enumerate(bouts):
         # Separate days for clarity
-        if i > 0 and bouts[i-1].daynumber() != bout.daynumber():
+        if i > 0 and bouts[i-1].date.toordinal() != bout.date.toordinal():
             print>>felo_file
-        line = fill_with_tabs(fill_with_tabs(bout.date, 2) +
+        line = fill_with_tabs(fill_with_tabs(bout.date_string, 2) +
                                "%s -- %s" % (bout.first_fencer, bout.second_fencer), 5) + \
                                "%d:%d" % (bout.points_first, bout.points_second)
         if bout.fenced_to == 0 or (bout.points_first != bout.fenced_to and
@@ -931,11 +886,11 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             last_xtics_daynumber = 0
         for i, bout in enumerate(bouts):
             set_preliminary_felo_ratings(fencers, bout, parameters)
-            if i == len(bouts) - 1 or bout.date != bouts[i+1].date:
+            if i == len(bouts) - 1 or bout.date_string != bouts[i+1].date_string:
                 # Not one *day* is over but one set of bouts which took place with
                 # unknown order.
                 adopt_preliminary_felo_ratings()
-            current_bout_daynumber = bout.daynumber()
+            current_bout_daynumber = bout.date.toordinal()
             year, month, day, _, _, _, _, _, _ = time.localtime()
             current_daynumber = julian_date(year, month, day)
             # There are three conditions so that plot points are created: We
@@ -944,8 +899,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             # anyway); the Felo ratings must be after the minimal date given in
             # the parameters section; *and* the Felo ratings must not be older
             # than the maximal days in the plot.
-            if plot and (i == len(bouts) - 1 or bouts[i+1].daynumber() != current_bout_daynumber) and \
-                    bout.date[:10] >= parameters["minimal date in plot"] and \
+            if plot and (i == len(bouts) - 1 or bouts[i+1].date.toordinal() != current_bout_daynumber) and \
+                    bout.date_string[:10] >= parameters["minimal date in plot"] and \
                     current_daynumber - current_bout_daynumber <= parameters["maximal days in plot"]:
                 data_file.write(str(current_bout_daynumber))
                 if current_bout_daynumber - last_xtics_daynumber >= parameters["min distance of plot tics"]:
