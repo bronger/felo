@@ -1,9 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+#    felo.py - Main GUI part of the Felo program
+#
+#    Copyright © 2006 Torsten Bronger <bronger@physik.rwth-aachen.de>
+#
+#    This file is part of the Felo program.
+#
+#    Felo is free software; you can redistribute it and/or modify it under
+#    the terms of the MIT licence:
+#
+#    Permission is hereby granted, free of charge, to any person obtaining a
+#    copy of this software and associated documentation files (the "Software"),
+#    to deal in the Software without restriction, including without limitation
+#    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+#    and/or sell copies of the Software, and to permit persons to whom the
+#    Software is furnished to do so, subject to the following conditions:
+#
+#    The above copyright notice and this permission notice shall be included in
+#    all copies or substantial portions of the Software.
+#
+#    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+#    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+#    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+#    DEALINGS IN THE SOFTWARE.
+#
 
 import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html
 import felo_rating
 import re, os, codecs, sys, time, StringIO, textwrap, platform
+import gettext
+gettext.install('felo', '.', unicode=True)
 
 datapath = os.path.abspath(os.path.dirname(__file__))
 
@@ -23,7 +53,7 @@ class Editor(wx.py.editor.EditWindow):
         self.SetMarginWidth(0, self.TextWidth(wx.stc.STC_STYLE_LINENUMBER, "00000"))
         self.SetMarginWidth(1, 10)
         self.Bind(wx.stc.EVT_STC_STYLENEEDED, self.OnStyling)
-        self.bout_line_pattern = re.compile("\\s*(?P<date>\\d{4}/\\d{1,2}/[\\d.]{1,5})"
+        self.bout_line_pattern = re.compile("\\s*(?P<date>\\d{4}-\\d{1,2}-[\\d.]{1,5})"
                                             "\\s*\t+\\s*"
                                             "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)\\s*\t+\\s*"
                                             "(?P<score>\\d+:\\d+(?P<fenced_to>/\\d+)?)\\s*\\Z")
@@ -76,32 +106,32 @@ class Frame(wx.Frame):
         menu_bar = wx.MenuBar()
 
         menu_file = wx.Menu()
-        open = menu_file.Append(wx.ID_ANY, u"Ö&ffnen")
+        open = menu_file.Append(wx.ID_ANY, _(u"&Open"))
         self.Bind(wx.EVT_MENU, self.OnOpen, open)
-        save = menu_file.Append(wx.ID_ANY, u"&Speichern")
+        save = menu_file.Append(wx.ID_ANY, _(u"&Save"))
         self.Bind(wx.EVT_MENU, self.OnSave, save)
-        save_as = menu_file.Append(wx.ID_ANY, u"Speichern &unter")
+        save_as = menu_file.Append(wx.ID_ANY, _(u"Save &as"))
         self.Bind(wx.EVT_MENU, self.OnSaveAs, save_as)
         menu_file.AppendSeparator()
-        exit = menu_file.Append(wx.ID_ANY, u"&Beenden")
+        exit = menu_file.Append(wx.ID_ANY, _(u"&Quit"))
         self.Bind(wx.EVT_MENU, self.OnExit, exit)
-        menu_bar.Append(menu_file, u"&Datei")
+        menu_bar.Append(menu_file, _(u"&File"))
 
         menu_calculate = wx.Menu()
-        calculate_felo_numbers = menu_calculate.Append(wx.ID_ANY, u"&Felo-Zahlen berechnen")
+        calculate_felo_numbers = menu_calculate.Append(wx.ID_ANY, _(u"Calculdate &Felo ratings"))
         self.Bind(wx.EVT_MENU, self.OnCalculateFeloRatings, calculate_felo_numbers)
-        generate_html = menu_calculate.Append(wx.ID_ANY, u"&HTML erzeugen")
+        generate_html = menu_calculate.Append(wx.ID_ANY, _(u"Generate &HTML"))
         self.Bind(wx.EVT_MENU, self.OnGenerateHTML, generate_html)
-        bootstrapping = menu_calculate.Append(wx.ID_ANY, u"&Bootstrapping")
+        bootstrapping = menu_calculate.Append(wx.ID_ANY, _(u"&Bootstrapping"))
         self.Bind(wx.EVT_MENU, self.OnBootstrapping, bootstrapping)
-        estimate_freshmen = menu_calculate.Append(wx.ID_ANY, u"&Neulinge einschätzen")
+        estimate_freshmen = menu_calculate.Append(wx.ID_ANY, _(u"&Estimate freshmen"))
         self.Bind(wx.EVT_MENU, self.OnEstimateFreshmen, estimate_freshmen)
-        menu_bar.Append(menu_calculate, u"&Berechnen")
+        menu_bar.Append(menu_calculate, _(u"&Calculate"))
 
         menu_help = wx.Menu()
-        about = menu_help.Append(wx.ID_ANY, u"Ü&ber")
+        about = menu_help.Append(wx.ID_ANY, _(u"&About"))
         self.Bind(wx.EVT_MENU, self.OnAbout, about)
-        menu_bar.Append(menu_help, u"&Hilfe")
+        menu_bar.Append(menu_help, _(u"&Help"))
 
         self.SetMenuBar(menu_bar)
 
@@ -113,8 +143,8 @@ class Frame(wx.Frame):
         self.felo_file_changed = True
     def AssureSave(self):
         if self.editor and self.felo_file_changed:
-            answer = wx.MessageBox(u"Die Datei \"%s\" wurde verändert.  Abspeichern?" % self.felo_filename,
-                                   u"Datei verändert", wx.YES_NO | wx.CANCEL | wx.YES_DEFAULT |
+            answer = wx.MessageBox(_(u"The file \"%s\" has changed.  Save it?") % self.felo_filename,
+                                   _(u"File changed"), wx.YES_NO | wx.CANCEL | wx.YES_DEFAULT |
                                    wx.ICON_QUESTION, self)
             if answer == wx.YES:
                 self.editor.SaveFile(self.felo_filename)
@@ -136,9 +166,9 @@ class Frame(wx.Frame):
     def OnOpen(self, event):
         if self.AssureSave == wx.CANCEL:
             return
-        wildcard = u"Felo-Datei (*.felo)|*.felo|" \
-            "Alle Dateien (*.*)|*.*"
-        dialog = wx.FileDialog(None, u"Felo-Datei wählen", os.getcwd(),
+        wildcard = _(u"Felo file (*.felo)|*.felo|"
+                     "All files (*.*)|*.*")
+        dialog = wx.FileDialog(None, _(u"Select Felo file"), os.getcwd(),
                                "", wildcard, wx.OPEN | wx.FILE_MUST_EXIST)
         if dialog.ShowModal() == wx.ID_OK:
             self.open_felo_file(dialog.GetPath())
@@ -159,9 +189,9 @@ class Frame(wx.Frame):
         self.save_felo_file()
     def OnSaveAs(self, event):
         if self.editor:
-            wildcard = u"Felo-Datei (*.felo)|*.felo|" \
-                "Alle Dateien (*.*)|*.*"
-            dialog = wx.FileDialog(None, u"Felo-Datei wählen", os.getcwd(),
+            wildcard = _(u"Felo file (*.felo)|*.felo|"
+                         "All files (*.*)|*.*")
+            dialog = wx.FileDialog(None, _(u"Select Felo file"), os.getcwd(),
                                    "", wildcard, wx.SAVE | wx.OVERWRITE_PROMPT)
             if dialog.ShowModal() == wx.ID_OK:
                 self.felo_filename = dialog.GetPath()
@@ -170,8 +200,8 @@ class Frame(wx.Frame):
     
     def assure_open_felo_file(self):
         if not self.editor:
-            wx.MessageBox(u"Bitte öffne erst eine Felo-Datei." ,
-                          u"Hinweis", wx.OK | wx.ICON_INFORMATION, self)
+            wx.MessageBox(_(u"Please first open a Felo file.") ,
+                          _(u"Notification"), wx.OK | wx.ICON_INFORMATION, self)
             return False
         return True
     def parse_editor_contents(self):
@@ -183,12 +213,12 @@ class Frame(wx.Frame):
             parameters, _, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         except felo_rating.LineError, e:
             self.editor.GotoLine(e.linenumber - 1)
-            wx.MessageBox(u"Fehler in Zeile %d: %s" % (e.linenumber, e.naked_description),
-                          u"Parsefehler", wx.OK | wx.ICON_ERROR, self)
+            wx.MessageBox(_(u"Error in line %d: %s") % (e.linenumber, e.naked_description),
+                          _(u"Parsing error"), wx.OK | wx.ICON_ERROR, self)
         except felo_rating.FeloFormatError, e:
-            wx.MessageBox(e.description, u"Parsefehler", wx.OK | wx.ICON_ERROR, self)
+            wx.MessageBox(e.description, _(u"Parsing error"), wx.OK | wx.ICON_ERROR, self)
         except Exception, e:
-            wx.MessageBox(e.description, u"Allgemeiner Fehler", wx.OK | wx.ICON_ERROR, self)
+            wx.MessageBox(e.description, _(u"General error"), wx.OK | wx.ICON_ERROR, self)
         else:
             return parameters, fencers, bouts
         return {}, {}, []
@@ -211,8 +241,8 @@ class Frame(wx.Frame):
         if not parameters:
             return
         bouts.sort()
-        last_date = time.strftime(u"%d.&nbsp;%B&nbsp;%Y", time.strptime(bouts[-1].date[:10], "%Y/%m/%d"))
-        base_filename = parameters[u"Gruppenname"].lower()
+        last_date = time.strftime(_(u"%d.&nbsp;%B&nbsp;%Y"), time.strptime(bouts[-1].date[:10], "%Y-%m-%d"))
+        base_filename = parameters["groupname"].lower()
         html_dialog = HTMLDialog(parameters[u"Ausgabeverzeichnis"])
         result = html_dialog.ShowModal()
         make_plot = html_dialog.plot_switch.GetValue()
@@ -231,7 +261,7 @@ class Frame(wx.Frame):
 @import "felo.css";
 /*]]>*/
 </style></head><body>\n\n<h1>%(title)s</h1>\n<h2>%(date)s</h2>\n\n<table><tbody>""" % \
-            {"title": u"Felo-Zahlen "+parameters[u"Gruppenname"], "date": u"vom "+last_date}
+            {"title": u"Felo-Zahlen "+parameters["groupname"], "date": u"vom "+last_date}
         try:
             fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts, plot=make_plot)
         except felo_rating.ExternalProgramError, e:
@@ -243,7 +273,7 @@ class Frame(wx.Frame):
         print>>html_file, u"</tbody></table>"
         if make_plot:
             print>>html_file, u"<p class='felo-plot'><img class='felo-plot' src='%s.png' alt='%s' /></p>" % \
-                (base_filename, u"Felo-Zahlen-Plot für "+parameters[u"Gruppenname"])
+                (base_filename, u"Felo-Zahlen-Plot für "+parameters["groupname"])
             print>>html_file, u"<p class='printable-notice'>Auch in einer <a href='%s.pdf'>" \
                 "ausdruckbaren Version</a>.</p>" % base_filename
             file_list += base_filename+".png\n"
