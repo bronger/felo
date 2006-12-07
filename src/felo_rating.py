@@ -157,13 +157,10 @@ class Bout(object):
         match = Bout.date_pattern(date_string)
         if not match:
             raise FeloFormatError(_("Invalid date string."))
-        year, month, day, index = match.groups()
+        year, month, day, index = match.groups("0")
         try:
             self.date = datetime.date(int(year), int(month), int(day))
-            if index:
-                self.index = int(index)
-            else:
-                self.index = 0
+            self.index = int(index)
         except (ValueError):
             raise FeloFormatError(_("Invalid date string."))
     date_string = property(__get_date_string, __set_date_string, doc="""The date of the bout in its
@@ -503,7 +500,7 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
                               '-- name2 <TAB> points1:points2".'),
                         input_file.name, linenumber)
         year, month, day, index, first_fencer, second_fencer, points_first, points_second, fenced_to = \
-            match.groups("0")
+            match.groups()
         points_first, points_second = int(points_first), int(points_second)
         if not fenced_to:
             fenced_to = max(points_first, points_second)
@@ -515,6 +512,8 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
             raise LineError(_('Fencer "%s" is unknown.') % first_fencer, input_file.name, linenumber)
         if second_fencer not in fencers:
             raise LineError(_('Fencer "%s" is unknown.') % second_fencer, input_file.name, linenumber)
+        if not index:
+            index = "0"
         bouts.append(Bout(int(year), int(month), int(day), int(index), first_fencer, second_fencer,
                                 points_first, points_second, fenced_to))
     return bouts
@@ -562,7 +561,7 @@ def parse_felo_file(felo_file):
                           os.path.splitext(os.path.split(felo_file.name)[1])[0].capitalize())
     parameters.setdefault("output folder", os.path.abspath(os.path.dirname(felo_file.name)))
     parameters.setdefault("min distance of plot tics", 7)
-    parameters.setdefault("minimal date in plot", "1500-00-00")
+    parameters.setdefault("minimal date in plot", "1980-01-01")
     parameters.setdefault("maximal days in plot", "366")
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
@@ -1093,4 +1092,3 @@ if __name__ == '__main__':
                     unicode(fencer.felo_rating)
     except Error, e:
         print>>sys.stderr, "felo_rating:", e.description
-        
