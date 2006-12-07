@@ -115,6 +115,8 @@ class Bout(object):
     It is not very active in the sense that is has many methods.  Actually it's
     just a container for the attributes of a bout.
     """
+    date_pattern = re.compile("\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2})"
+                              "(?:\\.(?P<index>\\d+))")
     def __init__(self, year, month, day, index=0, first_fencer="", second_fencer="",
                  points_first=0, points_second=0, fenced_to=10):
         """Class constructor.
@@ -152,14 +154,17 @@ class Bout(object):
             result += "." + str(self.index)
         return result
     def __set_date_string(self, date_string):
+        match = Bout.date_pattern(date_string)
+        if not match:
+            raise FeloFormatError(_("Invalid date string."))
+        year, month, day, index = match.groups()
         try:
-            dot_position = date_string.find(".")
-            if dot_position == -1:
-                self.index = 0
+            self.date = datetime.date(int(year), int(month), int(day))
+            if index:
+                self.index = int(index)
             else:
-                self.index = int(date_string[dot_position+1:])
-            self.date = datetime.date(date_string[:4], date_string[5:7], date_string[8:10])
-        except (ValueError, TypeError):
+                self.index = 0
+        except (ValueError):
             raise FeloFormatError(_("Invalid date string."))
     date_string = property(__get_date_string, __set_date_string, doc="""The date of the bout in its
         string representation YYYY-MM-TT.II, where ".II" is the optional index.""")
@@ -481,11 +486,12 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
     Return values:
     A list with all bouts that were read.
     """
-    line_pattern = re.compile("\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>[\\d.]{1,5})"
-                               +separator+
-                               "(?P<first>.+?)\s*--\s*(?P<second>.+?)"+separator+
-                               "(?P<points_first>\\d+):(?P<points_second>\\d+)"+
-                               "(?:/(?P<fenced_to>\\d+))?\s*\\Z")
+    line_pattern = re.compile("\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2})"
+                              "(?:\\.(?P<index>\\d+))?"
+                              +separator+
+                              "(?P<first>.+?)\s*--\s*(?P<second>.+?)"+separator+
+                              "(?P<points_first>\\d+):(?P<points_second>\\d+)"+
+                              "(?:/(?P<fenced_to>\\d+))?\s*\\Z")
     bouts = []
     for line in input_file:
         linenumber += 1
@@ -496,8 +502,8 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
             raise LineError(_('Line must follow the pattern "YYYY-MM-DD <TAB> name1 '
                               '-- name2 <TAB> points1:points2".'),
                         input_file.name, linenumber)
-        year, month, day, first_fencer, second_fencer, points_first, points_second, fenced_to = \
-            match.groups()
+        year, month, day, index, first_fencer, second_fencer, points_first, points_second, fenced_to = \
+            match.groups("0")
         points_first, points_second = int(points_first), int(points_second)
         if not fenced_to:
             fenced_to = max(points_first, points_second)
@@ -509,7 +515,7 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
             raise LineError(_('Fencer "%s" is unknown.') % first_fencer, input_file.name, linenumber)
         if second_fencer not in fencers:
             raise LineError(_('Fencer "%s" is unknown.') % second_fencer, input_file.name, linenumber)
-        bouts.append(Bout(year, month, day, first_fencer, second_fencer,
+        bouts.append(Bout(int(year), int(month), int(day), int(index), first_fencer, second_fencer,
                                 points_first, points_second, fenced_to))
     return bouts
 
@@ -527,7 +533,7 @@ def parse_felo_file(felo_file):
                                _(u"felo rating top fencers"): "felo rating top fencers",
                                _(u"k factor others"): "k factor others",
                                _(u"k factor freshmen"): "k factor freshmen",
-                               _(u"5 point bouts freshmen"): "5 points bouts freshmen",
+                               _(u"5 point bouts freshmen"): "5 point bouts freshmen",
                                _(u"minimal felo rating"): "minimal felo rating",
                                _(u"5 point bouts for estimate"): "5 point bouts for estimate",
                                _(u"groupname"): "groupname",
@@ -537,14 +543,17 @@ def parse_felo_file(felo_file):
                                _(u"maximal days in plot"): "maximal days in plot"}
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
-    for native_name, value in parameters_native_language.items():
-        parameters[english_parameter_names[native_name]] = value
+    try:
+        for native_name, value in parameters_native_language.items():
+            parameters[english_parameter_names[native_name]] = value
+    except KeyError, e:
+        raise FeloFormatError(_(u"Parameter \"%s\" is unknown.") % e[0])
     given_parameters = list(parameters)
     parameters.setdefault("k factor top fencers", 25)
     parameters.setdefault("felo rating top fencers", 2400)
     parameters.setdefault("k factor others", 32)
     parameters.setdefault("k factor freshmen", 40)
-    parameters.setdefault("5 points bouts freshmen", 15)
+    parameters.setdefault("5 point bouts freshmen", 15)
     parameters.setdefault("minimal felo rating", 1200)
     parameters.setdefault("5 point bouts for estimate", 10)
     # The groupname is used e.g. for the file names of the plots.  It defaults
@@ -891,8 +900,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                 # unknown order.
                 adopt_preliminary_felo_ratings()
             current_bout_daynumber = bout.date.toordinal()
-            year, month, day, _, _, _, _, _, _ = time.localtime()
-            current_daynumber = julian_date(year, month, day)
+            year, month, day, __, __, __, __, __, __ = time.localtime()
+            current_daynumber = datetime.date(year, month, day).toordinal()
             # There are three conditions so that plot points are created: We
             # must have a new day, so we don't generate points within one day
             # (too fine-grained, and no real times are known within one day
@@ -1019,7 +1028,7 @@ def prognosticate_bout(first_fencer, second_fencer, fenced_to):
         points_second = fenced_to
     for line in file(datapath+"/auf%d.dat" % fenced_to):
         if line[0] != "#":
-            result_first, winning_chance_first, _ = line.split()
+            result_first, winning_chance_first, __ = line.split()
             result_first, winning_chance_first = float(result_first), float(winning_chance_first)
             if abs(expectation_first - result_first) < 0.0051:
                 break
