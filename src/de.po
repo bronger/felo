@@ -7,13 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Felo 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-06 20:38+0100\n"
-"PO-Revision-Date: 2006-12-06 20:43+0100\n"
+"POT-Creation-Date: 2006-12-07 23:38+0100\n"
+"PO-Revision-Date: 2006-12-07 23:34+0100\n"
 "Last-Translator: Torsten Bronger <bronger@physik.rwth-aachen.de>\n"
 "Language-Team: German <bronger@physik.rwth-aachen.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: felo.py:42
+msgid "Preview HTML"
+msgstr "HTML Vorschau"
 
 #: felo.py:109
 msgid "&Open"
@@ -97,130 +101,142 @@ msgstr "Fehler in Zeile %d: %s"
 msgid "Parsing error"
 msgstr "Parsefehler"
 
-#: felo.py:221
-msgid "General error"
-msgstr "Allgemeiner Fehler"
-
-#: felo.py:244
+#: felo.py:242
 msgid "%d.&nbsp;%B&nbsp;%Y"
 msgstr "%d.&nbsp;%B&nbsp;%Y"
+
+#: felo.py:306
+msgid ""
+"Estimating the freshmen will change their initial Felo numbers.  Are you "
+"sure that you wish to continue?"
+msgstr ""
+"Das Einschätzen der Neulinge wird u.U. deren Fechter-Daten verändern.  "
+"Willst du wirklich fortfahren?\""
+
+#: felo.py:308
+msgid "Estimating freshmen"
+msgstr "Einschätzen der Neulinge"
 
 #: felo_rating.py:102
 msgid "Line must follow the pattern \"name <TAB> value\"."
 msgstr "Zeile muss nach dem Muster \"Name <TAB> Wert\" sein."
 
-#: felo_rating.py:166
+#: felo_rating.py:159 felo_rating.py:165
 msgid "Invalid date string."
 msgstr "Ungültiger Datumsstring."
 
-#: felo_rating.py:539
+#: felo_rating.py:499
 msgid ""
-"Line must follow the pattern \"YYYY/MM/DD <TAB> name1 -- name2 <TAB> points1:"
+"Line must follow the pattern \"YYYY-MM-DD <TAB> name1 -- name2 <TAB> points1:"
 "points2\"."
 msgstr ""
-"Zeile muss nach dem Muster \"JJJJ/MM/TT <TAB> Name1 -- Name2 <TAB> Punkte1:"
+"Zeile muss nach dem Muster \"JJJJ-MM-TT <TAB> Name1 -- Name2 <TAB> Punkte1:"
 "Punkte2\" sein."
 
-#: felo_rating.py:550
+#: felo_rating.py:510
 msgid "One fencer has more points than the winning points."
 msgstr "Einer hat mehr Punkte als die Siegerpunktezahl."
 
-#: felo_rating.py:552 felo_rating.py:554
+#: felo_rating.py:512 felo_rating.py:514
 #, python-format
 msgid "Fencer \"%s\" is unknown."
 msgstr "Fechter \"%s\" ist unbekannt."
 
-#: felo_rating.py:569
+#: felo_rating.py:531
 msgid "k factor top fencers"
 msgstr "k-Faktor Top-Fechter"
 
-#: felo_rating.py:570
+#: felo_rating.py:532
 msgid "felo rating top fencers"
 msgstr "Felo-Zahl Top-Fechter"
 
-#: felo_rating.py:571
+#: felo_rating.py:533
 msgid "k factor others"
 msgstr "k-Faktor Rest"
 
-#: felo_rating.py:572
+#: felo_rating.py:534
 msgid "k factor freshmen"
 msgstr "k-Faktor Einsteiger"
 
-#: felo_rating.py:573
+#: felo_rating.py:535
 msgid "5 point bouts freshmen"
 msgstr "5er-Gefechte Einsteiger"
 
-#: felo_rating.py:574
+#: felo_rating.py:536
 msgid "minimal felo rating"
 msgstr "Minimum Felo-Zahl"
 
-#: felo_rating.py:575
+#: felo_rating.py:537
 msgid "5 point bouts for estimate"
 msgstr "5er-Gefechte für Schätzung"
 
-#: felo_rating.py:576
+#: felo_rating.py:538
 msgid "groupname"
 msgstr "Gruppenname"
 
-#: felo_rating.py:577
+#: felo_rating.py:539
 msgid "output folder"
 msgstr "Ausgabeordner"
 
-#: felo_rating.py:578
+#: felo_rating.py:540
 msgid "min distance of plot tics"
 msgstr "Plot-Tics Mindestabstand"
 
-#: felo_rating.py:579
+#: felo_rating.py:541
 msgid "minimal date in plot"
 msgstr "Plot Mindestdatum"
 
-#: felo_rating.py:580
+#: felo_rating.py:542
 msgid "maximal days in plot"
 msgstr "Plot maximale Tage"
 
-#: felo_rating.py:613
+#: felo_rating.py:549
+#, python-format
+msgid "Parameter \"%s\" is unknown."
+msgstr "Parameter \"%s\" ist unbekannt."
+
+#: felo_rating.py:578
 #, python-format
 msgid "Felo rating of \"%s\" is invalid."
 msgstr "Felo-Zahl von \"%s\" ist ungültig."
 
-#: felo_rating.py:656
+#: felo_rating.py:621
 msgid "# Initial Felo ratings"
 msgstr "# Anfangswerte"
 
-#: felo_rating.py:657
+#: felo_rating.py:622
 msgid "# Names of fencers who want to be hidden"
 msgstr "# Namen der Fechter, die versteckt bleiben wollen,"
 
-#: felo_rating.py:658
+#: felo_rating.py:623
 msgid "# in parentheses"
 msgstr "# in Klammern"
 
-#: felo_rating.py:670
+#: felo_rating.py:635
 msgid "# Bouts"
 msgstr "# Gefechte"
 
-#: felo_rating.py:694
+#: felo_rating.py:659
 msgid "Felo file invalid because there are not exactly two boundary lines."
 msgstr "Felo-Datei inkorrekt, weil nicht genau zwei Grenzlinien."
 
-#: felo_rating.py:716
+#: felo_rating.py:681
 msgid "First delete the backup (.bak) file."
 msgstr "Erst die Sicherungskopie (Endung .bak) löschen."
 
-#: felo_rating.py:757
+#: felo_rating.py:722
 msgid ", line "
 msgstr ", Zeile "
 
-#: felo_rating.py:954
-#, python-format
-msgid "'%(year)d/%(month)d/%(day)d'"
-msgstr "'%(day)d.%(month)d.%(year)d'"
+#: felo_rating.py:918
+msgid "'%Y-%m-%d'"
+msgstr "'%d.%m.%y'"
 
-#: felo_rating.py:982
+#: felo_rating.py:944
 msgid "The bootstrapping didn't converge."
 msgstr "Das Bootstrapping ist nicht konvergiert."
 
-#: felo_rating.py:1001
+#: felo_rating.py:963
 msgid ""
 "The program \"gnuplot\" wasn't found.  However, it is needed for the plots.  "
 "Please install it from http://www.gnuplot.info/ and set it into the PATH."
@@ -229,7 +245,7 @@ msgstr ""
 "die Plots.  Bitte von http://www.gnuplot.info/ installieren und in den PATH "
 "setzen."
 
-#: felo_rating.py:1010
+#: felo_rating.py:972
 msgid ""
 "The program \"convert\" of ImageMagick wasn't found.  However, it is needed "
 "for the plots.  Please install it from http://www.imagemagick.org/ and set "
@@ -239,7 +255,7 @@ msgstr ""
 "notwendig für die Plots.  Bitte von http://www.imagemagick.org/ installieren "
 "und in den PATH setzen."
 
-#: felo_rating.py:1018
+#: felo_rating.py:980
 msgid ""
 "The program \"ps2pdf\" of Ghostscript wasn't found.  However, it is needed "
 "for the plots.  Please install it from http://www.cs.wisc.edu/~ghost/ and "
@@ -249,38 +265,38 @@ msgstr ""
 "notwendig für die Plots.  Bitte von http://www.cs.wisc.edu/~ghost/ "
 "installieren und in den PATH setzen."
 
-#: felo_rating.py:1085
+#: felo_rating.py:1047
 msgid "Generate plots with the Felo ratings"
 msgstr "Erzeuge Plots der Felo-Zahlen"
 
-#: felo_rating.py:1087
+#: felo_rating.py:1049
 msgid "Try to estimage good initial values for all fencers"
 msgstr "Versuche, gute Start-Felo-Zahlen fuer alle zu berechnen"
 
-#: felo_rating.py:1089
+#: felo_rating.py:1051
 msgid "Maximal iteration steps during bootstrapping.  Default: 1000"
 msgstr "Maximale Iterationsschritte beim Bootstrapping.  Default: 1000"
 
-#: felo_rating.py:1091
+#: felo_rating.py:1053
 msgid "NUMBER"
 msgstr "NUMMER"
 
-#: felo_rating.py:1093
+#: felo_rating.py:1055
 msgid "Try to estimate freshmen"
 msgstr "Versuche, Neueinsteiger zu bewerten"
 
-#: felo_rating.py:1095
+#: felo_rating.py:1057
 msgid "Write the new initial values back into the Felo file"
 msgstr "Schreibe die neuen Startzahlen zurueck in die Felo-Datei"
 
-#: felo_rating.py:1099
+#: felo_rating.py:1061
 msgid "Name of the output file.  Default: output to the screen (stdout)"
 msgstr "Name der Ausgabedatei.  Default: Ausgabe auf dem Bildschirm (stdout)"
 
-#: felo_rating.py:1100
+#: felo_rating.py:1062
 msgid "FILENAME"
 msgstr "DATEINAME"
 
-#: felo_rating.py:1105
+#: felo_rating.py:1067
 msgid "You cannot bootstrap and estimate freshmen at the same time."
 msgstr "Man kann nicht gleichzeitig bootstrappen und Neueinsteiger bewerten."
