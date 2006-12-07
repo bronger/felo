@@ -11,8 +11,6 @@ import sys
 sys.path.append("../src")
 from felo_rating import parse_felo_file, calculate_felo_ratings, write_felo_file
 
-os.chdir("../aachen")
-
 def datei_zeitstempel(pfade):
     timestamp = 0
     for pfad in pfade:
@@ -20,7 +18,7 @@ def datei_zeitstempel(pfade):
     return time.strftime(u"%d.&nbsp;%B&nbsp;%Y", time.localtime(timestamp))
 
 def convert_date(date):
-    return time.strftime(u"%d.&nbsp;%B&nbsp;%Y", time.strptime(date, "%Y/%m/%d"))
+    return time.strftime(u"%d.&nbsp;%B&nbsp;%Y", time.strptime(date, "%Y-%m-%d"))
 
 mache_plots = True
 ausgabedatei = codecs.open("/home/bronger/aktuell/fechten/Statistics/felo-zahlen.html",
