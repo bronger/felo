@@ -6,7 +6,7 @@ k-Faktor Einsteiger		40
 k-Faktor Rest			32
 k-Faktor Top-Fechter		25
 Minimum Elo-Zahl		1200
-Plot Mindestdatum		2006/11/02
+Plot Mindestdatum		2006-11-02
 
 ====================================================
 # Anfangswerte
@@ -41,186 +41,186 @@ Yves			1732
 ====================================================
 # Gefechte
 
-2006/05/01.01	Liska -- Simone		5:3
-2006/05/01.02	Liska -- Christian	1:5
-2006/05/01.03	Liska -- Maxim		5:4
-2006/05/01.04	Liska -- Alp		5:1
-2006/05/01.05	Liska -- Paul		5:1
-2006/05/01.06	Liska -- Stefan		5:1
-2006/05/01.07	Simone -- Christian	2:5
-2006/05/01.08	Simone -- Maxim		5:2
-2006/05/01.09	Simone -- Alp		5:1
-2006/05/01.10	Simone -- Paul		5:1
-2006/05/01.11	Simone -- Stefan	5:2
-2006/05/01.12	Christian -- Maxim	5:3
-2006/05/01.13	Christian -- Alp	5:1
-2006/05/01.14	Christian -- Paul	5:0
-2006/05/01.15	Christian -- Stefan	5:3
-2006/05/01.16	Maxim -- Alp		5:1
-2006/05/01.17	Maxim -- Paul		5:3
-2006/05/01.18	Maxim -- Stefan		1:5
-2006/05/01.19	Alp -- Paul		3:5
-2006/05/01.20	Alp -- Stefan		0:5
-2006/05/01.21	Paul -- Stefan		2:5
-2006/05/01.22	Maxim -- Paul		5:10
-2006/05/01.23	Stefan -- Alp		9:10
-2006/05/01.24	Alp -- Liska		0:10
-2006/05/01.25	Christian -- Paul	10:9
-2006/05/01.26	Christian -- Liska	6:10
+2006-05-01.01	Liska -- Simone		5:3
+2006-05-01.02	Liska -- Christian	1:5
+2006-05-01.03	Liska -- Maxim		5:4
+2006-05-01.04	Liska -- Alp		5:1
+2006-05-01.05	Liska -- Paul		5:1
+2006-05-01.06	Liska -- Stefan		5:1
+2006-05-01.07	Simone -- Christian	2:5
+2006-05-01.08	Simone -- Maxim		5:2
+2006-05-01.09	Simone -- Alp		5:1
+2006-05-01.10	Simone -- Paul		5:1
+2006-05-01.11	Simone -- Stefan	5:2
+2006-05-01.12	Christian -- Maxim	5:3
+2006-05-01.13	Christian -- Alp	5:1
+2006-05-01.14	Christian -- Paul	5:0
+2006-05-01.15	Christian -- Stefan	5:3
+2006-05-01.16	Maxim -- Alp		5:1
+2006-05-01.17	Maxim -- Paul		5:3
+2006-05-01.18	Maxim -- Stefan		1:5
+2006-05-01.19	Alp -- Paul		3:5
+2006-05-01.20	Alp -- Stefan		0:5
+2006-05-01.21	Paul -- Stefan		2:5
+2006-05-01.22	Maxim -- Paul		5:10
+2006-05-01.23	Stefan -- Alp		9:10
+2006-05-01.24	Alp -- Liska		0:10
+2006-05-01.25	Christian -- Paul	10:9
+2006-05-01.26	Christian -- Liska	6:10
 
-2006/08/01.1	Torsten -- Niki		7:10
-2006/08/01.2	Maxim -- Alp		10:5
-2006/08/01.3	Paul -- Niki		10:3
-2006/08/01.4	Katrin -- Maxim		10:8
-2006/08/01.5	Paul -- Katrin		10:6
+2006-08-01.1	Torsten -- Niki		7:10
+2006-08-01.2	Maxim -- Alp		10:5
+2006-08-01.3	Paul -- Niki		10:3
+2006-08-01.4	Katrin -- Maxim		10:8
+2006-08-01.5	Paul -- Katrin		10:6
 
-2006/09/06.1	Ming -- Christian	3:7/0
-2006/09/06.2	Simone -- Thomas	5:7/0
-2006/09/06.3	Sebastian J -- Niki	7:1/0
-2006/09/06.4	Ming -- Thomas		2:13/0
-2006/09/06.5	Simone -- Niki		12:4/0
-2006/09/06.6	Sebastian J -- Christian	4:10/0
-2006/09/06.7	Ming -- Niki		10:0/0
-2006/09/06.8	Simone -- Christian	7:9/0
-2006/09/06.9	Sebastian J -- Thomas	7:10/0
+2006-09-06.1	Ming -- Christian	3:7/0
+2006-09-06.2	Simone -- Thomas	5:7/0
+2006-09-06.3	Sebastian J -- Niki	7:1/0
+2006-09-06.4	Ming -- Thomas		2:13/0
+2006-09-06.5	Simone -- Niki		12:4/0
+2006-09-06.6	Sebastian J -- Christian	4:10/0
+2006-09-06.7	Ming -- Niki		10:0/0
+2006-09-06.8	Simone -- Christian	7:9/0
+2006-09-06.9	Sebastian J -- Thomas	7:10/0
 
-2006/10/08.1	Paul -- Ming		0:3/0
-2006/10/08.2	Christian -- Harald	6:2/0
-2006/10/08.3	Paul -- Niki		3:0/0
-2006/10/08.4	Paul -- Harald		2:7/0
-2006/10/08.5	Christian -- Niki	4:0/0
-2006/10/08.6	Christian -- Harald	3:6/0
-2006/10/08.7	Paul -- Niki		3:0/0
+2006-10-08.1	Paul -- Ming		0:3/0
+2006-10-08.2	Christian -- Harald	6:2/0
+2006-10-08.3	Paul -- Niki		3:0/0
+2006-10-08.4	Paul -- Harald		2:7/0
+2006-10-08.5	Christian -- Niki	4:0/0
+2006-10-08.6	Christian -- Harald	3:6/0
+2006-10-08.7	Paul -- Niki		3:0/0
 
-2006/10/09.1	Katrin -- Franzi	3:2/0
-2006/10/09.2	Georg -- Stefan		0:4/0
-2006/10/09.3	Sebastian J -- Alp	2:3/0
-2006/10/09.4	Katrin -- Stefan	1:3/0
-2006/10/09.5	Georg -- Alp		6:3/0
-2006/10/09.6	Sebastian J -- Franzi	5:3/0
-2006/10/09.7	Katrin -- Alp		4:1/0
-2006/10/09.8	Georg -- Franzi		3:2/0
-2006/10/09.9	Sebastian J -- Stefan	3:3/0
+2006-10-09.1	Katrin -- Franzi	3:2/0
+2006-10-09.2	Georg -- Stefan		0:4/0
+2006-10-09.3	Sebastian J -- Alp	2:3/0
+2006-10-09.4	Katrin -- Stefan	1:3/0
+2006-10-09.5	Georg -- Alp		6:3/0
+2006-10-09.6	Sebastian J -- Franzi	5:3/0
+2006-10-09.7	Katrin -- Alp		4:1/0
+2006-10-09.8	Georg -- Franzi		3:2/0
+2006-10-09.9	Sebastian J -- Stefan	3:3/0
 
-2006/10/10.01	Niki -- Katrin		5:1/0
-2006/10/10.02	Maxim -- Alexander	5:6/0
-2006/10/10.03	Georg -- Christian	2:8/0
-2006/10/10.04	Stefan -- Alp		8:5/0
-2006/10/10.05	Niki -- Alexander	1:5/0
-2006/10/10.06	Maxim -- Christian	5:5/0
-2006/10/10.07	Georg -- Alp		3:5/0
-2006/10/10.08	Stefan -- Katrin	11:5/0
-2006/10/10.09	Niki -- Christian	0:5/0
-2006/10/10.10	Maxim -- Alp		7:5/0
-2006/10/10.11	Georg -- Katrin		8:0/0
-2006/10/10.12	Stefan -- Alexander	1:2/0
+2006-10-10.01	Niki -- Katrin		5:1/0
+2006-10-10.02	Maxim -- Alexander	5:6/0
+2006-10-10.03	Georg -- Christian	2:8/0
+2006-10-10.04	Stefan -- Alp		8:5/0
+2006-10-10.05	Niki -- Alexander	1:5/0
+2006-10-10.06	Maxim -- Christian	5:5/0
+2006-10-10.07	Georg -- Alp		3:5/0
+2006-10-10.08	Stefan -- Katrin	11:5/0
+2006-10-10.09	Niki -- Christian	0:5/0
+2006-10-10.10	Maxim -- Alp		7:5/0
+2006-10-10.11	Georg -- Katrin		8:0/0
+2006-10-10.12	Stefan -- Alexander	1:2/0
 
-2006/10/11.01	Marcel -- Alp		4:5
-2006/10/11.02	Marcel -- Maxim		5:4
-2006/10/11.03	Marcel -- Torsten	5:2
-2006/10/11.04	Marcel -- Katrin	5:2
-2006/10/11.05	Marcel -- Niki		5:3
-2006/10/11.06	Marcel -- Franzi	3:5
-2006/10/11.07	Alp -- Maxim		1:5
-2006/10/11.08	Alp -- Torsten		3:5
-2006/10/11.09	Alp -- Katrin		5:2
-2006/10/11.10	Alp -- Niki		5:0
-2006/10/11.11	Alp -- Franzi		3:5
-2006/10/11.12	Maxim -- Torsten	5:0
-2006/10/11.13	Maxim -- Katrin		5:1
-2006/10/11.14	Maxim -- Niki		5:3
-2006/10/11.15	Maxim -- Franzi		5:3
-2006/10/11.16	Torsten -- Katrin	5:4
-2006/10/11.17	Torsten -- Niki		5:3
-2006/10/11.18	Torsten -- Franzi	0:5
-2006/10/11.19	Katrin -- Niki		1:5
-2006/10/11.20	Katrin -- Franzi	5:3
-2006/10/11.21	Niki -- Franzi		1:5
-2006/10/11.22	Yves -- Harald		5:3
+2006-10-11.01	Marcel -- Alp		4:5
+2006-10-11.02	Marcel -- Maxim		5:4
+2006-10-11.03	Marcel -- Torsten	5:2
+2006-10-11.04	Marcel -- Katrin	5:2
+2006-10-11.05	Marcel -- Niki		5:3
+2006-10-11.06	Marcel -- Franzi	3:5
+2006-10-11.07	Alp -- Maxim		1:5
+2006-10-11.08	Alp -- Torsten		3:5
+2006-10-11.09	Alp -- Katrin		5:2
+2006-10-11.10	Alp -- Niki		5:0
+2006-10-11.11	Alp -- Franzi		3:5
+2006-10-11.12	Maxim -- Torsten	5:0
+2006-10-11.13	Maxim -- Katrin		5:1
+2006-10-11.14	Maxim -- Niki		5:3
+2006-10-11.15	Maxim -- Franzi		5:3
+2006-10-11.16	Torsten -- Katrin	5:4
+2006-10-11.17	Torsten -- Niki		5:3
+2006-10-11.18	Torsten -- Franzi	0:5
+2006-10-11.19	Katrin -- Niki		1:5
+2006-10-11.20	Katrin -- Franzi	5:3
+2006-10-11.21	Niki -- Franzi		1:5
+2006-10-11.22	Yves -- Harald		5:3
 
-2006/10/12.1	Christian -- Niki	5:0/0
-2006/10/12.2	Alp -- Stefan		3:10/0
-2006/10/12.3	Paul -- Maxim		5:5/0
-2006/10/12.4	Alp -- Niki		4:5/0
-2006/10/12.5	Christian -- Maxim	8:0/0
-2006/10/12.6	Paul -- Stefan		3:10/0
-2006/10/12.7	Alp -- Maxim		3:5/0
-2006/10/12.8	Paul -- Niki		9:2/0
-2006/10/12.9	Christian -- Stefan	4:8/0
+2006-10-12.1	Christian -- Niki	5:0/0
+2006-10-12.2	Alp -- Stefan		3:10/0
+2006-10-12.3	Paul -- Maxim		5:5/0
+2006-10-12.4	Alp -- Niki		4:5/0
+2006-10-12.5	Christian -- Maxim	8:0/0
+2006-10-12.6	Paul -- Stefan		3:10/0
+2006-10-12.7	Alp -- Maxim		3:5/0
+2006-10-12.8	Paul -- Niki		9:2/0
+2006-10-12.9	Christian -- Stefan	4:8/0
 
-2006/11/01.01	Niki -- Christian	1:10
-2006/11/01.02	Niki -- Michael		1:5
-2006/11/01.03	Niki -- Alp		10:8
-2006/11/01.04	Niki -- Franzi		4:10
-2006/11/01.05	Christian -- Michael	5:3
-2006/11/01.06	Christian -- Moritz	4:10
-2006/11/01.07	Christian -- Alp	10:3
-2006/11/01.08	Christian -- Maxim	10:5
-2006/11/01.09	Christian -- Katrin	10:1
-2006/11/01.10	Michael -- Moritz	6:10
-2006/11/01.11	Michael -- Maxim	10:5
-2006/11/01.12	Moritz -- Alp		10:6
-2006/11/01.13	Moritz -- Stefan	8:10
-2006/11/01.14	Alp -- Maxim		6:10
-2006/11/01.15	Alp -- Stefan		4:5
-2006/11/01.16	Franzi -- Katrin	10:7
-2006/11/01.17	Maxim -- Katrin		10:6
+2006-11-01.01	Niki -- Christian	1:10
+2006-11-01.02	Niki -- Michael		1:5
+2006-11-01.03	Niki -- Alp		10:8
+2006-11-01.04	Niki -- Franzi		4:10
+2006-11-01.05	Christian -- Michael	5:3
+2006-11-01.06	Christian -- Moritz	4:10
+2006-11-01.07	Christian -- Alp	10:3
+2006-11-01.08	Christian -- Maxim	10:5
+2006-11-01.09	Christian -- Katrin	10:1
+2006-11-01.10	Michael -- Moritz	6:10
+2006-11-01.11	Michael -- Maxim	10:5
+2006-11-01.12	Moritz -- Alp		10:6
+2006-11-01.13	Moritz -- Stefan	8:10
+2006-11-01.14	Alp -- Maxim		6:10
+2006-11-01.15	Alp -- Stefan		4:5
+2006-11-01.16	Franzi -- Katrin	10:7
+2006-11-01.17	Maxim -- Katrin		10:6
 
-2006/11/02.01	Moritz -- Torsten	5:2/0
-2006/11/02.02	Katrin -- Stefan	3:8/0
-2006/11/02.03	Ming -- Melanie G	7:4/0
-2006/11/02.04	Katrin -- Maxim		0:6/0
-2006/11/02.05	Moritz -- Melanie G	10:1/0
-2006/11/02.06	Ming -- Stefan		4:9/0
-2006/11/02.07	Katrin -- Melanie G	3:5/0
-2006/11/02.08	Ming -- Maxim		8:4/0
-2006/11/02.09	Moritz -- Stefan	3:6/0
-2006/11/02.10	Thomas -- Christian	3:3/0
-2006/11/02.11	Alp -- Simone		0:7/0
-2006/11/02.12	Doro -- Franzi		1:5/0
-2006/11/02.13	Alp -- Christian	0:5/0
-2006/11/02.14	Thomas -- Franzi	19:2/0
-2006/11/02.15	Doro -- Maxim		2:8/0
-2006/11/02.16	Alp -- Franzi		3:5/0
-2006/11/02.17	Doro -- Christian	2:5/0
-2006/11/02.18	Thomas -- Maxim		13:2/0
+2006-11-02.01	Moritz -- Torsten	5:2/0
+2006-11-02.02	Katrin -- Stefan	3:8/0
+2006-11-02.03	Ming -- Melanie G	7:4/0
+2006-11-02.04	Katrin -- Maxim		0:6/0
+2006-11-02.05	Moritz -- Melanie G	10:1/0
+2006-11-02.06	Ming -- Stefan		4:9/0
+2006-11-02.07	Katrin -- Melanie G	3:5/0
+2006-11-02.08	Ming -- Maxim		8:4/0
+2006-11-02.09	Moritz -- Stefan	3:6/0
+2006-11-02.10	Thomas -- Christian	3:3/0
+2006-11-02.11	Alp -- Simone		0:7/0
+2006-11-02.12	Doro -- Franzi		1:5/0
+2006-11-02.13	Alp -- Christian	0:5/0
+2006-11-02.14	Thomas -- Franzi	19:2/0
+2006-11-02.15	Doro -- Maxim		2:8/0
+2006-11-02.16	Alp -- Franzi		3:5/0
+2006-11-02.17	Doro -- Christian	2:5/0
+2006-11-02.18	Thomas -- Maxim		13:2/0
 
-2006/11/16.1	Stefan -- Moritz	10:8
-2006/11/16.2	Stefan -- Alp		5:4
-2006/11/16.3	Franzi -- Niki		10:4
-2006/11/16.4	Franzi -- Katrin	10:6
-2006/11/16.5	Franzi -- Moritz	5:3
+2006-11-16.1	Stefan -- Moritz	10:8
+2006-11-16.2	Stefan -- Alp		5:4
+2006-11-16.3	Franzi -- Niki		10:4
+2006-11-16.4	Franzi -- Katrin	10:6
+2006-11-16.5	Franzi -- Moritz	5:3
 
-2006/11/23.1	Moritz -- Simone	5:3/0
-2006/11/23.2	Franzi -- Stefan	3:7/0
-2006/11/23.3	Nora -- Niki		8:0/0
-2006/11/23.4	Franzi -- Simone	2:10/0
-2006/11/23.5	Moritz -- Niki		8:2/0
-2006/11/23.6	Nora -- Stefan		5:5/0
-2006/11/23.7	Franzi -- Niki		5:2/0
-2006/11/23.8	Nora -- Simone		5:2/0
-2006/11/23.9	Moritz -- Stefan	5:9/0
+2006-11-23.1	Moritz -- Simone	5:3/0
+2006-11-23.2	Franzi -- Stefan	3:7/0
+2006-11-23.3	Nora -- Niki		8:0/0
+2006-11-23.4	Franzi -- Simone	2:10/0
+2006-11-23.5	Moritz -- Niki		8:2/0
+2006-11-23.6	Nora -- Stefan		5:5/0
+2006-11-23.7	Franzi -- Niki		5:2/0
+2006-11-23.8	Nora -- Simone		5:2/0
+2006-11-23.9	Moritz -- Stefan	5:9/0
 
-2006/11/30	Katrin -- Doro		3:0
-2006/11/30	Katrin -- Alp		3:0
-2006/11/30	Katrin -- Christian	1:3
-2006/11/30	Katrin -- Niki		2:3
-2006/11/30	Katrin -- Ming		1:3
-2006/11/30	Katrin -- Stefan	1:3
-2006/11/30	Doro -- Alp		0:3
-2006/11/30	Doro -- Christian	3:2
-2006/11/30	Doro -- Niki		3:2
-2006/11/30	Doro -- Ming		0:3
-2006/11/30	Doro -- Stefan		2:3
-2006/11/30	Alp -- Niki		3:2
-2006/11/30	Alp -- Franzi		2:3
-2006/11/30	Alp -- Ming		3:2
-2006/11/30	Alp -- Stefan		2:3
-2006/11/30	Christian -- Niki	3:2
-2006/11/30	Christian -- Ming	3:1
-2006/11/30	Niki -- Franzi		2:3
-2006/11/30	Niki -- Ming		0:3
-2006/11/30	Niki -- Stefan		0:3
-2006/11/30	Franzi -- Ming		1:3
-2006/11/30	Franzi -- Stefan	1:3
-2006/11/30	Ming -- Stefan		1:3
+2006-11-30	Katrin -- Doro		3:0
+2006-11-30	Katrin -- Alp		3:0
+2006-11-30	Katrin -- Christian	1:3
+2006-11-30	Katrin -- Niki		2:3
+2006-11-30	Katrin -- Ming		1:3
+2006-11-30	Katrin -- Stefan	1:3
+2006-11-30	Doro -- Alp		0:3
+2006-11-30	Doro -- Christian	3:2
+2006-11-30	Doro -- Niki		3:2
+2006-11-30	Doro -- Ming		0:3
+2006-11-30	Doro -- Stefan		2:3
+2006-11-30	Alp -- Niki		3:2
+2006-11-30	Alp -- Franzi		2:3
+2006-11-30	Alp -- Ming		3:2
+2006-11-30	Alp -- Stefan		2:3
+2006-11-30	Christian -- Niki	3:2
+2006-11-30	Christian -- Ming	3:1
+2006-11-30	Niki -- Franzi		2:3
+2006-11-30	Niki -- Ming		0:3
+2006-11-30	Niki -- Stefan		0:3
+2006-11-30	Franzi -- Ming		1:3
+2006-11-30	Franzi -- Stefan	1:3
+2006-11-30	Ming -- Stefan		1:3
