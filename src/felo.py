@@ -37,7 +37,7 @@ import gettext, locale
 locale.setlocale(locale.LC_ALL, '')
 gettext.install('felo', '.', unicode=True)
 import felo_rating
-import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html
+import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html, wx.lib.hyperlink
 
 datapath = os.path.abspath(os.path.dirname(__file__))
 
@@ -98,16 +98,16 @@ class ResultFrame(wx.Frame):
 class HTMLDialog(wx.Dialog):
     def __init__(self, directory, *args, **keyw):
         wx.Dialog.__init__(self, None, wx.ID_ANY, title=_(u"HTML export"), *args, **keyw)
-        hbox_top = wx.BoxSizer(wx.HORIZONTAL)
         vbox_main = wx.BoxSizer(wx.VERTICAL)
         text = wx.StaticText(self, wx.ID_ANY,
                              textwrap.fill(_(u"The web files will be written to the folder \"%s\".")
                                            % directory, 41))
-        vbox_main.Add(text)
+        vbox_main.Add(text, flag=wx.LEFT | wx.RIGHT | wx.TOP, border=10)
         vbox_checkboxes = wx.BoxSizer(wx.VERTICAL)
         self.plot_switch = wx.CheckBox(self, wx.ID_ANY, _(u"with plot"))
         vbox_checkboxes.Add(self.plot_switch, flag=wx.BOTTOM, border=10)
         self.HTML_preview = wx.CheckBox(self, wx.ID_ANY, _(u"preview the HTML"))
+        self.HTML_preview.SetValue(True)
         vbox_checkboxes.Add(self.HTML_preview)
         vbox_main.Add(vbox_checkboxes, flag=wx.ALL, border=20)
         hbox_buttons = wx.BoxSizer(wx.HORIZONTAL)
@@ -117,9 +117,45 @@ class HTMLDialog(wx.Dialog):
         cancel_button = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
         hbox_buttons.Add(cancel_button, flag=wx.LEFT, border=10)
         vbox_main.Add(hbox_buttons, flag=wx.ALIGN_CENTER)
+        hbox_top = wx.BoxSizer(wx.HORIZONTAL)
         hbox_top.Add(vbox_main, flag=wx.ALL | wx.ALIGN_CENTER, border=5)
         self.SetSizer(hbox_top)
         self.Fit()
+
+class AboutWindow(wx.Dialog):
+    def __init__(self, *args, **keyw):
+        wx.Dialog.__init__(self, None, wx.ID_ANY, title=_(u"About Felo"), *args, **keyw)
+        vbox_main = wx.BoxSizer(wx.VERTICAL)
+        text1 = wx.StaticText(self, wx.ID_ANY, _(u"version ")+"1.0"+_(u", revision ")+__version__[11:-2])
+        vbox_main.Add(text1, flag=wx.ALIGN_CENTER)
+        logo = wx.StaticBitmap(self, wx.ID_ANY,
+                               wx.BitmapFromImage(wx.Image(datapath+"/felo-logo-small.png", wx.BITMAP_TYPE_PNG)))
+        vbox_main.Add(logo, flag=wx.ALIGN_CENTER)
+        text2 = wx.StaticText(self, wx.ID_ANY, u"— "+_(u"Estimate fencing strengths of sport fencers")+u" —")
+        vbox_main.Add(text2, flag=wx.ALIGN_CENTER | wx.LEFT | wx.RIGHT | wx.TOP, border=10)
+        text3 = wx.StaticText(self, wx.ID_ANY, _(u"Brought to you by the sport fencing group at the\n"
+                                                 u"University of Technology Aachen (RWTH), Germany."),
+                              style=wx.ALIGN_CENTER)
+        vbox_main.Add(text3, flag=wx.ALIGN_CENTER | wx.LEFT | wx.RIGHT | wx.TOP, border=10)
+        text4 = wx.StaticText(self, wx.ID_ANY, _(u"For bug reports, suggestions, documentation, the\n"
+                                                 u"source code, and the mailinglist visit Felo's homepage at"),
+                              style=wx.ALIGN_CENTER)
+        vbox_main.Add(text4, flag=wx.ALIGN_CENTER | wx.LEFT | wx.RIGHT | wx.TOP, border=10)
+        vbox_main.Add(wx.lib.hyperlink.HyperLinkCtrl(self, wx.ID_ANY, "http://felo.sourceforge.net",
+                                                     style=wx.ALIGN_CENTER),
+                      flag=wx.ALIGN_CENTER | wx.LEFT | wx.RIGHT, border=10)
+        text5 = wx.StaticText(self, wx.ID_ANY, _(u"English translation by Torsten Bronger."), style=wx.ALIGN_CENTER)
+        vbox_main.Add(text5, flag=wx.ALIGN_CENTER | wx.LEFT | wx.RIGHT | wx.TOP, border=10)
+        text6 = wx.StaticText(self, wx.ID_ANY, u"© 2006 Torsten Bronger")
+        vbox_main.Add(text6, flag=wx.ALIGN_LEFT | wx.LEFT | wx.RIGHT | wx.TOP, border=10)
+        hbox_top = wx.BoxSizer(wx.HORIZONTAL)
+        hbox_top.Add(vbox_main, flag=wx.ALL | wx.ALIGN_CENTER, border=5)
+        self.SetSizer(hbox_top)
+        self.Fit()
+        for widget in (self, logo, text1, text2, text3, text4, text5, text6):
+            widget.Bind(wx.EVT_LEFT_DOWN, self.OnClick)
+    def OnClick(self, event):
+        self.Destroy()
 
 class Frame(wx.Frame):
     def __init__(self, *args, **keyw):
@@ -303,6 +339,7 @@ class Frame(wx.Frame):
         html_dialog = HTMLDialog(parameters["output folder"])
         result = html_dialog.ShowModal()
         make_plot = html_dialog.plot_switch.GetValue()
+        HTML_preview = html_dialog.HTML_preview.GetValue()
         html_dialog.Destroy()
         if result != wx.ID_OK:
             return
@@ -337,13 +374,14 @@ class Frame(wx.Frame):
             file_list += base_filename+".pdf\n"
         print>>html_file, u"</body></html>"
         html_file.close()
-        html_window = HtmlFrame(self, html_filename)
-        html_window.Show()
+        if HTML_preview:
+            html_window = HtmlFrame(self, html_filename)
+            html_window.Show()
         wx.MessageBox(_(u"The following files must be uploaded to the web server:\n\n")+file_list,
                       _(u"Upload file list"), wx.OK | wx.ICON_INFORMATION, self)
     def OnBootstrapping(self, event):
         answer = wx.MessageBox(_(u"The bootstrapping will change the fencer data.  "
-                               "Are you sure that you wish to continue?"),
+                                 "Are you sure that you wish to continue?"),
                                u"Bootstrapping", wx.YES_NO | wx.NO_DEFAULT |
                                wx.ICON_QUESTION, self)
         if answer != wx.YES:
@@ -374,9 +412,9 @@ class Frame(wx.Frame):
         self.editor.SetText(felo_rating.write_back_fencers(self.editor.GetText(), fencers))
         self.felo_file_changed = True
     def OnAbout(self, event):
-        image = wx.Image(datapath+"/felo-logo.png", wx.BITMAP_TYPE_PNG)
-        bitmap = image.ConvertToBitmap()
-        wx.SplashScreen(bitmap, wx.SPLASH_CENTRE_ON_PARENT | wx.SPLASH_NO_TIMEOUT, 0, self, wx.ID_ANY)
+        about_window = AboutWindow()
+        about_window.ShowModal()
+        about_window.Destroy()
 
 class App(wx.App):
     def OnInit(self):
