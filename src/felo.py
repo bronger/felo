@@ -86,20 +86,20 @@ class Editor(wx.py.editor.EditWindow):
 
 class ResultFrame(wx.Frame):
     def __init__(self, results, *args, **keyw):
-        wx.Frame.__init__(self, None, wx.ID_ANY, size=(300, 500), title="Felo-Zahlen", *args, **keyw)
+        wx.Frame.__init__(self, None, wx.ID_ANY, size=(300, 500), title=_(u"Felo ratings"), *args, **keyw)
         result_box = wx.TextCtrl(self, wx.ID_ANY, results, style=wx.TE_MULTILINE)
         result_box.SetEditable(False)
         
 class HTMLDialog(wx.Dialog):
     def __init__(self, directory, *args, **keyw):
-        wx.Dialog.__init__(self, None, wx.ID_ANY, size=(300, 180), title=u"HTML-Export", *args, **keyw)
+        wx.Dialog.__init__(self, None, wx.ID_ANY, size=(300, 180), title=_(u"HTML export"), *args, **keyw)
         wx.StaticText(self, wx.ID_ANY,
-                      textwrap.fill(u"Die Web-Dateien werden in das Verzeichnis %s geschrieben." % directory, 41),
+                      textwrap.fill(_(u"The web files will be written to the folder %s.") % directory, 41),
                       (20, 20))
-        self.plot_switch = wx.CheckBox(self, wx.ID_ANY, u"mit Plot", (35, 100), (150, 20))
-        ok_button = wx.Button(self, wx.ID_OK, "Okay", pos=(50, 140))
+        self.plot_switch = wx.CheckBox(self, wx.ID_ANY, _(u"with plot"), (35, 100), (150, 20))
+        ok_button = wx.Button(self, wx.ID_OK, _("Okay"), pos=(50, 140))
         ok_button.SetDefault()
-        cancel_button = wx.Button(self, wx.ID_CANCEL, "Abbrechen", pos=(150, 140))
+        cancel_button = wx.Button(self, wx.ID_CANCEL, _("Cancel"), pos=(150, 140))
 
 class Frame(wx.Frame):
     def __init__(self, *args, **keyw):
