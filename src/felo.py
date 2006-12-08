@@ -29,12 +29,12 @@
 #    DEALINGS IN THE SOFTWARE.
 #
 
-import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html
-import felo_rating
 import re, os, codecs, sys, time, StringIO, textwrap, platform
 import gettext, locale
 locale.setlocale(locale.LC_ALL, '')
 gettext.install('felo', '.', unicode=True)
+import felo_rating
+import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html
 
 datapath = os.path.abspath(os.path.dirname(__file__))
 
