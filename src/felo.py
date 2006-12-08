@@ -29,6 +29,9 @@
 #    DEALINGS IN THE SOFTWARE.
 #
 
+__version__ = "$Revision$"
+# $HeadURL$
+
 import re, os, codecs, sys, time, StringIO, textwrap, platform
 import gettext, locale
 locale.setlocale(locale.LC_ALL, '')
@@ -94,14 +97,29 @@ class ResultFrame(wx.Frame):
         
 class HTMLDialog(wx.Dialog):
     def __init__(self, directory, *args, **keyw):
-        wx.Dialog.__init__(self, None, wx.ID_ANY, size=(300, 180), title=_(u"HTML export"), *args, **keyw)
-        wx.StaticText(self, wx.ID_ANY,
-                      textwrap.fill(_(u"The web files will be written to the folder %s.") % directory, 41),
-                      (20, 20))
-        self.plot_switch = wx.CheckBox(self, wx.ID_ANY, _(u"with plot"), (35, 100), (150, 20))
-        ok_button = wx.Button(self, wx.ID_OK, _("Okay"), pos=(50, 140))
+        wx.Dialog.__init__(self, None, wx.ID_ANY, title=_(u"HTML export"), *args, **keyw)
+        hbox_top = wx.BoxSizer(wx.HORIZONTAL)
+        vbox_main = wx.BoxSizer(wx.VERTICAL)
+        text = wx.StaticText(self, wx.ID_ANY,
+                             textwrap.fill(_(u"The web files will be written to the folder \"%s\".")
+                                           % directory, 41))
+        vbox_main.Add(text)
+        vbox_checkboxes = wx.BoxSizer(wx.VERTICAL)
+        self.plot_switch = wx.CheckBox(self, wx.ID_ANY, _(u"with plot"))
+        vbox_checkboxes.Add(self.plot_switch, flag=wx.BOTTOM, border=10)
+        self.HTML_preview = wx.CheckBox(self, wx.ID_ANY, _(u"preview the HTML"))
+        vbox_checkboxes.Add(self.HTML_preview)
+        vbox_main.Add(vbox_checkboxes, flag=wx.ALL, border=20)
+        hbox_buttons = wx.BoxSizer(wx.HORIZONTAL)
+        ok_button = wx.Button(self, wx.ID_OK, _("Okay"))
         ok_button.SetDefault()
-        cancel_button = wx.Button(self, wx.ID_CANCEL, _("Cancel"), pos=(150, 140))
+        hbox_buttons.Add(ok_button)
+        cancel_button = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
+        hbox_buttons.Add(cancel_button, flag=wx.LEFT, border=10)
+        vbox_main.Add(hbox_buttons, flag=wx.ALIGN_CENTER)
+        hbox_top.Add(vbox_main, flag=wx.ALL | wx.ALIGN_CENTER, border=5)
+        self.SetSizer(hbox_top)
+        self.Fit()
 
 class Frame(wx.Frame):
     def __init__(self, *args, **keyw):
@@ -125,20 +143,20 @@ class Frame(wx.Frame):
         self.editor = Editor(self)
 
         menu_edit = wx.Menu()
-        undo = menu_edit.Append(wx.ID_ANY, _(u"&Undo"))
+        undo = menu_edit.Append(wx.ID_ANY, _(u"&Undo")+"\tCtrl-Z")
         self.Bind(wx.EVT_MENU, self.OnUndo, undo)
-        redo = menu_edit.Append(wx.ID_ANY, _(u"&Redo"))
+        redo = menu_edit.Append(wx.ID_ANY, _(u"&Redo")+"\tCtrl-R")
         self.Bind(wx.EVT_MENU, self.OnRedo, redo)
         menu_edit.AppendSeparator()
-        cut = menu_edit.Append(wx.ID_ANY, _(u"&Cut"))
+        cut = menu_edit.Append(wx.ID_ANY, _(u"&Cut")+"\tCtrl-X")
         self.Bind(wx.EVT_MENU, self.OnCut, cut)
-        copy = menu_edit.Append(wx.ID_ANY, _(u"C&opy"))
+        copy = menu_edit.Append(wx.ID_ANY, _(u"C&opy")+"\tCtrl-C")
         self.Bind(wx.EVT_MENU, self.OnCopy, copy)
-        paste = menu_edit.Append(wx.ID_ANY, _(u"&Paste"))
+        paste = menu_edit.Append(wx.ID_ANY, _(u"&Paste")+"\tCtrl-V")
         self.Bind(wx.EVT_MENU, self.OnPaste, paste)
-        delete = menu_edit.Append(wx.ID_ANY, _(u"&Delete"))
+        delete = menu_edit.Append(wx.ID_ANY, _(u"&Delete")+"\tDEL")
         self.Bind(wx.EVT_MENU, self.OnDelete, delete)
-        select_all = menu_edit.Append(wx.ID_ANY, _(u"Select &all"))
+        select_all = menu_edit.Append(wx.ID_ANY, _(u"Select &all")+"\tCtrl-A")
         self.Bind(wx.EVT_MENU, self.OnSelectAll, select_all)
         menu_bar.Append(menu_edit, _(u"&Edit"))
 
