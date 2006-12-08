@@ -62,7 +62,7 @@ __version__ = "$Revision:  $"
 import codecs, re, os.path, datetime, time, shutil
 from subprocess import call, Popen, PIPE
 import gettext
-t = gettext.translation('felo', '/home/bronger/src/felo/src')
+t = gettext.translation('felo', '/home/bronger/src/felo/src', fallback=True)
 _ = t.ugettext
 
 datapath = os.path.abspath(os.path.dirname(__file__))
