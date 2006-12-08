@@ -53,6 +53,8 @@ class Editor(wx.py.editor.EditWindow):
         self.setStyles(wx.py.editwindow.FACES)
         self.SetMarginWidth(0, self.TextWidth(wx.stc.STC_STYLE_LINENUMBER, "00000"))
         self.SetMarginWidth(1, 10)
+        self.SetScrollWidth(self.TextWidth(wx.stc.STC_STYLE_DEFAULT, 68*"0"))
+        self.SetLexer(wx.stc.STC_LEX_CONTAINER)
         self.Bind(wx.stc.EVT_STC_STYLENEEDED, self.OnStyling)
         self.bout_line_pattern = re.compile("\\s*(?P<date>\\d{4}-\\d{1,2}-\\d{1,2}(?:\\.\\d+)?)"
                                             "\\s*\t+\\s*"
@@ -107,6 +109,8 @@ class Frame(wx.Frame):
         menu_bar = wx.MenuBar()
 
         menu_file = wx.Menu()
+        new = menu_file.Append(wx.ID_ANY, _(u"&New"))
+        self.Bind(wx.EVT_MENU, self.OnNew, new)
         open = menu_file.Append(wx.ID_ANY, _(u"&Open"))
         self.Bind(wx.EVT_MENU, self.OnOpen, open)
         save = menu_file.Append(wx.ID_ANY, _(u"&Save"))
@@ -118,8 +122,28 @@ class Frame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnExit, exit)
         menu_bar.Append(menu_file, _(u"&File"))
 
+        self.editor = Editor(self)
+
+        menu_edit = wx.Menu()
+        undo = menu_edit.Append(wx.ID_ANY, _(u"&Undo"))
+        self.Bind(wx.EVT_MENU, self.OnUndo, undo)
+        redo = menu_edit.Append(wx.ID_ANY, _(u"&Redo"))
+        self.Bind(wx.EVT_MENU, self.OnRedo, redo)
+        menu_edit.AppendSeparator()
+        cut = menu_edit.Append(wx.ID_ANY, _(u"&Cut"))
+        self.Bind(wx.EVT_MENU, self.OnCut, cut)
+        copy = menu_edit.Append(wx.ID_ANY, _(u"C&opy"))
+        self.Bind(wx.EVT_MENU, self.OnCopy, copy)
+        paste = menu_edit.Append(wx.ID_ANY, _(u"&Paste"))
+        self.Bind(wx.EVT_MENU, self.OnPaste, paste)
+        delete = menu_edit.Append(wx.ID_ANY, _(u"&Delete"))
+        self.Bind(wx.EVT_MENU, self.OnDelete, delete)
+        select_all = menu_edit.Append(wx.ID_ANY, _(u"Select &all"))
+        self.Bind(wx.EVT_MENU, self.OnSelectAll, select_all)
+        menu_bar.Append(menu_edit, _(u"&Edit"))
+
         menu_calculate = wx.Menu()
-        calculate_felo_numbers = menu_calculate.Append(wx.ID_ANY, _(u"Calculdate &Felo ratings"))
+        calculate_felo_numbers = menu_calculate.Append(wx.ID_ANY, _(u"Calculate &Felo ratings"))
         self.Bind(wx.EVT_MENU, self.OnCalculateFeloRatings, calculate_felo_numbers)
         generate_html = menu_calculate.Append(wx.ID_ANY, _(u"Generate &HTML"))
         self.Bind(wx.EVT_MENU, self.OnGenerateHTML, generate_html)
@@ -137,13 +161,32 @@ class Frame(wx.Frame):
         self.SetMenuBar(menu_bar)
 
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
-        self.felo_filename = self.editor = None
+
+        self.felo_filename = _("unnamed.felo")
+        self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
+        self.editor.Bind(wx.stc.EVT_STC_CHANGE, self.OnChange)
+        self.felo_file_changed = False
+        self.SendSizeEvent()
         if len(sys.argv) > 1:
             self.open_felo_file(sys.argv[1])
+    def OnUndo(self, event):
+        self.editor.Undo()
+    def OnRedo(self, event):
+        self.editor.Redo()
+    def OnCopy(self, event):
+        self.editor.Copy()
+    def OnCut(self, event):
+        self.editor.Cut()
+    def OnPaste(self, event):
+        self.editor.Paste()
+    def OnDelete(self, event):
+        self.editor.Clear()
+    def OnSelectAll(self, event):
+        self.editor.SelectAll()
     def OnChange(self, event):
         self.felo_file_changed = True
     def AssureSave(self):
-        if self.editor and self.felo_file_changed:
+        if self.felo_file_changed:
             answer = wx.MessageBox(_(u"The file \"%s\" has changed.  Save it?") % self.felo_filename,
                                    _(u"File changed"), wx.YES_NO | wx.CANCEL | wx.YES_DEFAULT |
                                    wx.ICON_QUESTION, self)
@@ -153,17 +196,25 @@ class Frame(wx.Frame):
             elif answer == wx.CANCEL:
                 return wx.CANCEL
     def open_felo_file(self, felo_filename):
-        self.felo_filename = os.path.abspath(felo_filename)
-        if not self.editor:
-            self.editor = Editor(self)
-            self.editor.SetScrollWidth(self.editor.TextWidth(wx.stc.STC_STYLE_DEFAULT, 68*"0"))
-            self.editor.SetLexer(wx.stc.STC_LEX_CONTAINER)
-            self.editor.Bind(wx.stc.EVT_STC_CHANGE, self.OnChange)
-            self.SendSizeEvent()
-        self.editor.LoadFile(self.felo_filename)
+        felo_filename = os.path.abspath(felo_filename)
+        path = os.path.dirname(felo_filename)
+        try:
+            os.chdir(path)
+        except OSError:
+            wx.MessageBox(_(u"Could not open file because folder '%s' doesn't exist.") % path,
+                          _(u"Folder not found"), wx.OK | wx.ICON_ERROR, self)
+            return
+        self.felo_filename = felo_filename
+        if os.path.isfile(self.felo_filename):
+            self.editor.LoadFile(self.felo_filename)
         self.felo_file_changed = False
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
-        os.chdir(os.path.dirname(self.felo_filename))
+    def OnNew(self):
+        if self.AssureSave == wx.CANCEL:
+            return
+        self.felo_filename = _("unnamed.felo")
+        self.editor.ClearAll()
+        self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
     def OnOpen(self, event):
         if self.AssureSave == wx.CANCEL:
             return
@@ -189,25 +240,16 @@ class Frame(wx.Frame):
     def OnSave(self, event):
         self.save_felo_file()
     def OnSaveAs(self, event):
-        if self.editor:
-            wildcard = _(u"Felo file (*.felo)|*.felo|"
-                         "All files (*.*)|*.*")
-            dialog = wx.FileDialog(None, _(u"Select Felo file"), os.getcwd(),
-                                   "", wildcard, wx.SAVE | wx.OVERWRITE_PROMPT)
-            if dialog.ShowModal() == wx.ID_OK:
-                self.felo_filename = dialog.GetPath()
-                dialog.Destroy()
-                self.save_felo_file()
+        wildcard = _(u"Felo file (*.felo)|*.felo|"
+                     "All files (*.*)|*.*")
+        dialog = wx.FileDialog(None, _(u"Select Felo file"), os.getcwd(),
+                               "", wildcard, wx.SAVE | wx.OVERWRITE_PROMPT)
+        if dialog.ShowModal() == wx.ID_OK:
+            self.felo_filename = dialog.GetPath()
+            dialog.Destroy()
+            self.save_felo_file()
     
-    def assure_open_felo_file(self):
-        if not self.editor:
-            wx.MessageBox(_(u"Please first open a Felo file.") ,
-                          _(u"Notification"), wx.OK | wx.ICON_INFORMATION, self)
-            return False
-        return True
     def parse_editor_contents(self):
-        if not self.assure_open_felo_file():
-            return {}, {}, []
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
         try:
@@ -232,8 +274,6 @@ class Frame(wx.Frame):
         result_frame = ResultFrame(results)
         result_frame.Show()
     def OnGenerateHTML(self, event):
-        if not self.assure_open_felo_file():
-            return
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
         parameters, fencers, bouts = self.parse_editor_contents()
@@ -284,8 +324,6 @@ class Frame(wx.Frame):
         wx.MessageBox(_(u"The following files must be uploaded to the web server:\n\n")+file_list,
                       _(u"Upload file list"), wx.OK | wx.ICON_INFORMATION, self)
     def OnBootstrapping(self, event):
-        if not self.assure_open_felo_file():
-            return
         answer = wx.MessageBox(_(u"The bootstrapping will change the fencer data.  "
                                "Are you sure that you wish to continue?"),
                                u"Bootstrapping", wx.YES_NO | wx.NO_DEFAULT |
@@ -302,8 +340,6 @@ class Frame(wx.Frame):
         self.editor.SetText(felo_rating.write_back_fencers(self.editor.GetText(), fencers))
         self.felo_file_changed = True
     def OnEstimateFreshmen(self, event):
-        if not self.assure_open_felo_file():
-            return
         answer = wx.MessageBox(_(u"Estimating the freshmen will change their initial Felo numbers.  "
                                  u"Are you sure that you wish to continue?"),
                                _(u"Estimating freshmen"), wx.YES_NO | wx.NO_DEFAULT |
