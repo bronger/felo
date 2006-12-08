@@ -56,8 +56,8 @@ __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_fe
            "write_back_fencers_to_file",
            "Error", "LineError", "BootstrappingError"]
 
-__version__ = "$Revision:  $"
-# $Source:  $
+__version__ = "$Revision$"
+# $HeadURL$
 
 import codecs, re, os.path, datetime, time, shutil
 from subprocess import call, Popen, PIPE
