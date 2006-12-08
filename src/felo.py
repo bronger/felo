@@ -32,7 +32,8 @@
 import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html
 import felo_rating
 import re, os, codecs, sys, time, StringIO, textwrap, platform
-import gettext
+import gettext, locale
+locale.setlocale(locale.LC_ALL, '')
 gettext.install('felo', '.', unicode=True)
 
 datapath = os.path.abspath(os.path.dirname(__file__))
@@ -239,16 +240,16 @@ class Frame(wx.Frame):
         if not parameters:
             return
         bouts.sort()
-        last_date = time.strftime(_(u"%d.&nbsp;%B&nbsp;%Y"), time.strptime(bouts[-1].date_string[:10], "%Y-%m-%d"))
+        last_date = time.strftime(_(u"%x"), time.strptime(bouts[-1].date_string[:10], "%Y-%m-%d"))
         base_filename = parameters["groupname"].lower()
-        html_dialog = HTMLDialog(parameters[u"Ausgabeverzeichnis"])
+        html_dialog = HTMLDialog(parameters["output folder"])
         result = html_dialog.ShowModal()
         make_plot = html_dialog.plot_switch.GetValue()
         html_dialog.Destroy()
         if result != wx.ID_OK:
             return
         file_list = u""
-        html_filename = os.path.join(parameters[u"Ausgabeverzeichnis"], base_filename+".html")
+        html_filename = os.path.join(parameters["output folder"], base_filename+".html")
         html_file = codecs.open(html_filename, "w", "utf-8")
         file_list += base_filename+".html\n"
         print>>html_file, u"""<?xml version="1.0" encoding="utf-8"?>
@@ -259,11 +260,11 @@ class Frame(wx.Frame):
 @import "felo.css";
 /*]]>*/
 </style></head><body>\n\n<h1>%(title)s</h1>\n<h2>%(date)s</h2>\n\n<table><tbody>""" % \
-            {"title": u"Felo-Zahlen "+parameters["groupname"], "date": u"vom "+last_date}
+            {"title": _(u"Felo ratings ")+parameters["groupname"], "date": _(u"as of ")+last_date}
         try:
             fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts, plot=make_plot)
         except felo_rating.ExternalProgramError, e:
-            wx.MessageBox(e.description, u"Externes Programm nicht gefunden", wx.OK | wx.ICON_ERROR, self)
+            wx.MessageBox(e.description, _(u"External program not found"), wx.OK | wx.ICON_ERROR, self)
             return
         for fencer in fencerlist:
             print>>html_file, u"<tr><td class='name'>%s</td><td class='felo-rating'>%d</td></tr>" % \
@@ -271,22 +272,22 @@ class Frame(wx.Frame):
         print>>html_file, u"</tbody></table>"
         if make_plot:
             print>>html_file, u"<p class='felo-plot'><img class='felo-plot' src='%s.png' alt='%s' /></p>" % \
-                (base_filename, u"Felo-Zahlen-Plot für "+parameters["groupname"])
-            print>>html_file, u"<p class='printable-notice'>Auch in einer <a href='%s.pdf'>" \
-                "ausdruckbaren Version</a>.</p>" % base_filename
+                (base_filename, _(u"Felo ratings plot for ")+parameters["groupname"])
+            print>>html_file, _(u"<p class='printable-notice'>Also in a <a href='%s.pdf'>" \
+                "printable version</a>.</p>") % base_filename
             file_list += base_filename+".png\n"
             file_list += base_filename+".pdf\n"
         print>>html_file, u"</body></html>"
         html_file.close()
         html_window = HtmlFrame(self, html_filename)
         html_window.Show()
-        wx.MessageBox(u"Die folgenden Dateien müssen nun auf den Webserver kopiert werden:\n\n"+file_list,
-                      u"Datei modifiziert", wx.OK | wx.ICON_INFORMATION, self)
+        wx.MessageBox(_(u"The following files must be uploaded to the web server:\n\n")+file_list,
+                      _(u"Upload file list"), wx.OK | wx.ICON_INFORMATION, self)
     def OnBootstrapping(self, event):
         if not self.assure_open_felo_file():
             return
-        answer = wx.MessageBox(u"Das Bootstrapping wird die Fechter-Daten verändern.  "
-                               "Willst du wirklich fortfahren?",
+        answer = wx.MessageBox(_(u"The bootstrapping will change the fencer data.  "
+                               "Are you sure that you wish to continue?"),
                                u"Bootstrapping", wx.YES_NO | wx.NO_DEFAULT |
                                wx.ICON_QUESTION, self)
         if answer != wx.YES:
