@@ -44,6 +44,7 @@ datapath = os.path.abspath(os.path.dirname(__file__))
 class HtmlFrame(wx.Frame):
     def __init__(self, parent, file):
         wx.Frame.__init__(self, parent, wx.ID_ANY, _(u"Preview HTML"), size=(400, 600))
+        self.SetIcon(App.icon)
         html = wx.html.HtmlWindow(self)
         if "gtk2" in wx.PlatformInfo:
             html.SetStandardFonts()
@@ -92,12 +93,15 @@ class Editor(wx.py.editor.EditWindow):
 class ResultFrame(wx.Frame):
     def __init__(self, results, *args, **keyw):
         wx.Frame.__init__(self, None, wx.ID_ANY, size=(300, 500), title=_(u"Felo ratings"), *args, **keyw)
+        self.SetIcon(App.icon)
         result_box = wx.TextCtrl(self, wx.ID_ANY, results, style=wx.TE_MULTILINE)
         result_box.SetEditable(False)
         
 class HTMLDialog(wx.Dialog):
     def __init__(self, directory, *args, **keyw):
         wx.Dialog.__init__(self, None, wx.ID_ANY, title=_(u"HTML export"), *args, **keyw)
+        if "gtk2" in wx.PlatformInfo:
+            self.SetIcon(App.icon)
         vbox_main = wx.BoxSizer(wx.VERTICAL)
         text = wx.StaticText(self, wx.ID_ANY,
                              textwrap.fill(_(u"The web files will be written to the folder \"%s\".")
@@ -125,6 +129,8 @@ class HTMLDialog(wx.Dialog):
 class AboutWindow(wx.Dialog):
     def __init__(self, *args, **keyw):
         wx.Dialog.__init__(self, None, wx.ID_ANY, title=_(u"About Felo"), *args, **keyw)
+        if "gtk2" in wx.PlatformInfo:
+            self.SetIcon(App.icon)
         vbox_main = wx.BoxSizer(wx.VERTICAL)
         text1 = wx.StaticText(self, wx.ID_ANY, _(u"version ")+"1.0"+_(u", revision ")+__version__[11:-2])
         vbox_main.Add(text1, flag=wx.ALIGN_CENTER)
@@ -160,6 +166,8 @@ class AboutWindow(wx.Dialog):
 class Frame(wx.Frame):
     def __init__(self, *args, **keyw):
         wx.Frame.__init__(self, None, wx.ID_ANY, size=(700, 700), title="Felo", *args, **keyw)
+        self.SetIcon(App.icon)
+
         menu_bar = wx.MenuBar()
 
         menu_file = wx.Menu()
@@ -184,15 +192,15 @@ class Frame(wx.Frame):
         redo = menu_edit.Append(wx.ID_ANY, _(u"&Redo")+"\tCtrl-R")
         self.Bind(wx.EVT_MENU, self.OnRedo, redo)
         menu_edit.AppendSeparator()
-        cut = menu_edit.Append(wx.ID_ANY, _(u"&Cut")+"\tCtrl-X")
+        cut = menu_edit.Append(wx.ID_ANY, _(u"Cu&t")+"\tCtrl-X")
         self.Bind(wx.EVT_MENU, self.OnCut, cut)
-        copy = menu_edit.Append(wx.ID_ANY, _(u"C&opy")+"\tCtrl-C")
+        copy = menu_edit.Append(wx.ID_ANY, _(u"&Copy")+"\tCtrl-C")
         self.Bind(wx.EVT_MENU, self.OnCopy, copy)
         paste = menu_edit.Append(wx.ID_ANY, _(u"&Paste")+"\tCtrl-V")
         self.Bind(wx.EVT_MENU, self.OnPaste, paste)
-        delete = menu_edit.Append(wx.ID_ANY, _(u"&Delete")+"\tDEL")
+        delete = menu_edit.Append(wx.ID_ANY, _(u"Cle&ar")+"\tDEL")
         self.Bind(wx.EVT_MENU, self.OnDelete, delete)
-        select_all = menu_edit.Append(wx.ID_ANY, _(u"Select &all")+"\tCtrl-A")
+        select_all = menu_edit.Append(wx.ID_ANY, _(u"Select a&ll")+"\tCtrl-A")
         self.Bind(wx.EVT_MENU, self.OnSelectAll, select_all)
         menu_bar.Append(menu_edit, _(u"&Edit"))
 
@@ -418,6 +426,8 @@ class Frame(wx.Frame):
 
 class App(wx.App):
     def OnInit(self):
+        App.icon = wx.EmptyIcon()
+        App.icon.CopyFromBitmap(wx.BitmapFromImage(wx.Image(datapath+"/felo-icon.png", wx.BITMAP_TYPE_PNG)))
         self.frame = Frame()
         self.frame.Show()
         self.SetTopWindow(self.frame)
