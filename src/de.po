@@ -7,122 +7,228 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Felo 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-08 09:34+0100\n"
-"PO-Revision-Date: 2006-12-08 09:34+0100\n"
+"POT-Creation-Date: 2006-12-08 21:57+0100\n"
+"PO-Revision-Date: 2006-12-08 21:57+0100\n"
 "Last-Translator: Torsten Bronger <bronger@physik.rwth-aachen.de>\n"
 "Language-Team: German <bronger@physik.rwth-aachen.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: felo.py:43
+#: felo.py:46
 msgid "Preview HTML"
 msgstr "HTML Vorschau"
 
-#: felo.py:110
+#: felo.py:94
+msgid "Felo ratings"
+msgstr "Felo-Zahlen "
+
+#: felo.py:100
+msgid "HTML export"
+msgstr "HTML-Export"
+
+#: felo.py:103
+#, python-format
+msgid "The web files will be written to the folder \"%s\"."
+msgstr "Die Web-Dateien werden in das Verzeichnis \"%s\" geschrieben."
+
+#: felo.py:107
+msgid "with plot"
+msgstr "mit Plot"
+
+#: felo.py:109
+msgid "preview the HTML"
+msgstr "Vorschau des HTMLs"
+
+#: felo.py:114
+msgid "Okay"
+msgstr "Okay"
+
+#: felo.py:117
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: felo.py:127
+msgid "About Felo"
+msgstr "Über Felo"
+
+#: felo.py:129
+msgid "version "
+msgstr "Version "
+
+#: felo.py:129
+msgid ", revision "
+msgstr ", Revision "
+
+#: felo.py:134
+msgid "Estimate fencing strengths of sport fencers"
+msgstr "Die Fechtstärken von Sportfechtern bestimmen"
+
+#: felo.py:136
+msgid ""
+"Brought to you by the sport fencing group at the\n"
+"University of Technology Aachen (RWTH), Germany."
+msgstr ""
+"Entwickelt in der Sportfechter-Gruppe\n"
+"der RWTH Aachen."
+
+#: felo.py:140
+msgid ""
+"For bug reports, suggestions, documentation, the\n"
+"source code, and the mailinglist visit Felo's homepage at"
+msgstr ""
+"Für Bug-Reports, Vorschläge, Anleitungen, den Quellcode\n"
+"und die Mailingliste besuche Felo's Homepage unter"
+
+#: felo.py:147
+msgid "English translation by Torsten Bronger."
+msgstr "Deutsche Übersetzung von Torsten Bronger."
+
+#: felo.py:166
+msgid "&New"
+msgstr "&Neu"
+
+#: felo.py:168
 msgid "&Open"
 msgstr "Ö&ffnen"
 
-#: felo.py:112
+#: felo.py:170
 msgid "&Save"
 msgstr "&Speichern"
 
-#: felo.py:114
+#: felo.py:172
 msgid "Save &as"
 msgstr "Speichern &unter"
 
-#: felo.py:117
+#: felo.py:175
 msgid "&Quit"
 msgstr "&Beenden"
 
-#: felo.py:119
+#: felo.py:177
 msgid "&File"
 msgstr "&Datei"
 
-#: felo.py:122
-msgid "Calculdate &Felo ratings"
+#: felo.py:182
+msgid "&Undo"
+msgstr "Rü&ckgängig"
+
+#: felo.py:184
+msgid "&Redo"
+msgstr "Wiederherste&llen"
+
+#: felo.py:187
+msgid "&Cut"
+msgstr "&Ausschneiden"
+
+#: felo.py:189
+msgid "C&opy"
+msgstr "&Kopieren"
+
+#: felo.py:191
+msgid "&Paste"
+msgstr "E&infügen"
+
+#: felo.py:193
+msgid "&Delete"
+msgstr "&Löschen"
+
+#: felo.py:195
+msgid "Select &all"
+msgstr "Alles aus&wählen"
+
+#: felo.py:197
+msgid "&Edit"
+msgstr "&Bearbeiten"
+
+#: felo.py:200
+msgid "Calculate &Felo ratings"
 msgstr "&Felo-Zahlen berechnen"
 
-#: felo.py:124
+#: felo.py:202
 msgid "Generate &HTML"
 msgstr "&HTML erzeugen"
 
-#: felo.py:126
+#: felo.py:204
 msgid "&Bootstrapping"
 msgstr "&Bootstrapping"
 
-#: felo.py:128
+#: felo.py:206
 msgid "&Estimate freshmen"
 msgstr "&Neulinge einschätzen"
 
-#: felo.py:130
+#: felo.py:208
 msgid "&Calculate"
 msgstr "&Berechnen"
 
-#: felo.py:133
+#: felo.py:211
 msgid "&About"
 msgstr "Ü&ber"
 
-#: felo.py:135
+#: felo.py:213
 msgid "&Help"
 msgstr "&Hilfe"
 
-#: felo.py:147
+#: felo.py:219 felo.py:269
+msgid "unnamed.felo"
+msgstr "unbenannt.felo"
+
+#: felo.py:244
 #, python-format
 msgid "The file \"%s\" has changed.  Save it?"
 msgstr "Die Datei \"%s\" wurde verändert.  Abspeichern?"
 
-#: felo.py:148
+#: felo.py:245
 msgid "File changed"
 msgstr "Datei verändert"
 
-#: felo.py:170 felo.py:193
+#: felo.py:258
+#, python-format
+msgid "Could not open file because folder '%s' doesn't exist."
+msgstr "Konnte den Ordner '%s' nicht öffnen, weil er nicht existiert."
+
+#: felo.py:259
+msgid "Folder not found"
+msgstr "Ordner nicht gefunden"
+
+#: felo.py:275 felo.py:297
 msgid "Felo file (*.felo)|*.felo|All files (*.*)|*.*"
 msgstr "Felo-Datei (*.felo)|*.felo|Alle Dateien (*.*)|*.*"
 
-#: felo.py:172 felo.py:195
+#: felo.py:277 felo.py:299
 msgid "Select Felo file"
 msgstr "Felo-Datei wählen"
 
-#: felo.py:204
-msgid "Please first open a Felo file."
-msgstr "Bitte öffne erst eine Felo-Datei."
-
-#: felo.py:205
-msgid "Notification"
-msgstr "Hinweis"
-
-#: felo.py:217
+#: felo.py:313
 #, python-format
 msgid "Error in line %d: %s"
 msgstr "Fehler in Zeile %d: %s"
 
-#: felo.py:218 felo.py:220
+#: felo.py:314 felo.py:316
 msgid "Parsing error"
 msgstr "Parsefehler"
 
-#: felo.py:243
+#: felo.py:337
 #, python-format
 msgid "%x"
 msgstr "%d.&nbsp;%B&nbsp;%Y"
 
-#: felo.py:263
+#: felo.py:358
 msgid "Felo ratings "
 msgstr "Felo-Zahlen "
 
-#: felo.py:263
+#: felo.py:358
 msgid "as of "
 msgstr "vom "
 
-#: felo.py:267
+#: felo.py:362
 msgid "External program not found"
 msgstr "Externes Programm nicht gefunden"
 
-#: felo.py:275
+#: felo.py:370
 msgid "Felo ratings plot for "
 msgstr "Felo-Zahlen-Plot für "
 
-#: felo.py:276
+#: felo.py:371
 #, python-format
 msgid ""
 "<p class='printable-notice'>Also in a <a href='%s.pdf'>printable version</a>."
@@ -131,7 +237,7 @@ msgstr ""
 "<p class='printable-notice'>Auch in einer <a href='%s.pdf'>ausdruckbaren "
 "Version</a>.</p>"
 
-#: felo.py:284
+#: felo.py:380
 msgid ""
 "The following files must be uploaded to the web server:\n"
 "\n"
@@ -139,11 +245,11 @@ msgstr ""
 "Die folgenden Dateien müssen auf den Webserver kopiert werden:\n"
 "\n"
 
-#: felo.py:285
+#: felo.py:381
 msgid "Upload file list"
 msgstr "Liste hochzuladender Dateien"
 
-#: felo.py:289
+#: felo.py:383
 msgid ""
 "The bootstrapping will change the fencer data.  Are you sure that you wish "
 "to continue?"
@@ -151,7 +257,7 @@ msgstr ""
 "Das Bootstrapping wird die Fechter-Daten verändern.  Willst du wirklich "
 "fortfahren?"
 
-#: felo.py:307
+#: felo.py:399
 msgid ""
 "Estimating the freshmen will change their initial Felo numbers.  Are you "
 "sure that you wish to continue?"
@@ -159,7 +265,7 @@ msgstr ""
 "Das Einschätzen der Neulinge wird u.U. deren Fechter-Daten verändern.  "
 "Willst du wirklich fortfahren?\""
 
-#: felo.py:309
+#: felo.py:401
 msgid "Estimating freshmen"
 msgstr "Einschätzen der Neulinge"
 
@@ -346,3 +452,9 @@ msgstr "DATEINAME"
 #: felo_rating.py:1070
 msgid "You cannot bootstrap and estimate freshmen at the same time."
 msgstr "Man kann nicht gleichzeitig bootstrappen und Neueinsteiger bewerten."
+
+#~ msgid "Please first open a Felo file."
+#~ msgstr "Bitte öffne erst eine Felo-Datei."
+
+#~ msgid "Notification"
+#~ msgstr "Hinweis"
