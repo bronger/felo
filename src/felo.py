@@ -32,7 +32,7 @@
 __version__ = "$Revision$"
 # $HeadURL$
 
-import re, os, codecs, sys, time, StringIO, textwrap, platform
+import re, os, codecs, sys, time, StringIO, textwrap, platform, webbrowser
 import gettext, locale
 locale.setlocale(locale.LC_ALL, '')
 gettext.install('felo', '.', unicode=True)
@@ -171,53 +171,41 @@ class Frame(wx.Frame):
         menu_bar = wx.MenuBar()
 
         menu_file = wx.Menu()
-        new = menu_file.Append(wx.ID_ANY, _(u"&New"))
-        self.Bind(wx.EVT_MENU, self.OnNew, new)
-        open = menu_file.Append(wx.ID_ANY, _(u"&Open"))
-        self.Bind(wx.EVT_MENU, self.OnOpen, open)
-        save = menu_file.Append(wx.ID_ANY, _(u"&Save"))
-        self.Bind(wx.EVT_MENU, self.OnSave, save)
-        save_as = menu_file.Append(wx.ID_ANY, _(u"Save &as"))
-        self.Bind(wx.EVT_MENU, self.OnSaveAs, save_as)
+        self.Bind(wx.EVT_MENU, self.OnNew, menu_file.Append(wx.ID_ANY, _(u"&New")))
+        self.Bind(wx.EVT_MENU, self.OnOpen, menu_file.Append(wx.ID_ANY, _(u"&Open")))
+        self.Bind(wx.EVT_MENU, self.OnSave, menu_file.Append(wx.ID_ANY, _(u"&Save")))
+        self.Bind(wx.EVT_MENU, self.OnSaveAs, menu_file.Append(wx.ID_ANY, _(u"Save &as")))
         menu_file.AppendSeparator()
-        exit = menu_file.Append(wx.ID_ANY, _(u"&Quit"))
-        self.Bind(wx.EVT_MENU, self.OnExit, exit)
+        self.Bind(wx.EVT_MENU, self.OnExit, menu_file.Append(wx.ID_ANY, _(u"&Quit")))
         menu_bar.Append(menu_file, _(u"&File"))
 
         self.editor = Editor(self)
 
         menu_edit = wx.Menu()
-        undo = menu_edit.Append(wx.ID_ANY, _(u"&Undo")+"\tCtrl-Z")
-        self.Bind(wx.EVT_MENU, self.OnUndo, undo)
-        redo = menu_edit.Append(wx.ID_ANY, _(u"&Redo")+"\tCtrl-R")
-        self.Bind(wx.EVT_MENU, self.OnRedo, redo)
+        self.Bind(wx.EVT_MENU, self.OnUndo, menu_edit.Append(wx.ID_ANY, _(u"&Undo")+"\tCtrl-Z"))
+        self.Bind(wx.EVT_MENU, self.OnRedo, menu_edit.Append(wx.ID_ANY, _(u"&Redo")+"\tCtrl-R"))
         menu_edit.AppendSeparator()
-        cut = menu_edit.Append(wx.ID_ANY, _(u"Cu&t")+"\tCtrl-X")
-        self.Bind(wx.EVT_MENU, self.OnCut, cut)
-        copy = menu_edit.Append(wx.ID_ANY, _(u"&Copy")+"\tCtrl-C")
-        self.Bind(wx.EVT_MENU, self.OnCopy, copy)
-        paste = menu_edit.Append(wx.ID_ANY, _(u"&Paste")+"\tCtrl-V")
-        self.Bind(wx.EVT_MENU, self.OnPaste, paste)
-        delete = menu_edit.Append(wx.ID_ANY, _(u"Cle&ar")+"\tDEL")
-        self.Bind(wx.EVT_MENU, self.OnDelete, delete)
-        select_all = menu_edit.Append(wx.ID_ANY, _(u"Select a&ll")+"\tCtrl-A")
-        self.Bind(wx.EVT_MENU, self.OnSelectAll, select_all)
+        self.Bind(wx.EVT_MENU, self.OnCut, menu_edit.Append(wx.ID_ANY, _(u"Cu&t")+"\tCtrl-X"))
+        self.Bind(wx.EVT_MENU, self.OnCopy, menu_edit.Append(wx.ID_ANY, _(u"&Copy")+"\tCtrl-C"))
+        self.Bind(wx.EVT_MENU, self.OnPaste, menu_edit.Append(wx.ID_ANY, _(u"&Paste")+"\tCtrl-V"))
+        self.Bind(wx.EVT_MENU, self.OnDelete, menu_edit.Append(wx.ID_ANY, _(u"Cle&ar")+"\tDEL"))
+        self.Bind(wx.EVT_MENU, self.OnSelectAll, menu_edit.Append(wx.ID_ANY, _(u"Select a&ll")+"\tCtrl-A"))
         menu_bar.Append(menu_edit, _(u"&Edit"))
 
         menu_calculate = wx.Menu()
-        calculate_felo_numbers = menu_calculate.Append(wx.ID_ANY, _(u"Calculate &Felo ratings"))
-        self.Bind(wx.EVT_MENU, self.OnCalculateFeloRatings, calculate_felo_numbers)
-        generate_html = menu_calculate.Append(wx.ID_ANY, _(u"Generate &HTML"))
-        self.Bind(wx.EVT_MENU, self.OnGenerateHTML, generate_html)
-        bootstrapping = menu_calculate.Append(wx.ID_ANY, _(u"&Bootstrapping"))
-        self.Bind(wx.EVT_MENU, self.OnBootstrapping, bootstrapping)
-        estimate_freshmen = menu_calculate.Append(wx.ID_ANY, _(u"&Estimate freshmen"))
-        self.Bind(wx.EVT_MENU, self.OnEstimateFreshmen, estimate_freshmen)
+        self.Bind(wx.EVT_MENU, self.OnCalculateFeloRatings, menu_calculate.Append(wx.ID_ANY, _(u"Calculate &Felo ratings")))
+        self.Bind(wx.EVT_MENU, self.OnGenerateHTML, menu_calculate.Append(wx.ID_ANY, _(u"Generate &HTML")))
+        self.Bind(wx.EVT_MENU, self.OnBootstrapping, menu_calculate.Append(wx.ID_ANY, _(u"&Bootstrapping")))
+        self.Bind(wx.EVT_MENU, self.OnEstimateFreshmen, menu_calculate.Append(wx.ID_ANY, _(u"&Estimate freshmen")))
         menu_bar.Append(menu_calculate, _(u"&Calculate"))
 
         menu_help = wx.Menu()
-        about = menu_help.Append(wx.ID_ANY, _(u"&About"))
-        self.Bind(wx.EVT_MENU, self.OnAbout, about)
+        self.Bind(wx.EVT_MENU, self.OnWebHelp, menu_help.Append(wx.ID_ANY, _(u"Online &help")))
+        self.Bind(wx.EVT_MENU, self.OnReportBug, menu_help.Append(wx.ID_ANY, _(u"Report &bug")))
+        self.Bind(wx.EVT_MENU, self.OnFeloForum, menu_help.Append(wx.ID_ANY, _(u"Felo &forum")))
+        self.Bind(wx.EVT_MENU, self.OnWebpage, menu_help.Append(wx.ID_ANY, _(u"Felo &webpage")))
+        menu_help.AppendSeparator()
+        self.Bind(wx.EVT_MENU, self.OnAbout, menu_help.Append(wx.ID_ANY, _(u"&About")))
         menu_bar.Append(menu_help, _(u"&Help"))
 
         self.SetMenuBar(menu_bar)
@@ -245,6 +233,14 @@ class Frame(wx.Frame):
         self.editor.Clear()
     def OnSelectAll(self, event):
         self.editor.SelectAll()
+    def OnWebHelp(self, event):
+        webbrowser.open(_("http://felo.sourceforge.net/felo-en/"))
+    def OnReportBug(self, event):
+        webbrowser.open("http://sourceforge.net/tracker/?func=add&group_id=183431&atid=905214")
+    def OnFeloForum(self, event):
+        webbrowser.open("http://sourceforge.net/forum/forum.php?forum_id=638727")
+    def OnWebpage(self, event):
+        webbrowser.open("http://felo.sourceforge.net")
     def OnChange(self, event):
         self.felo_file_changed = True
     def AssureSave(self):
