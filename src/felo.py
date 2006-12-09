@@ -306,7 +306,6 @@ class Frame(wx.Frame):
             self.felo_filename = dialog.GetPath()
             dialog.Destroy()
             self.save_felo_file()
-    
     def parse_editor_contents(self):
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
@@ -321,9 +320,14 @@ class Frame(wx.Frame):
         else:
             return parameters, fencers, bouts
         return {}, {}, []
+    def report_empty_bouts(self):
+        wx.MessageBox(_(u"No bouts were found.  Please enter or open a complete Felo file "
+                        u"with fencers and bouts."),
+                      _(u"No bouts found"), wx.OK | wx.ICON_WARNING, self)
     def OnCalculateFeloRatings(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
-        if not parameters:
+        if not bouts:
+            self.report_empty_bouts()
             return
         fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts)
         results = u""
@@ -335,7 +339,8 @@ class Frame(wx.Frame):
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
         parameters, fencers, bouts = self.parse_editor_contents()
-        if not parameters:
+        if not bouts:
+            self.report_empty_bouts()
             return
         bouts.sort()
         last_date = time.strftime(_(u"%x"), time.strptime(bouts[-1].date_string[:10], "%Y-%m-%d"))
@@ -384,15 +389,16 @@ class Frame(wx.Frame):
         wx.MessageBox(_(u"The following files must be uploaded to the web server:\n\n")+file_list,
                       _(u"Upload file list"), wx.OK | wx.ICON_INFORMATION, self)
     def OnBootstrapping(self, event):
+        parameters, fencers, bouts = self.parse_editor_contents()
+        if not bouts:
+            self.report_empty_bouts()
+            return
         answer = wx.MessageBox(_(u"The bootstrapping will change the fencer data.  "
                                  "Are you sure that you wish to continue?"),
                                u"Bootstrapping", wx.YES_NO | wx.NO_DEFAULT |
                                wx.ICON_QUESTION, self)
         if answer != wx.YES:
             return
-        felo_file_contents = StringIO.StringIO(self.editor.GetText())
-        felo_file_contents.name = self.felo_filename
-        parameters, __, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         felo_rating.calculate_felo_ratings(parameters, fencers, bouts, bootstrapping=True)
         for fencer in fencers.values():
             if not fencer.freshman:
@@ -400,15 +406,16 @@ class Frame(wx.Frame):
         self.editor.SetText(felo_rating.write_back_fencers(self.editor.GetText(), fencers))
         self.felo_file_changed = True
     def OnEstimateFreshmen(self, event):
+        parameters, fencers, bouts = self.parse_editor_contents()
+        if not bouts:
+            self.report_empty_bouts()
+            return
         answer = wx.MessageBox(_(u"Estimating the freshmen will change their initial Felo numbers.  "
                                  u"Are you sure that you wish to continue?"),
                                _(u"Estimating freshmen"), wx.YES_NO | wx.NO_DEFAULT |
                                wx.ICON_QUESTION, self)
         if answer != wx.YES:
             return
-        felo_file_contents = StringIO.StringIO(self.editor.GetText())
-        felo_file_contents.name = self.felo_filename
-        parameters, __, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         felo_rating.calculate_felo_ratings(parameters, fencers, bouts, estimate_freshmen=True)
         for fencer in fencers.values():
             if fencer.freshman:
