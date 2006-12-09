@@ -1,11 +1,11 @@
 # This is just an example file.  You may use it as
-# a sample for your own file.  Every file starting
+# a sample for your own file.  Every line starting
 # with "#" is ignored by the program.
 
 # First Part: Parameters
 
-Gruppenname			Florett
-Plot Mindestdatum		2006-11-02
+groupname			foil
+earliest date in plot		2006-11-02
 
 ====================================================
 # Second Part: Initial ratings
