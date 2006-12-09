@@ -543,7 +543,7 @@ def parse_felo_file(felo_file):
                                _(u"groupname"): "groupname",
                                _(u"output folder"): "output folder",
                                _(u"min distance of plot tics"): "min distance of plot tics",
-                               _(u"minimal date in plot"): "minimal date in plot",
+                               _(u"earliest date in plot"): "earliest date in plot",
                                _(u"maximal days in plot"): "maximal days in plot"}
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
@@ -566,7 +566,7 @@ def parse_felo_file(felo_file):
                           os.path.splitext(os.path.split(felo_file.name)[1])[0].capitalize())
     parameters.setdefault("output folder", os.path.abspath(os.path.dirname(felo_file.name)))
     parameters.setdefault("min distance of plot tics", 7)
-    parameters.setdefault("minimal date in plot", "1980-01-01")
+    parameters.setdefault("earliest date in plot", "1980-01-01")
     parameters.setdefault("maximal days in plot", "366")
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
@@ -916,7 +916,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             # the parameters section; *and* the Felo ratings must not be older
             # than the maximal days in the plot.
             if plot and (i == len(bouts) - 1 or bouts[i+1].date.toordinal() != current_bout_daynumber) and \
-                    bout.date_string[:10] >= parameters["minimal date in plot"] and \
+                    bout.date_string[:10] >= parameters["earliest date in plot"] and \
                     current_daynumber - current_bout_daynumber <= parameters["maximal days in plot"]:
                 data_file.write(str(current_bout_daynumber))
                 if current_bout_daynumber - last_xtics_daynumber >= parameters["min distance of plot tics"]:
