@@ -231,6 +231,7 @@ class Frame(wx.Frame):
         self.SendSizeEvent()
         if len(sys.argv) > 1:
             self.open_felo_file(sys.argv[1])
+        self.editor.SetFocus()
     def OnWebHelp(self, event):
         webbrowser.open(_("http://felo.sourceforge.net/felo-en/"))
     def OnReportBug(self, event):
