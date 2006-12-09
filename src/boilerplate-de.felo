@@ -1,10 +1,15 @@
-# Parameter
+# Dies ist nur eine Beispiel-Datei.  Du kannst sie
+# als Muster für die eigene Datei benutzen.  Jede
+# Zeile, die mit "#" beginnt, wird vom Programm
+# ignoriert.
+
+# 1. Teil: Parameter
 
 Gruppenname			Florett
 Plot Mindestdatum		2006-11-02
 
 ====================================================
-# Anfangswerte
+# 2. Teil: Anfangswerte
 # Namen der Fechter, die versteckt bleiben wollen,
 # in Klammern
 
@@ -15,7 +20,7 @@ Elmer			1400
 Obi Wan			1600
 
 ====================================================
-# Gefechte
+# 3. Teil: Gefechte
 
 2006-05-01	Anakin -- Elmer		5:3
 2006-05-01	Anakin -- Wile Coyote	5:1
