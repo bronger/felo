@@ -205,7 +205,7 @@ class Frame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnFeloForum, menu_help.Append(wx.ID_ANY, _(u"Felo &forum")))
         self.Bind(wx.EVT_MENU, self.OnWebpage, menu_help.Append(wx.ID_ANY, _(u"Felo &webpage")))
         menu_help.AppendSeparator()
-        self.Bind(wx.EVT_MENU, self.OnAbout, menu_help.Append(wx.ID_ANY, _(u"&About")))
+        self.Bind(wx.EVT_MENU, self.OnAbout, menu_help.Append(wx.ID_ANY, _(u"&About Felo")))
         menu_bar.Append(menu_help, _(u"&Help"))
 
         self.SetMenuBar(menu_bar)
@@ -268,13 +268,13 @@ class Frame(wx.Frame):
         self.felo_file_changed = False
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
     def OnNew(self):
-        if self.AssureSave == wx.CANCEL:
+        if self.AssureSave() == wx.CANCEL:
             return
         self.felo_filename = _("unnamed.felo")
         self.editor.ClearAll()
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
     def OnOpen(self, event):
-        if self.AssureSave == wx.CANCEL:
+        if self.AssureSave() == wx.CANCEL:
             return
         wildcard = _(u"Felo file (*.felo)|*.felo|"
                      "All files (*.*)|*.*")
