@@ -182,14 +182,15 @@ class Frame(wx.Frame):
         self.editor = Editor(self)
 
         menu_edit = wx.Menu()
-        self.Bind(wx.EVT_MENU, self.OnUndo, menu_edit.Append(wx.ID_ANY, _(u"&Undo")+"\tCtrl-Z"))
-        self.Bind(wx.EVT_MENU, self.OnRedo, menu_edit.Append(wx.ID_ANY, _(u"&Redo")+"\tCtrl-R"))
+        self.Bind(wx.EVT_MENU, lambda e: self.editor.Undo(), menu_edit.Append(wx.ID_ANY, _(u"&Undo")+"\tCtrl-Z"))
+        self.Bind(wx.EVT_MENU, lambda e: self.editor.Redo(), menu_edit.Append(wx.ID_ANY, _(u"&Redo")+"\tCtrl-R"))
         menu_edit.AppendSeparator()
-        self.Bind(wx.EVT_MENU, self.OnCut, menu_edit.Append(wx.ID_ANY, _(u"Cu&t")+"\tCtrl-X"))
-        self.Bind(wx.EVT_MENU, self.OnCopy, menu_edit.Append(wx.ID_ANY, _(u"&Copy")+"\tCtrl-C"))
-        self.Bind(wx.EVT_MENU, self.OnPaste, menu_edit.Append(wx.ID_ANY, _(u"&Paste")+"\tCtrl-V"))
-        self.Bind(wx.EVT_MENU, self.OnDelete, menu_edit.Append(wx.ID_ANY, _(u"Cle&ar")+"\tDEL"))
-        self.Bind(wx.EVT_MENU, self.OnSelectAll, menu_edit.Append(wx.ID_ANY, _(u"Select a&ll")+"\tCtrl-A"))
+        self.Bind(wx.EVT_MENU, lambda e: self.editor.Cut(), menu_edit.Append(wx.ID_ANY, _(u"Cu&t")+"\tCtrl-X"))
+        self.Bind(wx.EVT_MENU, lambda e: self.editor.Copy(), menu_edit.Append(wx.ID_ANY, _(u"&Copy")+"\tCtrl-C"))
+        self.Bind(wx.EVT_MENU, lambda e: self.editor.Paste(), menu_edit.Append(wx.ID_ANY, _(u"&Paste")+"\tCtrl-V"))
+        self.Bind(wx.EVT_MENU, lambda e: self.editor.Clear(), menu_edit.Append(wx.ID_ANY, _(u"Cle&ar")+"\tDEL"))
+        self.Bind(wx.EVT_MENU, lambda e: self.editor.SelectAll(),
+                  menu_edit.Append(wx.ID_ANY, _(u"Select a&ll")+"\tCtrl-A"))
         menu_bar.Append(menu_edit, _(u"&Edit"))
 
         menu_calculate = wx.Menu()
@@ -219,20 +220,6 @@ class Frame(wx.Frame):
         self.SendSizeEvent()
         if len(sys.argv) > 1:
             self.open_felo_file(sys.argv[1])
-    def OnUndo(self, event):
-        self.editor.Undo()
-    def OnRedo(self, event):
-        self.editor.Redo()
-    def OnCopy(self, event):
-        self.editor.Copy()
-    def OnCut(self, event):
-        self.editor.Cut()
-    def OnPaste(self, event):
-        self.editor.Paste()
-    def OnDelete(self, event):
-        self.editor.Clear()
-    def OnSelectAll(self, event):
-        self.editor.SelectAll()
     def OnWebHelp(self, event):
         webbrowser.open(_("http://felo.sourceforge.net/felo-en/"))
     def OnReportBug(self, event):
@@ -321,7 +308,7 @@ class Frame(wx.Frame):
             return parameters, fencers, bouts
         return {}, {}, []
     def report_empty_bouts(self):
-        wx.MessageBox(_(u"No bouts were found.  Please enter or open a complete Felo file "
+        wx.MessageBox(_(u"I haven't found any bouts.  Please enter or open a complete Felo file "
                         u"with fencers and bouts."),
                       _(u"No bouts found"), wx.OK | wx.ICON_WARNING, self)
     def OnCalculateFeloRatings(self, event):
