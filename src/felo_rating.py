@@ -486,12 +486,12 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
     Return values:
     A list with all bouts that were read.
     """
-    line_pattern = re.compile("\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2})"
+    line_pattern = re.compile("\\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2})"
                               "(?:\\.(?P<index>\\d+))?"
                               +separator+
-                              "(?P<first>.+?)\s*--\s*(?P<second>.+?)"+separator+
-                              "(?P<points_first>\\d+):(?P<points_second>\\d+)"+
-                              "(?:/(?P<fenced_to>\\d+))?\s*\\Z")
+                              "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)"+separator+
+                              "(?P<points_first>\\d+):(?P<points_second>\\d+)\\s*"+
+                              "(?P<fenced_to>(?:/\\d+)|\\*)?\\s*\\Z")
     bouts = []
     for line in input_file:
         linenumber += 1
@@ -508,7 +508,9 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
         if not fenced_to:
             fenced_to = max(points_first, points_second)
         else:
-            fenced_to = int(fenced_to)
+            if fenced_to == "*":
+                fenced_to = "/0"
+            fenced_to = int(fenced_to[1:])
         if fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
             raise LineError(_("One fencer has more points than the winning points."), input_file.name, linenumber)
         if first_fencer not in fencers:
@@ -660,9 +662,9 @@ def write_back_fencers(felo_file_contents, fencers):
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
         raise FeloFormatError(_("Felo file invalid because there are not exactly two boundary lines."))
-    fencer_lines = [u_("# Initial Felo ratings"),
-                    u_("# Names of fencers who want to be hidden"),
-                    u_("# in parentheses"),
+    fencer_lines = [_(u"# Initial Felo ratings"),
+                    _(u"# Names of fencers who want to be hidden"),
+                    _(u"# in parentheses"),
                     u""]
     fencerslist = fencers.items()
     fencerslist.sort()
@@ -849,7 +851,7 @@ class Fencer(object):
         return self.name + " (" + unicode(self.felo_rating) + ")"
 
 def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_freshmen=False,
-                           bootstrapping=False, maxcycles=1000):
+                           bootstrapping=False, maxcycles=1000, bootstrapping_callback=None):
     """Calculate the new Felo ratings, taking a whole bunch of bouts into
     account.  If wanted, generate plots with the development of the Felo
     numbers.
@@ -866,6 +868,9 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
     maxcycles -- the maximal number of cycles in the bootstrapping process.  If
         it is not enough, an exception is raised.
     estimate_freshmen -- if True, try to calculate estimates for freshmen.
+    bootstrapping_callback -- callabale object which takes as the only
+        parameter a float between 0 and 1 indicating the progress while
+        bootstrapping.  It may update a progress bar, for example.
 
     Return values: A list (not a dictionary!) of all visible fencers, sorted by
     descending Felo number.
@@ -935,6 +940,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
     bouts.sort()
     if bootstrapping:
         for i in range(maxcycles):
+            if bootstrapping_callback:
+                bootstrapping_callback(float(i)/(maxcycles-1))
             for fencer in fencers.values():
                 fencer.old_felo_rating = fencer.felo_rating_exact
             calculate_felo_ratings_core(parameters, fencers, bouts, plot=False)
