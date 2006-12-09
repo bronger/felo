@@ -614,7 +614,7 @@ def write_felo_file(filename, parameters, fencers, bouts):
     Return values: None
     """
     felo_file = codecs.open(filename, "w", "utf-8")
-    print>>felo_file, "# Parameter"
+    print>>felo_file, _("# Parameters")
     print>>felo_file
     parameterslist = parameters.items()
     # sort case-insensitively
@@ -662,10 +662,9 @@ def write_back_fencers(felo_file_contents, fencers):
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
         raise FeloFormatError(_("Felo file invalid because there are not exactly two boundary lines."))
-    fencer_lines = [_(u"# Initial Felo ratings"),
-                    _(u"# Names of fencers who want to be hidden"),
-                    _(u"# in parentheses"),
-                    u""]
+    fencer_lines = []
+    while lines[fencer_limits[0] + 1].lstrip().startswith("#") or lines[fencer_limits[0] + 1].lstrip() == "":
+        fencer_limits[0] += 1
     fencerslist = fencers.items()
     fencerslist.sort()
     for fencer in [entry[1] for entry in fencerslist]:
