@@ -63,8 +63,8 @@ class Editor(wx.py.editor.EditWindow):
         self.bout_line_pattern = re.compile("\\s*(?P<date>\\d{4}-\\d{1,2}-\\d{1,2}(?:\\.\\d+)?)"
                                             "\\s*\t+\\s*"
                                             "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)\\s*\t+\\s*"
-                                            "(?P<score>\\d+:\\d+(?P<fenced_to>/\\d+)?)\\s*\\Z")
-        self.item_line_pattern = re.compile("\s*(?P<name>[^\t]+?)\\s*\t+\\s*(?P<value>.+?)\s*\\Z")
+                                            "(?P<score>\\d+:\\d+\\s*(?P<fenced_to>(?:/\\d+)|\\*)?)\\s*\\Z")
+        self.item_line_pattern = re.compile("\\s*(?P<name>[^\t]+?)\\s*\t+\\s*(?P<value>.+?)\\s*\\Z")
     def OnStyling(self, event):
         def apply_style(span, style):
             start, end = span
@@ -163,6 +163,17 @@ class AboutWindow(wx.Dialog):
     def OnClick(self, event):
         self.Destroy()
 
+class WaitDialog(wx.Dialog):
+    def __init__(self, message, title, *args, **keyw):
+        wx.Dialog.__init__(self, None, wx.ID_ANY, title=title, *args, **keyw)
+        if "gtk2" in wx.PlatformInfo:
+            self.SetIcon(App.icon)
+        text = wx.StaticText(self, wx.ID_ANY, textwrap.fill(message, 41))
+        hbox_top = wx.BoxSizer(wx.HORIZONTAL)
+        hbox_top.Add(text, flag=wx.ALL | wx.ALIGN_CENTER, border=25)
+        self.SetSizer(hbox_top)
+        self.Fit()
+
 class Frame(wx.Frame):
     def __init__(self, *args, **keyw):
         wx.Frame.__init__(self, None, wx.ID_ANY, size=(700, 700), title="Felo", *args, **keyw)
@@ -236,10 +247,9 @@ class Frame(wx.Frame):
                                    _(u"File changed"), wx.YES_NO | wx.CANCEL | wx.YES_DEFAULT |
                                    wx.ICON_QUESTION, self)
             if answer == wx.YES:
-                self.editor.SaveFile(self.felo_filename)
-                self.felo_file_changed = False
+                return self.OnSave(None)
             elif answer == wx.CANCEL:
-                return wx.CANCEL
+                return wx.ID_CANCEL
     def open_felo_file(self, felo_filename):
         felo_filename = os.path.abspath(felo_filename)
         path = os.path.dirname(felo_filename)
@@ -254,14 +264,15 @@ class Frame(wx.Frame):
             self.editor.LoadFile(self.felo_filename)
         self.felo_file_changed = False
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
-    def OnNew(self):
-        if self.AssureSave() == wx.CANCEL:
+    def OnNew(self, event):
+        if self.AssureSave() == wx.ID_CANCEL:
             return
         self.felo_filename = _("unnamed.felo")
         self.editor.ClearAll()
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
+        self.editor.LoadFile(datapath+"/"+_("boilerplate.felo"))
     def OnOpen(self, event):
-        if self.AssureSave() == wx.CANCEL:
+        if self.AssureSave() == wx.ID_CANCEL:
             return
         wildcard = _(u"Felo file (*.felo)|*.felo|"
                      "All files (*.*)|*.*")
@@ -273,7 +284,7 @@ class Frame(wx.Frame):
     def OnExit(self, event):
         self.Close()
     def OnCloseWindow(self, event):
-        if self.AssureSave() == wx.CANCEL:
+        if self.AssureSave() == wx.ID_CANCEL:
             return
         self.Destroy()
     def save_felo_file(self):
@@ -283,16 +294,22 @@ class Frame(wx.Frame):
             return True
         return False
     def OnSave(self, event):
-        self.save_felo_file()
+        if self.felo_filename == _("unnamed.felo"):
+            return self.OnSaveAs(event)
+        else:
+            self.save_felo_file()
+            return wx.ID_OK
     def OnSaveAs(self, event):
         wildcard = _(u"Felo file (*.felo)|*.felo|"
                      "All files (*.*)|*.*")
         dialog = wx.FileDialog(None, _(u"Select Felo file"), os.getcwd(),
-                               "", wildcard, wx.SAVE | wx.OVERWRITE_PROMPT)
-        if dialog.ShowModal() == wx.ID_OK:
+                               self.felo_filename, wildcard, wx.SAVE | wx.OVERWRITE_PROMPT)
+        result = dialog.ShowModal()
+        if result == wx.ID_OK:
             self.felo_filename = dialog.GetPath()
-            dialog.Destroy()
             self.save_felo_file()
+        dialog.Destroy()
+        return result
     def parse_editor_contents(self):
         felo_file_contents = StringIO.StringIO(self.editor.GetText())
         felo_file_contents.name = self.felo_filename
@@ -313,6 +330,8 @@ class Frame(wx.Frame):
                       _(u"No bouts found"), wx.OK | wx.ICON_WARNING, self)
     def OnCalculateFeloRatings(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
+        if not parameters:
+            return
         if not bouts:
             self.report_empty_bouts()
             return
@@ -323,9 +342,9 @@ class Frame(wx.Frame):
         result_frame = ResultFrame(results)
         result_frame.Show()
     def OnGenerateHTML(self, event):
-        felo_file_contents = StringIO.StringIO(self.editor.GetText())
-        felo_file_contents.name = self.felo_filename
         parameters, fencers, bouts = self.parse_editor_contents()
+        if not parameters:
+            return
         if not bouts:
             self.report_empty_bouts()
             return
@@ -377,23 +396,30 @@ class Frame(wx.Frame):
                       _(u"Upload file list"), wx.OK | wx.ICON_INFORMATION, self)
     def OnBootstrapping(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
+        if not parameters:
+            return
         if not bouts:
             self.report_empty_bouts()
             return
         answer = wx.MessageBox(_(u"The bootstrapping will change the fencer data.  "
                                  "Are you sure that you wish to continue?"),
-                               u"Bootstrapping", wx.YES_NO | wx.NO_DEFAULT |
+                               _(u"Bootstrapping"), wx.YES_NO | wx.NO_DEFAULT |
                                wx.ICON_QUESTION, self)
-        if answer != wx.YES:
+        if answer == wx.NO:
             return
+#         wait_message = WaitDialog(_(u"I'm bootstrapping, please be patient") + u" …", _(u"Bootstrapping"))
+#         wait_message.ShowModal()
         felo_rating.calculate_felo_ratings(parameters, fencers, bouts, bootstrapping=True)
         for fencer in fencers.values():
             if not fencer.freshman:
                 fencer.initial_felo_rating = fencer.felo_rating
         self.editor.SetText(felo_rating.write_back_fencers(self.editor.GetText(), fencers))
         self.felo_file_changed = True
+#         wait_message.Destroy()
     def OnEstimateFreshmen(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
+        if not parameters:
+            return
         if not bouts:
             self.report_empty_bouts()
             return
@@ -401,7 +427,7 @@ class Frame(wx.Frame):
                                  u"Are you sure that you wish to continue?"),
                                _(u"Estimating freshmen"), wx.YES_NO | wx.NO_DEFAULT |
                                wx.ICON_QUESTION, self)
-        if answer != wx.YES:
+        if answer == wx.NO:
             return
         felo_rating.calculate_felo_ratings(parameters, fencers, bouts, estimate_freshmen=True)
         for fencer in fencers.values():
