@@ -34,7 +34,7 @@ try:
 except ImportError:
     from distutils.core import setup
 import distutils.dir_util
-import shutil, os.path, atexit, sys
+import shutil, os.path, atexit, sys, glob
 
 try:
     distutils.dir_util.remove_tree("build")
@@ -73,14 +73,21 @@ if os.path.isfile(real_rpmmacros_name) and not os.path.isfile(temp_rpmmacros_nam
         shutil.copy(distutils_rpmmacros_name, real_rpmmacros_name)
     atexit.register(restore_rpmmacros)
 
+languages = ("de",)
+language_data_files = []
+for language in languages:
+    language_path = os.path.join("share", "locale", language, "LC_MESSAGES")
+    language_data_files.append((language_path, [os.path.join("/home/bronger/src/felo/po", language, "felo.mo")]))
+
 setup(name = 'Felo',
-      description = 'Calculation Felo ratings for estimating sport fencers',
+      description = 'Calculate Felo ratings for estimating sport fencers',
       version = '1.0',
       long_description = \
-      """Felo ratings are a wonderful new method to estimate fencers.  The Felo
-program calculates these ratings for a given group of fencers.  The
-only thing the user needs to do is to provide the program with a
-bout result list.  The program offers a graphical user interface (using wxWidgets).""",
+      """Felo ratings are a wonderful new method to estimate fencers.  The
+Felo program calculates these ratings for a given group of fencers.
+The only thing the user needs to do is to provide the program with a
+bout result list.  The program offers a graphical user interface
+(using wxWidgets).""",
       author = 'Torsten Bronger',
       author_email = 'bronger@physik.rwth-aachen.de',
       maintainer_email = 'felo-general@lists.sourceforge.net',
@@ -103,9 +110,11 @@ bout result list.  The program offers a graphical user interface (using wxWidget
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Mathematics',
         ],
+      data_files = language_data_files,
       platforms = "Linux, Windows",
+      packages = ['felo'],
       package_dir = {'felo': 'src'},
       package_data = {'felo': ['auf5.dat', 'auf10.dat', 'auf15.dat',
                                'boilerplate.felo', 'boilerplate-de.felo',
-                               'felo-icon.png', 'felo-logo.png', 'felo-logo-small.png']},
-      packages = ['felo'])
+                               'felo-icon.png', 'felo-logo.png', 'felo-logo-small.png']}
+      )
