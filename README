@@ -1,0 +1,4 @@
+Felo ratings are a wonderful new method to estimate fencers.  The Felo program
+calculates these ratings for a given group of fencers.  The only thing the user
+needs to do is to provide the program with a bout result list.  The program
+offers a graphical user interface (using wxWidgets).
