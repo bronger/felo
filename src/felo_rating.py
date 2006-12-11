@@ -60,12 +60,20 @@ __version__ = "$Revision$"
 # $HeadURL$
 
 import codecs, re, os.path, datetime, time, shutil
+# This strange construction is necessary because on Windows, the file may be
+# put into a ZIP file (by py2exe), so we have to delete the last *two* parts of
+# the path.
+datapath = os.path.abspath(__file__)
+while not os.path.isdir(datapath):
+    datapath = os.path.dirname(datapath)
 from subprocess import call, Popen, PIPE
 import gettext
-t = gettext.translation('felo', '/home/bronger/src/felo/src', fallback=True)
+if os.name == 'nt':
+    t = gettext.translation('felo', datapath, fallback=True)
+else:
+    t = gettext.translation('felo', fallback=True)
 _ = t.ugettext
 
-datapath = os.path.abspath(os.path.dirname(__file__))
 
 separator = "\s*\t+\s*"
 """Column separator in a Felo file"""
