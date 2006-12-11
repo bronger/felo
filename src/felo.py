@@ -49,7 +49,7 @@ else:
 import felo_rating
 import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html, wx.lib.hyperlink
 
-class HtmlFrame(wx.Frame):
+class HtmlPreviewFrame(wx.Frame):
     def __init__(self, parent, file):
         wx.Frame.__init__(self, parent, wx.ID_ANY, _(u"Preview HTML"), size=(400, 600))
         self.SetIcon(App.icon)
@@ -99,11 +99,34 @@ class Editor(wx.py.editor.EditWindow):
             position += len(line)
 
 class ResultFrame(wx.Frame):
-    def __init__(self, results, *args, **keyw):
-        wx.Frame.__init__(self, None, wx.ID_ANY, size=(300, 500), title=_(u"Felo ratings"), *args, **keyw)
+    def __init__(self, title, fencerlist, *args, **keyw):
+        wx.Frame.__init__(self, None, wx.ID_ANY, size=(300, 600), title=title, *args, **keyw)
         self.SetIcon(App.icon)
-        result_box = wx.TextCtrl(self, wx.ID_ANY, results, style=wx.TE_MULTILINE)
-        result_box.SetEditable(False)
+        grid = wx.FlexGridSizer(2, 1)
+        grid.AddGrowableRow(0, 1)
+        grid.AddGrowableCol(0, 1)
+        result_html = u"<table><tbody>"
+        self.clipboard_contents = u""
+        for fencer in fencerlist:
+            result_html += u"<tr><td>%s</td><td>%s</td></tr>\n" % (fencer.name, unicode(fencer.felo_rating))
+            self.clipboard_contents += u"%s\t%s" % (fencer.name, unicode(fencer.felo_rating)) + os.linesep
+        result_html += u"</tbody></table>"
+        html = wx.html.HtmlWindow(self)
+        if "gtk2" in wx.PlatformInfo:
+            html.SetStandardFonts()
+        html.SetPage(result_html)
+        grid.Add(html, flag=wx.EXPAND)
+        button = wx.Button(self, wx.ID_OK, _("Copy to clipboard"))
+        self.Bind(wx.EVT_BUTTON, self.OnCopyClipboard, button)
+        grid.Add(button, flag=wx.ALIGN_CENTER_HORIZONTAL)
+        self.SetSizer(grid)
+    def OnCopyClipboard(self, event):
+        text = wx.TextDataObject(self.clipboard_contents)
+        if wx.TheClipboard.Open():
+#            wx.TheClipboard.UsePrimarySelection()
+            wx.TheClipboard.SetData(text)
+            wx.TheClipboard.Close()
+            wx.TheClipboard.Flush()
         
 class HTMLDialog(wx.Dialog):
     def __init__(self, directory, *args, **keyw):
@@ -366,10 +389,7 @@ class Frame(wx.Frame):
             self.report_empty_bouts()
             return
         fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts)
-        results = u""
-        for fencer in fencerlist:
-            results += fencer.name + u"\t\t" + unicode(fencer.felo_rating) + u"\n"
-        result_frame = ResultFrame(results)
+        result_frame = ResultFrame(_(u"Felo ratings ") + parameters["groupname"], fencerlist)
         result_frame.Show()
     def OnGenerateHTML(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
@@ -420,7 +440,7 @@ class Frame(wx.Frame):
         print>>html_file, u"</body></html>"
         html_file.close()
         if HTML_preview:
-            html_window = HtmlFrame(self, html_filename)
+            html_window = HtmlPreviewFrame(self, html_filename)
             html_window.Show()
         wx.MessageBox(_(u"The following files must be uploaded to the web server:\n\n")+file_list,
                       _(u"Upload file list"), wx.OK | wx.ICON_INFORMATION, self)
