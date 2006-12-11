@@ -32,7 +32,7 @@
 __version__ = "$Revision$"
 # $HeadURL$
 
-import re, os, codecs, sys, time, StringIO, textwrap, platform, webbrowser
+import re, os, codecs, sys, time, StringIO, textwrap, platform, webbrowser, shutil
 datapath = os.path.abspath(os.path.dirname(sys.argv[0]))
 import gettext, locale
 locale.setlocale(locale.LC_ALL, '')
@@ -171,16 +171,17 @@ class AboutWindow(wx.Dialog):
     def OnClick(self, event):
         self.Destroy()
 
-class WaitDialog(wx.Dialog):
+class ProgressFrame(wx.Frame):
     def __init__(self, message, title, *args, **keyw):
-        wx.Dialog.__init__(self, None, wx.ID_ANY, title=title, *args, **keyw)
-        if "gtk2" in wx.PlatformInfo:
-            self.SetIcon(App.icon)
-        text = wx.StaticText(self, wx.ID_ANY, textwrap.fill(message, 41))
-        hbox_top = wx.BoxSizer(wx.HORIZONTAL)
-        hbox_top.Add(text, flag=wx.ALL | wx.ALIGN_CENTER, border=25)
-        self.SetSizer(hbox_top)
-        self.Fit()
+        wx.Frame.__init__(self, None, wx.ID_ANY, title=title, size=(350, 150), *args, **keyw)
+        self.SetIcon(App.icon)
+        panel = wx.Panel(self, wx.ID_ANY)
+        self.gauge = wx.Gauge(panel, wx.ID_ANY, 100, (20, 50), (250, 25))
+        self.gauge.SetBezelFace(3)
+        self.gauge.SetShadowWidth(3)
+    def update(self, ratio):
+        self.gauge.SetValue(int(round(ratio*100)))
+        wx.Yield()
 
 class Frame(wx.Frame):
     def __init__(self, *args, **keyw):
@@ -304,6 +305,8 @@ class Frame(wx.Frame):
         self.Destroy()
     def save_felo_file(self):
         if self.felo_filename:
+            if os.path.isfile(self.felo_filename):
+                shutil.copyfile(self.felo_filename, os.path.splitext(self.felo_filename)[0]+".bak")
             file = codecs.open(self.felo_filename, "wb", encoding="utf-8")
             file.write(self.editor.GetText())
             file.close()
@@ -425,15 +428,23 @@ class Frame(wx.Frame):
                                wx.ICON_QUESTION, self)
         if answer == wx.NO:
             return
-#         wait_message = WaitDialog(_(u"I'm bootstrapping, please be patient") + u" …", _(u"Bootstrapping"))
-#         wait_message.ShowModal()
-        felo_rating.calculate_felo_ratings(parameters, fencers, bouts, bootstrapping=True)
-        for fencer in fencers.values():
-            if not fencer.freshman:
-                fencer.initial_felo_rating = fencer.felo_rating
-        self.editor.SetText(felo_rating.write_back_fencers(self.editor.GetText(), fencers))
-        self.felo_file_changed = True
-#         wait_message.Destroy()
+        progress_window = ProgressFrame(_(u"I'm bootstrapping, please be patient") + u" …", _(u"Bootstrapping"))
+        progress_window.Show()
+        wx.Yield()
+        try:
+            felo_rating.calculate_felo_ratings(parameters, fencers, bouts, bootstrapping=True,
+                                               bootstrapping_callback = progress_window.update)
+            for fencer in fencers.values():
+                if not fencer.freshman:
+                    fencer.initial_felo_rating = fencer.felo_rating
+            self.editor.SetText(felo_rating.write_back_fencers(self.editor.GetText(), fencers))
+            self.felo_file_changed = True
+        except felo_rating.BootstrappingError, e:
+            progress_window.Destroy()
+            wx.MessageBox(_(u"The bootstrapping didn't converge.  You may want to increase "
+                            u"the value for the 'threshold bootstrapping' parameter."),
+                          _(u"Bootstrapping didn't converge"), wx.OK | wx.ICON_ERROR, self)
+        progress_window.Destroy()
     def OnEstimateFreshmen(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
         if not parameters:
