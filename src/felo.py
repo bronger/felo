@@ -173,12 +173,21 @@ class AboutWindow(wx.Dialog):
 
 class ProgressFrame(wx.Frame):
     def __init__(self, message, title, *args, **keyw):
-        wx.Frame.__init__(self, None, wx.ID_ANY, title=title, size=(350, 150), *args, **keyw)
+        wx.Frame.__init__(self, None, wx.ID_ANY, title=title, *args, **keyw)
         self.SetIcon(App.icon)
         panel = wx.Panel(self, wx.ID_ANY)
-        self.gauge = wx.Gauge(panel, wx.ID_ANY, 100, (20, 50), (250, 25))
+        vbox_main = wx.BoxSizer(wx.VERTICAL)
+        text = wx.StaticText(panel, wx.ID_ANY, message)
+        vbox_main.Add(text, flag=wx.BOTTOM, border = 20)
+        self.gauge = wx.Gauge(panel, wx.ID_ANY, 100, size=(250, 20))
         self.gauge.SetBezelFace(3)
         self.gauge.SetShadowWidth(3)
+        vbox_main.Add(self.gauge, flag=wx.ALIGN_CENTER)
+        hbox_top = wx.BoxSizer(wx.HORIZONTAL)
+        hbox_top.Add(vbox_main, flag=wx.ALL | wx.ALIGN_CENTER, border=25)
+        panel.SetSizer(hbox_top)
+        hbox_top.Fit(self)
+        hbox_top.SetSizeHints(self)
     def update(self, ratio):
         self.gauge.SetValue(int(round(ratio*100)))
         wx.Yield()
@@ -441,7 +450,7 @@ class Frame(wx.Frame):
             self.felo_file_changed = True
         except felo_rating.BootstrappingError, e:
             progress_window.Destroy()
-            wx.MessageBox(_(u"The bootstrapping didn't converge.  You may want to increase "
+            wx.MessageBox(_(u"The bootstrapping didn't converge.  You may want to increase\n"
                             u"the value for the 'threshold bootstrapping' parameter."),
                           _(u"Bootstrapping didn't converge"), wx.OK | wx.ICON_ERROR, self)
         progress_window.Destroy()
