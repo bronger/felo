@@ -33,13 +33,21 @@ __version__ = "$Revision$"
 # $HeadURL$
 
 import re, os, codecs, sys, time, StringIO, textwrap, platform, webbrowser
+datapath = os.path.abspath(os.path.dirname(sys.argv[0]))
 import gettext, locale
 locale.setlocale(locale.LC_ALL, '')
-gettext.install('felo', '.', unicode=True)
+if os.name == 'nt':
+    # For Windows: set, if needed, a value in LANG environmental variable
+    lang = os.getenv('LANG')
+    if lang is None:
+        lang = locale.getdefaultlocale()[0]  # en_US, fr_FR, el_GR etc..
+    if lang:
+        os.environ['LANG'] = lang
+    gettext.install('felo', datapath, unicode=True)
+else:
+    gettext.install('felo', unicode=True)
 import felo_rating
 import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html, wx.lib.hyperlink
-
-datapath = os.path.abspath(os.path.dirname(__file__))
 
 class HtmlFrame(wx.Frame):
     def __init__(self, parent, file):
@@ -60,18 +68,18 @@ class Editor(wx.py.editor.EditWindow):
         self.SetScrollWidth(self.TextWidth(wx.stc.STC_STYLE_DEFAULT, 68*"0"))
         self.SetLexer(wx.stc.STC_LEX_CONTAINER)
         self.Bind(wx.stc.EVT_STC_STYLENEEDED, self.OnStyling)
-        self.bout_line_pattern = re.compile("\\s*(?P<date>\\d{4}-\\d{1,2}-\\d{1,2}(?:\\.\\d+)?)"
-                                            "\\s*\t+\\s*"
-                                            "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)\\s*\t+\\s*"
-                                            "(?P<score>\\d+:\\d+\\s*(?P<fenced_to>(?:/\\d+)|\\*)?)\\s*\\Z")
-        self.item_line_pattern = re.compile("\\s*(?P<name>[^\t]+?)\\s*\t+\\s*(?P<value>.+?)\\s*\\Z")
+        self.bout_line_pattern = re.compile(u"\\s*(?P<date>\\d{4}-\\d{1,2}-\\d{1,2}(?:\\.\\d+)?)"
+                                            u"\\s*\t+\\s*"
+                                            u"(?P<first>.+?)\\s*--\\s*(?P<second>.+?)\\s*\t+\\s*"
+                                            u"(?P<score>\\d+:\\d+\\s*(?P<fenced_to>(?:/\\d+)|\\*)?)\\s*\\Z")
+        self.item_line_pattern = re.compile(u"\\s*(?P<name>[^\t]+?)\\s*\t+\\s*(?P<value>.+?)\\s*\\Z")
     def OnStyling(self, event):
         def apply_style(span, style):
             start, end = span
             self.StartStyling(position+start, 0xff)
             self.SetStyling(end-start, style)
         start, end = self.PositionFromLine(self.LineFromPosition(self.GetEndStyled())), event.GetPosition()
-        text = self.GetTextRange(start, end)
+        text = self.GetTextRange(start, end).encode("utf-8")
         position = start
         lines = text.splitlines(True)
         for line in lines:
@@ -191,6 +199,7 @@ class Frame(wx.Frame):
         menu_bar.Append(menu_file, _(u"&File"))
 
         self.editor = Editor(self)
+        self.editor.SetEOLMode(wx.stc.STC_EOL_LF)
 
         menu_edit = wx.Menu()
         self.Bind(wx.EVT_MENU, lambda e: self.editor.Undo(), menu_edit.Append(wx.ID_ANY, _(u"&Undo")+"\tCtrl-Z"))
@@ -251,6 +260,11 @@ class Frame(wx.Frame):
                 return self.OnSave(None)
             elif answer == wx.CANCEL:
                 return wx.ID_CANCEL
+    def read_utf8_file(self, filename):
+        file = codecs.open(filename, encoding="utf-8")
+        filecontents = "\n".join([line.rstrip('\r\n') for line in file])
+        file.close()
+        return filecontents
     def open_felo_file(self, felo_filename):
         felo_filename = os.path.abspath(felo_filename)
         path = os.path.dirname(felo_filename)
@@ -262,7 +276,7 @@ class Frame(wx.Frame):
             return
         self.felo_filename = felo_filename
         if os.path.isfile(self.felo_filename):
-            self.editor.LoadFile(self.felo_filename)
+            self.editor.SetText(self.read_utf8_file(self.felo_filename))
         self.felo_file_changed = False
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
     def OnNew(self, event):
@@ -271,7 +285,7 @@ class Frame(wx.Frame):
         self.felo_filename = _("unnamed.felo")
         self.editor.ClearAll()
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
-        self.editor.LoadFile(datapath+"/"+_("boilerplate.felo"))
+        self.editor.SetText(self.read_utf8_file(datapath+"/"+_("boilerplate.felo")))
     def OnOpen(self, event):
         if self.AssureSave() == wx.ID_CANCEL:
             return
@@ -290,7 +304,9 @@ class Frame(wx.Frame):
         self.Destroy()
     def save_felo_file(self):
         if self.felo_filename:
-            self.editor.SaveFile(self.felo_filename)
+            file = codecs.open(self.felo_filename, "wb", encoding="utf-8")
+            file.write(self.editor.GetText())
+            file.close()
             self.felo_file_changed = False
             return True
         return False
@@ -308,6 +324,7 @@ class Frame(wx.Frame):
         result = dialog.ShowModal()
         if result == wx.ID_OK:
             self.felo_filename = dialog.GetPath()
+            self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
             self.save_felo_file()
         dialog.Destroy()
         return result
