@@ -552,7 +552,8 @@ def parse_felo_file(felo_file):
                                _(u"output folder"): "output folder",
                                _(u"min distance of plot tics"): "min distance of plot tics",
                                _(u"earliest date in plot"): "earliest date in plot",
-                               _(u"maximal days in plot"): "maximal days in plot"}
+                               _(u"maximal days in plot"): "maximal days in plot",
+                               _(u"threshold bootstrapping"): "threshold bootstrapping"}
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
     try:
@@ -568,6 +569,7 @@ def parse_felo_file(felo_file):
     parameters.setdefault("5 point bouts freshmen", 15)
     parameters.setdefault("minimal felo rating", 1200)
     parameters.setdefault("5 point bouts for estimate", 10)
+    parameters.setdefault("threshold bootstrapping", 0.001)
     # The groupname is used e.g. for the file names of the plots.  It defaults
     # to the name of the Felo file.
     parameters.setdefault("groupname",
@@ -947,13 +949,13 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
     bouts.sort()
     if bootstrapping:
         for i in range(maxcycles):
-            if bootstrapping_callback:
+            if i % 10 == 0 and bootstrapping_callback:
                 bootstrapping_callback(float(i)/(maxcycles-1))
             for fencer in fencers.values():
                 fencer.old_felo_rating = fencer.felo_rating_exact
             calculate_felo_ratings_core(parameters, fencers, bouts, plot=False)
             for fencer in fencers.values():
-                if abs(fencer.old_felo_rating - fencer.felo_rating_exact) > 0.001:
+                if abs(fencer.old_felo_rating - fencer.felo_rating_exact) >= parameters["threshold bootstrapping"]:
                     break
             else:
                 break
