@@ -50,8 +50,8 @@ import felo_rating
 import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html, wx.lib.hyperlink
 
 class HtmlPreviewFrame(wx.Frame):
-    def __init__(self, parent, file):
-        wx.Frame.__init__(self, parent, wx.ID_ANY, _(u"Preview HTML"), size=(400, 600))
+    def __init__(self, parent, title, file):
+        wx.Frame.__init__(self, parent, wx.ID_ANY, title, size=(400, 600))
         self.SetIcon(App.icon)
         html = wx.html.HtmlWindow(self)
         if "gtk2" in wx.PlatformInfo:
@@ -259,6 +259,7 @@ class Frame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnFeloForum, menu_help.Append(wx.ID_ANY, _(u"Felo &forum")))
         self.Bind(wx.EVT_MENU, self.OnWebpage, menu_help.Append(wx.ID_ANY, _(u"Felo &webpage")))
         menu_help.AppendSeparator()
+        self.Bind(wx.EVT_MENU, self.OnShowLicence, menu_help.Append(wx.ID_ANY, _(u"Show &licence")))
         self.Bind(wx.EVT_MENU, self.OnAbout, menu_help.Append(wx.ID_ANY, _(u"&About Felo")))
         menu_bar.Append(menu_help, _(u"&Help"))
 
@@ -276,6 +277,9 @@ class Frame(wx.Frame):
         self.editor.SetFocus()
     def OnWebHelp(self, event):
         webbrowser.open(_("http://felo.sourceforge.net/felo-en/"))
+    def OnShowLicence(self, event):
+        licence_window = HtmlPreviewFrame(self, _("Software licence"), datapath+"/"+_("licence.html"))
+        licence_window.Show()
     def OnReportBug(self, event):
         webbrowser.open("http://sourceforge.net/tracker/?func=add&group_id=183431&atid=905214")
     def OnFeloForum(self, event):
@@ -295,7 +299,7 @@ class Frame(wx.Frame):
                 return wx.ID_CANCEL
     def read_utf8_file(self, filename):
         file = codecs.open(filename, encoding="utf-8")
-        filecontents = "\n".join([line.rstrip('\r\n') for line in file])
+        filecontents = "\n".join([line.rstrip('\r\n') for line in file]) + "\n"
         file.close()
         return filecontents
     def open_felo_file(self, felo_filename):
@@ -440,7 +444,7 @@ class Frame(wx.Frame):
         print>>html_file, u"</body></html>"
         html_file.close()
         if HTML_preview:
-            html_window = HtmlPreviewFrame(self, html_filename)
+            html_window = HtmlPreviewFrame(self, _(u"Preview HTML"), html_filename)
             html_window.Show()
         wx.MessageBox(_(u"The following files must be uploaded to the web server:\n\n")+file_list,
                       _(u"Upload file list"), wx.OK | wx.ICON_INFORMATION, self)
