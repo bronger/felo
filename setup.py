@@ -116,5 +116,5 @@ bout result list.  The program offers a graphical user interface
       packages = ['felo'],
       package_dir = {'felo': 'src'},
       package_data = {'felo': glob('auf*.dat') + glob('boilerplate*.felo') + glob('*.png') +
-                      glob('licence*.html')}
+                      glob('licence*.html') + glob('*.ico')}
       )

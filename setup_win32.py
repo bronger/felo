@@ -84,6 +84,6 @@ bout result list.  The program offers a graphical user interface (using wxWidget
         ],
       platforms = "Linux, Windows",
       data_files = [('.', glob('src/auf*.dat') + glob('src/boilerplate*.felo') + glob('src/*.png') +
-                     glob('src/licence*.html'))]
+                     glob('src/licence*.html') + glob('*.ico'))]
       + language_data_files
 )
