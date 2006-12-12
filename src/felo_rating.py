@@ -1056,12 +1056,25 @@ if __name__ == '__main__':
     option_parser.add_option("--write-back", action="store_true", dest="write_back",
                              help=_(u"Write the new initial values back into the Felo file"),
                              default=False)
+    option_parser.add_option("--version", action="store_true", dest="version",
+                             help=_(u"Print out version number and copying information"),
+                             default=False)
     option_parser.add_option("-o", "--output", type="string",
                              dest="output_file",
                              help=_(u"Name of the output file.  Default: output to the screen (stdout)"),
                              default=None, metavar=_(u"FILENAME"))
     options, felo_filenames = option_parser.parse_args()
 
+    if options.version:
+        print "Felo ratings 1.0" + _(u", revision %s") % __version__[11:-2]
+        print
+        print _(u"Copyright %s 2006 Torsten Bronger, Aachen, Germany") % u"©"
+        print _(u"""This is free software.  You may redistribute copies of it under the terms of
+the MIT License <http://www.opensource.org/licenses/mit-license.php>.
+There is NO WARRANTY, to the extent permitted by law.""")
+        print
+        print _(u"Written by Torsten Bronger <bronger@physik.rwth-aachen.de>.")
+        sys.exit()
     try:
         if options.estimate_freshmen and options.bootstrap:
             raise Error(_(u"You cannot bootstrap and estimate freshmen at the same time."))
