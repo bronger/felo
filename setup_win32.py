@@ -49,7 +49,7 @@ languages = ("de",)
 language_data_files = []
 for language in languages:
     language_path = language + "/LC_MESSAGES"
-    language_data_files.append((language_path, ["src/" + language_path + "/felo.mo"]))
+    language_data_files.append((language_path, ["po/" + language + "/felo.mo"]))
 
 setup(name = 'Felo',
       windows = [{'script': 'src/felo.py'}],
@@ -81,8 +81,7 @@ bout result list.  The program offers a graphical user interface (using wxWidget
         'Topic :: Scientific/Engineering :: Mathematics',
         ],
       platforms = "Linux, Windows",
-      data_files = [('.', ['src/auf5.dat', 'src/auf10.dat', 'src/auf15.dat',
-                           'src/boilerplate.felo', 'src/boilerplate-de.felo',
-                           'src/felo-icon.png', 'src/felo-logo.png', 'src/felo-logo-small.png'])]
+      data_files = [('.', glob('src/auf*.dat') + glob('src/boilerplate*.felo') + glob('src/*.png') +
+                     glob('src/licence*.html'))]
       + language_data_files
 )
