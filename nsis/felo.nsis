@@ -1,4 +1,4 @@
-;       $Id: campustalk.nsi,v 1.8 2006/10/17 09:40:01 bronger Exp $    
+;       $Id$    
 ; ======================================================================
 ;     felo.nsi - Part of the Felo Program
 ; 
@@ -104,21 +104,21 @@
 
 Section "Felo"
   SetOutPath "$INSTDIR"
-  File /r "Pandion\*"
-  File "ct_branding\ct-install.ico"
+  File /r "..\dist\*"
+  File "..\src\felo.ico"
   WriteRegStr HKCU "Software\Felo" "" "$INSTDIR"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
               "DisplayName" "Felo"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
               "UninstallString" "$INSTDIR\uninstall.exe"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "DisplayIcon" "$INSTDIR\ct-install.ico"
+              "DisplayIcon" "$INSTDIR\felo.ico"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
               "Publisher" "Torsten Bronger, Aachen"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "HelpLink" "http://jabber.rwth-aachen.de/wiki/index.php/Hauptseite"
+              "HelpLink" "http://sourceforge.net/forum/forum.php?forum_id=638727"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "URLInfoAbout" "http://jabber.rwth-aachen.de"
+              "URLInfoAbout" "http://felo.sourceforge.net"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
               "DisplayVersion" "1.0"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
