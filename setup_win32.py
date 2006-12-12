@@ -35,6 +35,7 @@ except ImportError:
     from distutils.core import setup
 import distutils.dir_util
 import shutil, os.path, atexit, sys
+from glob import glob
 import py2exe
 
 sys.path.append('src')
@@ -52,7 +53,8 @@ for language in languages:
     language_data_files.append((language_path, ["po/" + language + "/felo.mo"]))
 
 setup(name = 'Felo',
-      windows = [{'script': 'src/felo.py'}],
+      windows = [{'script': 'src/felo.py',
+                  'icon_resources': [(1, 'src/felo.ico')]}],
       description = 'Calculation Felo ratings for estimating sport fencers',
       version = '1.0',
       long_description = \
