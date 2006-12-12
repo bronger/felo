@@ -58,6 +58,7 @@ __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_fe
 
 __version__ = "$Revision$"
 # $HeadURL$
+distribution_version = "1.0"
 
 import codecs, re, os.path, datetime, time, shutil
 # This strange construction is necessary because on Windows, the file may be
@@ -1066,7 +1067,7 @@ if __name__ == '__main__':
     options, felo_filenames = option_parser.parse_args()
 
     if options.version:
-        print "Felo ratings 1.0" + _(u", revision %s") % __version__[11:-2]
+        print "Felo ratings " + distribution_version + _(u", revision %s") % __version__[11:-2]
         print
         print _(u"Copyright %s 2006 Torsten Bronger, Aachen, Germany") % u"©"
         print _(u"""This is free software.  You may redistribute copies of it under the terms of

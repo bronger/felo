@@ -31,6 +31,7 @@
 
 __version__ = "$Revision$"
 # $HeadURL$
+distribution_version = "1.0"
 
 import re, os, codecs, sys, time, StringIO, textwrap, platform, webbrowser, shutil
 datapath = os.path.abspath(os.path.dirname(sys.argv[0]))
@@ -163,7 +164,8 @@ class AboutWindow(wx.Dialog):
         if "gtk2" in wx.PlatformInfo:
             self.SetIcon(App.icon)
         vbox_main = wx.BoxSizer(wx.VERTICAL)
-        text1 = wx.StaticText(self, wx.ID_ANY, _(u"version ")+"1.0"+_(u", revision ")+__version__[11:-2])
+        text1 = wx.StaticText(self, wx.ID_ANY, _(u"version ")+distribution_version+
+                              _(u", revision ")+__version__[11:-2])
         vbox_main.Add(text1, flag=wx.ALIGN_CENTER)
         logo = wx.StaticBitmap(self, wx.ID_ANY,
                                wx.BitmapFromImage(wx.Image(datapath+"/felo-logo-small.png", wx.BITMAP_TYPE_PNG)))
