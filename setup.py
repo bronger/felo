@@ -34,7 +34,8 @@ try:
 except ImportError:
     from distutils.core import setup
 import distutils.dir_util
-import shutil, os.path, atexit, sys, glob
+import shutil, os.path, atexit, sys
+from glob import glob
 
 try:
     distutils.dir_util.remove_tree("build")
@@ -114,7 +115,6 @@ bout result list.  The program offers a graphical user interface
       platforms = "Linux, Windows",
       packages = ['felo'],
       package_dir = {'felo': 'src'},
-      package_data = {'felo': ['auf5.dat', 'auf10.dat', 'auf15.dat',
-                               'boilerplate.felo', 'boilerplate-de.felo',
-                               'felo-icon.png', 'felo-logo.png', 'felo-logo-small.png']}
+      package_data = {'felo': glob('auf*.dat') + glob('boilerplate*.felo') + glob('*.png') +
+                      glob('licence*.html')}
       )
