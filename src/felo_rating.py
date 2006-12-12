@@ -386,30 +386,6 @@ The list contains 101 lists, for result values 0, 0.01, 0.02, ... 1.  (This
 happens to be the first element of each list, too.)  Every list contains 15
 values, for bouts fenced to 1, 2, ... 15 points."""
 
-def correct_result_value(measured_result_value, fenced_to):
-    """This function is part of the solution for the winning-hit problem.  It is
-    not used currently, because in set_preliminary_felo_ratings(), adjusting
-    the expectation value is faster than adjusting the result value due to the
-    mapping direction in the array apparent_expectation_values.  However, both
-    methods are pretty much equivalent.
-
-    Parameters:
-    measured_result_value -- the result value calculated from the bout score.
-    fenced_to -- number of points the bout was fenced to.
-
-    Result value:
-    The real result value, freed from the winning-hit bias."""
-    if measured_result_value == 0.0:
-        return 0.0
-    for i in range(1, len(apparent_expectation_values)):
-        if apparent_expectation_values[i][fenced_to-1]+1e-6 >= measured_result_value:
-            # Interpolate between two adjactent points
-            return 0.01 / (apparent_expectation_values[i][fenced_to-1] -
-                           apparent_expectation_values[i-1][fenced_to-1]) * \
-                (measured_result_value - apparent_expectation_values[i-1][fenced_to-1]) + \
-                apparent_expectation_values[i-1][0]
-                
-        
 def set_preliminary_felo_ratings(fencers, bout, parameters):
     """Calculates the new Felo numbers of the two fencers of a given bout and
     stores them at preliminary places in the fencer objects.  More accurately,
@@ -460,7 +436,7 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     felo_first = fencers[first_fencer].felo_rating_exact
     felo_second = fencers[second_fencer].felo_rating_exact
     expectation_first = 1 / (1 + 10**((felo_second - felo_first)/400.0))
-    if (bout.fenced_to == 0 or bout.fenced_to == max_points) and max_points <= 15 and expectation_first < 1.0:
+    if bout.fenced_to == 0 and max_points <= 15 and expectation_first < 1.0:
         # Adjusting the expectation value to eliminate the bias due to the
         # winning-hit problem.  I interpolate between two adjactent points in
         # the value array apparent_expectation_values.  Interpolating is
