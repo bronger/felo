@@ -408,7 +408,7 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     max_points = max(points_first, points_second)
     total_points = points_first + points_second
     if bout.fenced_to == 0:
-        weighting = 1.0
+        weighting = parameters["weighting team bout"]
     else:
         # weighting roughly is the number of bouts fenced to 5 points
         weighting = total_points / 6.76
@@ -442,7 +442,10 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
         # the value array apparent_expectation_values.  Interpolating is
         # necessary, otherwise the bootstrapping doesn't converge.  Even with
         # this simple linear interpolating, convergence is significantly more
-        # difficult than without the winning-hit adjustment at all.
+        # difficult than without the winning-hit adjustment at all.  This
+        # adjustment is only necessary if a bout is not weighted according to
+        # the total points fenced.  AT the moment, this is only the case for
+        # single bouts in a team relay competition.
         expectation_first = (apparent_expectation_values[int(expectation_first*100)+1][max_points-1] -
                              apparent_expectation_values[int(expectation_first*100)][max_points-1]) * \
                              (expectation_first*100 - int(expectation_first*100)) + \
@@ -529,7 +532,8 @@ def parse_felo_file(felo_file):
                                _(u"min distance of plot tics"): "min distance of plot tics",
                                _(u"earliest date in plot"): "earliest date in plot",
                                _(u"maximal days in plot"): "maximal days in plot",
-                               _(u"threshold bootstrapping"): "threshold bootstrapping"}
+                               _(u"threshold bootstrapping"): "threshold bootstrapping",
+                               _(u"weighting team bout"): "weighting team bout"}
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
     try:
@@ -546,6 +550,7 @@ def parse_felo_file(felo_file):
     parameters.setdefault("minimal felo rating", 1200)
     parameters.setdefault("5 point bouts for estimate", 10)
     parameters.setdefault("threshold bootstrapping", 0.001)
+    parameters.setdefault("weighting team bout", 1.0)
     # The groupname is used e.g. for the file names of the plots.  It defaults
     # to the name of the Felo file.
     parameters.setdefault("groupname",
