@@ -60,11 +60,11 @@
 
   !define MUI_ABORTWARNING
   !define MUI_UNABORTWARNING
-  !define MUI_ICON "ct_branding\ct-install.ico"
-  !define MUI_UNICON "ct_branding\ct-uninstall.ico"
+  !define MUI_ICON "..\src\felo.ico"
+  !define MUI_UNICON "..\src\felo-uninstall.ico"
   !define MUI_HEADERIMAGE
-  !define MUI_HEADERIMAGE_BITMAP "ct_branding\campustalk.bmp"
-  !define MUI_WELCOMEFINISHPAGE_BITMAP "ct_branding\ct-welcome.bmp"
+  !define MUI_HEADERIMAGE_BITMAP "..\src\felo-header.bmp"
+  !define MUI_WELCOMEFINISHPAGE_BITMAP "..\src\felo-welcome.bmp"
   
 ;--------------------------------
 ;Language Selection Dialog Settings
@@ -77,9 +77,7 @@
 ;--------------------------------
 ;Finish Page Settings
 
-  !define MUI_FINISHPAGE_RUN "$INSTDIR\Felo.exe"
-;   !define MUI_FINISHPAGE_LINK "Jetzt beim RWTH-Jabber-Server registrieren"
-;   !define MUI_FINISHPAGE_LINK_LOCATION "https://jabber.rwth-aachen.de/index.php?Funktion=Anmeldung"
+  !define MUI_FINISHPAGE_RUN "$INSTDIR\felo.exe"
   !define MUI_FINISHPAGE_NOREBOOTSUPPORT
 
 
@@ -137,8 +135,8 @@ Section "Felo"
   ;Create shortcuts
   CreateDirectory "$SMPROGRAMS\Felo"
   CreateShortCut "$SMPROGRAMS\Felo\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-  CreateShortCut "$SMPROGRAMS\Felo\Felo.lnk" "$INSTDIR\Felo.exe"
-  CreateShortCut "$SMSTARTUP\Felo.lnk" "$INSTDIR\Felo.exe"
+  CreateShortCut "$SMPROGRAMS\Felo\Felo.lnk" "$INSTDIR\felo.exe"
+  CreateShortCut "$SMSTARTUP\Felo.lnk" "$INSTDIR\felo.exe"
 SectionEnd
 
 ;--------------------------------
@@ -156,7 +154,7 @@ SectionEnd
 Section "Uninstall"
   # Ich mache das so quasi-einzeln, weil mir ein RMDir /r "$INSTDIR" zu gefährlich erscheint.
   Delete "$INSTDIR\Uninstall.exe"
-  Delete "$INSTDIR\Felo.exe"
+  Delete "$INSTDIR\felo.exe"
   Delete "$INSTDIR\libbind.dll"
   Delete "$INSTDIR\License*.rtf"
   RMDir /r "$INSTDIR\src"
