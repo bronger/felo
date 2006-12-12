@@ -1,4 +1,62 @@
+
+		    Felo -- Felo ratings for sport fencers
+
+			    Version 1.0  2006/12/11
+			  http://felo.sourceforge.net
+
+			   (c) 2006 Torsten Bronger
+			<bronger@users.sourceforge.net>
+
+                                           See the file COPYING or the above
+                                           web address for licence information.
+
+SUMMARY
+
 Felo ratings are a wonderful new method to estimate fencers.  The Felo program
 calculates these ratings for a given group of fencers.  The only thing the user
 needs to do is to provide the program with a bout result list.  The program
 offers a graphical user interface (using wxWidgets).
+
+
+BUILD INSTRUCTIONS
+
+This section is intended for people who want to produce a distribution of the
+Felo program.  It is not about installing it in general.
+
+The RPM and Windows installer generation process is somewhat awkward because a)
+distutils is buggy and b) I'm stupid.  In particular, I felt forced to split
+the setup.py script in a Linux version (setup.py) and a Windows version
+(setup_win32.py).  In the Linux version, I had to give the path to the language
+translations (the .mo files) as an absolute path in my file system because
+otherwise, the bdist_rpm command doesn't find them.  So if you want to build an
+RPM and your home directory is not /home/bronger, you must change it manually.
+
+The other stupid thing is the generation of the .mo files.  The bast way to
+achive this is to delete all .gmo files in the po/ directory and to call
+"make".  AT the same time, this updates the .po files from the .py sources.
+
+General checklist:
+
+* If new translations arrived, update po/Makefile and both setup scripts.
+  Remember to have also the licence and the boilerplate in this language (not
+  necessary, but nice).  Idelly, the documentation, too.  :-)
+
+* If new strings to-be-translated have been insterted into the Python source
+  codes, remove all .gmo files in po/ and call make there in order to update
+  the .po files.
+
+* Remove all .gmo files in po/ and call make there (again).
+
+* If a new version number is to be released, update the version number in this
+  file, the source code (global variable "distribution_version" in felo.py and
+  felo_rating.py), and both setup scripts.
+
+For Linux RPM generation:
+
+* python setup.py sdist
+  python setup.py bdist_rpm
+
+For Windows py2exe generation:
+
+* 
+
