@@ -1,0 +1,185 @@
+;       $Id: campustalk.nsi,v 1.8 2006/10/17 09:40:01 bronger Exp $    
+; ======================================================================
+;     campustalk.nsi - Part of the CampusTalk Program
+;     Copyright 2006 Torsten Bronger
+;                    <bronger@users.sourceforge.net>
+; 
+;   This program is free software; you can redistribute it and/or
+;   modify it under the terms of the Artistic License 2.0 as published
+;   by Larry Wall.  You should have received a copy of the Artistic
+;   License 2.0 along with this program in the file COPYING; if not,
+;   you can get it at
+;     http://dev.perl.org/rfc/346.html
+;   or contact the current maintainer of CampusTalk.
+;
+;   This program is distributed in the hope that it will be useful, but
+;   WITHOUT ANY WARRANTY; without even the implied warranty of
+;   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;   Artistic License 2.0 for more details.
+;
+;   This file may only be distributed together with a copy of the
+;   CampusTalk program.
+;
+;   The CampusTalk program consists of all files listed in manifest.txt.
+; ======================================================================
+
+; NOTE: this .NSI script is designed for NSIS v2
+
+########################################################################
+#
+# Header information
+#
+########################################################################
+
+;--------------------------------
+;Include Modern UI
+
+  !include "MUI.nsh"
+
+;--------------------------------
+;General
+
+  Name "CampusTalk"
+  OutFile "CampusTalk-1.0.exe"
+
+  BrandingText "CampusTalk -- http://jabber.rwth-aachen.de"
+
+  InstallDir "$PROGRAMFILES\CampusTalk"
+  InstallDirRegKey HKCU "Software\CampusTalk" ""
+
+  SetCompressor /SOLID lzma
+
+;--------------------------------
+;Interface Settings
+
+  !define MUI_ABORTWARNING
+  !define MUI_UNABORTWARNING
+  !define MUI_ICON "ct_branding\ct-install.ico"
+  !define MUI_UNICON "ct_branding\ct-uninstall.ico"
+  !define MUI_HEADERIMAGE
+  !define MUI_HEADERIMAGE_BITMAP "ct_branding\campustalk.bmp"
+  !define MUI_WELCOMEFINISHPAGE_BITMAP "ct_branding\ct-welcome.bmp"
+  
+;--------------------------------
+;Language Selection Dialog Settings
+
+  ;Remember the installer language
+  !define MUI_LANGDLL_REGISTRY_ROOT "HKCU" 
+  !define MUI_LANGDLL_REGISTRY_KEY "Software\CampusTalk" 
+  !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
+
+;--------------------------------
+;Finish Page Settings
+
+  !define MUI_FINISHPAGE_RUN "$INSTDIR\CampusTalk.exe"
+;   !define MUI_FINISHPAGE_LINK "Jetzt beim RWTH-Jabber-Server registrieren"
+;   !define MUI_FINISHPAGE_LINK_LOCATION "https://jabber.rwth-aachen.de/index.php?Funktion=Anmeldung"
+  !define MUI_FINISHPAGE_NOREBOOTSUPPORT
+
+
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE "Licence.rtf"
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!include "translations.nsi"
+
+;--------------------------------
+;Reserve Files
+  
+  ;These files should be inserted before other files in the data block
+  ;Keep these lines before any File command
+  ;Only for solid compression (by default, solid compression is enabled for BZIP2 and LZMA)
+  
+  !insertmacro MUI_RESERVEFILE_LANGDLL
+
+
+Section "CampusTalk"
+  SetOutPath "$INSTDIR"
+  File /r "Pandion\*"
+  File "ct_branding\ct-install.ico"
+  WriteRegStr HKCU "Software\CampusTalk" "" "$INSTDIR"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "DisplayName" "CampusTalk"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "UninstallString" "$INSTDIR\uninstall.exe"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "DisplayIcon" "$INSTDIR\ct-install.ico"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "Publisher" "Torsten Bronger, Aachen"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "HelpLink" "http://jabber.rwth-aachen.de/wiki/index.php/Hauptseite"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "URLInfoAbout" "http://jabber.rwth-aachen.de"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "DisplayVersion" "1.0"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "VersionMajor" 1
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "VersionMinor" 0
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "NoModify" 1
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk" \
+              "NoRepair" 1
+  ;Create uninstaller
+  WriteUninstaller "$INSTDIR\Uninstall.exe"
+
+  ;Create shortcuts
+  CreateDirectory "$SMPROGRAMS\CampusTalk"
+  CreateShortCut "$SMPROGRAMS\CampusTalk\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+  CreateShortCut "$SMPROGRAMS\CampusTalk\CampusTalk.lnk" "$INSTDIR\CampusTalk.exe"
+  CreateShortCut "$SMSTARTUP\CampusTalk.lnk" "$INSTDIR\CampusTalk.exe"
+SectionEnd
+
+;--------------------------------
+;Installer Functions
+
+; Function .onInit
+;   !define MUI_LANGDLL_WINDOWTITLE "Sprachauswahl für den Installer"
+;   !define MUI_LANGDLL_INFO "Bitte wählen Sie eine Sprache aus:"
+;   !insertmacro MUI_LANGDLL_DISPLAY
+;   !undef MUI_LANGDLL_WINDOWTITLE
+;   !undef MUI_LANGDLL_INFO
+; FunctionEnd
+
+
+Section "Uninstall"
+  # Ich mache das so quasi-einzeln, weil mir ein RMDir /r "$INSTDIR" zu gefährlich erscheint.
+  Delete "$INSTDIR\Uninstall.exe"
+  Delete "$INSTDIR\CampusTalk.exe"
+  Delete "$INSTDIR\libbind.dll"
+  Delete "$INSTDIR\License*.rtf"
+  RMDir /r "$INSTDIR\src"
+  RMDir /r "$INSTDIR\sounds"
+  RMDir /r "$INSTDIR\settings"
+  RMDir /r "$INSTDIR\languages"
+  RMDir /r "$INSTDIR\images"
+  RMDir /r "$INSTDIR\emoticons"
+  RMDir /r "$INSTDIR\avatars"
+  RMDir "$INSTDIR"
+
+  Delete "$SMPROGRAMS\CampusTalk\Uninstall.lnk"
+  Delete "$SMPROGRAMS\CampusTalk\CampusTalk.lnk"
+  RMDir "$SMPROGRAMS\CampusTalk"
+
+  Delete "$SMSTARTUP\CampusTalk\CampusTalk.lnk"
+
+  MessageBox MB_YESNO|MB_ICONQUESTION "$(un.TEXT_RemoveProfiles)" IDNO weiter
+  RMDir /r "$APPDATA\CampusTalk"
+weiter:
+    
+  DeleteRegKey /ifempty HKCU "Software\CampusTalk"
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\CampusTalk"
+SectionEnd
+
+
+;--------------------------------
+;Uninstaller Functions
+
+; Function un.onInit
+;   !insertmacro MUI_UNGETLANGUAGE
+; FunctionEnd
