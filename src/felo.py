@@ -44,7 +44,7 @@ if os.name == 'nt':
         lang = locale.getdefaultlocale()[0]  # en_US, fr_FR, el_GR etc..
     if lang:
         os.environ['LANG'] = lang
-    gettext.install('felo', datapath, unicode=True)
+    gettext.install('felo', datapath + "/po", unicode=True)
 else:
     gettext.install('felo', unicode=True)
 import felo_rating

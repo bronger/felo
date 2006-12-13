@@ -70,7 +70,7 @@ while not os.path.isdir(datapath):
 from subprocess import call, Popen, PIPE
 import gettext
 if os.name == 'nt':
-    t = gettext.translation('felo', datapath, fallback=True)
+    t = gettext.translation('felo', datapath+"/po", fallback=True)
 else:
     t = gettext.translation('felo', fallback=True)
 _ = t.ugettext
