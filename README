@@ -58,5 +58,9 @@ For Linux RPM generation:
 
 For Windows py2exe generation:
 
-* 
+* c:\python24\python setup_win32.py py2exe
 
+* in Windows explorer, right-click on nsis\felo.nsi and say "compile NSIS
+  script".
+
+* The installer is then written to nsis\.
