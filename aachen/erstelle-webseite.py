@@ -10,6 +10,8 @@ import shutil, time
 import sys
 sys.path.append("../src")
 from felo_rating import parse_felo_file, calculate_felo_ratings, write_felo_file
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 def datei_zeitstempel(pfade):
     timestamp = 0
@@ -23,8 +25,8 @@ def convert_date(date):
 mache_plots = True
 ausgabedatei = codecs.open("/home/bronger/aktuell/fechten/Statistics/felo-zahlen.html",
                            "w", "iso-8859-1")
-foil_parameters, _, foil_fencers, foil_bouts = parse_felo_file(codecs.open("florett.felo", encoding="utf-8"))
-epee_parameters, _, epee_fencers, epee_bouts = parse_felo_file(codecs.open("degen.felo", encoding="utf-8"))
+foil_parameters, __, foil_fencers, foil_bouts = parse_felo_file(codecs.open("florett.felo", encoding="utf-8"))
+epee_parameters, __, epee_fencers, epee_bouts = parse_felo_file(codecs.open("degen.felo", encoding="utf-8"))
 foil_bouts.sort()
 epee_bouts.sort()
 
@@ -53,7 +55,7 @@ print>>ausgabedatei, u"""<?xml version="1.0" encoding="iso-8859-1"?>
 <p style="font-size: medium;margin-top:-1ex">vom %s</p>
 <p style="font-size:large"><a href="felo-plots.html">Zur Grafik &rarr;</a></p>
 <table cellspacing="10" style="font-size: large; width:100%%">
-<tbody>""" % convert_date(foil_bouts[-1].date[:10])
+<tbody>""" % convert_date(foil_bouts[-1].date_string[:10])
 # write_felo_file("florett_.felo", foil_parameters, foil_fencers, foil_bouts)
 for fechter in calculate_felo_ratings(foil_parameters, foil_fencers, foil_bouts, plot=mache_plots):
     felo_zahl = str(fechter.felo_rating)
@@ -69,7 +71,7 @@ print>>ausgabedatei, u"""</tbody>
 <p style="font-size: medium;margin-top:-1ex">vom %s</p>
 <p style="font-size:large"><a href="felo-plots.html#degen">Zur Grafik &rarr;</a></p>
 <table cellspacing="10" style="font-size: large; width:100%%">
-<tbody>""" % convert_date(epee_bouts[-1].date[:10])
+<tbody>""" % convert_date(epee_bouts[-1].date_string[:10])
 for fechter in calculate_felo_ratings(epee_parameters, epee_fencers, epee_bouts, plot=mache_plots):
     felo_zahl = str(fechter.felo_rating)
     if fechter.total_weighting < 7:
@@ -92,8 +94,8 @@ auf internationale Wettkämpfe bezieht.) --></p>
 <tr><td>2500</td><td>Fechten wie ein junger Gott</td></tr>
 <tr><td>2400</td><td>Internationale Meister</td></tr>
 <tr><td>2200</td><td>Nationale Meister</td></tr>
-<tr><td>1800</td><td>sehr gute Vereinsspieler</td></tr>
-<tr><td>1600</td><td>starke Freizeitspieler</td></tr>
+<tr><td>1800</td><td>sehr gute Vereinsfechter</td></tr>
+<tr><td>1600</td><td>starke Freizeitfechter</td></tr>
 <tr><td>1400</td><td>Einsteiger</td></tr>
 <tr><td>1200</td><td>untere rechnerische Grenze</td></tr>
 </tbody></table>
