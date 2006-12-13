@@ -29,7 +29,7 @@
 ;
 ; ======================================================================
 
-; NOTE: this .nsis script is designed for NSIS v2
+; NOTE: this .nsi script is designed for NSIS v2
 
 ########################################################################
 #
@@ -53,7 +53,7 @@
   InstallDir "$PROGRAMFILES\Felo"
   InstallDirRegKey HKCU "Software\Felo" ""
 
-  SetCompressor /SOLID lzma
+;  SetCompressor /SOLID lzma
 
 ;--------------------------------
 ;Interface Settings
@@ -82,7 +82,7 @@
 
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "Licence.rtf"
+!insertmacro MUI_PAGE_LICENSE $(MUILicense)
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -152,18 +152,41 @@ SectionEnd
 
 
 Section "Uninstall"
-  # Ich mache das so quasi-einzeln, weil mir ein RMDir /r "$INSTDIR" zu gefährlich erscheint.
+  # I do everything separately because an RMDir /r "$INSTDIR" seems to dangerous to me.
   Delete "$INSTDIR\Uninstall.exe"
+  Delete "$INSTDIR\felo.ico"
+  Delete "$INSTDIR\auf10.dat"
+  Delete "$INSTDIR\auf15.dat"
+  Delete "$INSTDIR\auf5.dat"
+  Delete "$INSTDIR\boilerplate*.felo"
+  Delete "$INSTDIR\boilerplate.felo"
+  Delete "$INSTDIR\bz2.pyd"
+  Delete "$INSTDIR\_controls_.pyd"
+  Delete "$INSTDIR\_core_.pyd"
   Delete "$INSTDIR\felo.exe"
-  Delete "$INSTDIR\libbind.dll"
-  Delete "$INSTDIR\License*.rtf"
-  RMDir /r "$INSTDIR\src"
-  RMDir /r "$INSTDIR\sounds"
-  RMDir /r "$INSTDIR\settings"
-  RMDir /r "$INSTDIR\languages"
-  RMDir /r "$INSTDIR\images"
-  RMDir /r "$INSTDIR\emoticons"
-  RMDir /r "$INSTDIR\avatars"
+  Delete "$INSTDIR\felo-icon.png"
+  Delete "$INSTDIR\felo-logo.png"
+  Delete "$INSTDIR\felo-logo-small.png"
+  Delete "$INSTDIR\_gdi_.pyd"
+  Delete "$INSTDIR\_grid.pyd"
+  Delete "$INSTDIR\_html.pyd"
+  Delete "$INSTDIR\library.zip"
+  Delete "$INSTDIR\licence*.html"
+  Delete "$INSTDIR\licence.html"
+  Delete "$INSTDIR\_misc_.pyd"
+  Delete "$INSTDIR\MSVCR71.dll"
+  Delete "$INSTDIR\python24.dll"
+  Delete "$INSTDIR\select.pyd"
+  Delete "$INSTDIR\_socket.pyd"
+  Delete "$INSTDIR\_ssl.pyd"
+  Delete "$INSTDIR\_stc.pyd"
+  Delete "$INSTDIR\unicodedata.pyd"
+  Delete "$INSTDIR\w9xpopen.exe"
+  Delete "$INSTDIR\_windows_.pyd"
+  Delete "$INSTDIR\wxmsw26u_stc_vc_enthought.dll"
+  Delete "$INSTDIR\wxmsw26u_vc_enthought.dll"
+  Delete "$INSTDIR\zlib.pyd"
+  RMDir /r "$INSTDIR\po"
   RMDir "$INSTDIR"
 
   Delete "$SMPROGRAMS\Felo\Uninstall.lnk"
@@ -172,10 +195,6 @@ Section "Uninstall"
 
   Delete "$SMSTARTUP\Felo\Felo.lnk"
 
-  MessageBox MB_YESNO|MB_ICONQUESTION "$(un.TEXT_RemoveProfiles)" IDNO weiter
-  RMDir /r "$APPDATA\Felo"
-weiter:
-    
   DeleteRegKey /ifempty HKCU "Software\Felo"
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo"
 SectionEnd
