@@ -80,7 +80,7 @@ for language in languages:
     language_path = os.path.join("share", "locale", language, "LC_MESSAGES")
     language_data_files.append((language_path, [os.path.join("/home/bronger/src/felo/po", language, "felo.mo")]))
 
-setup(name = 'Felo',
+setup(name = 'felo',
       description = 'Calculate Felo ratings for estimating sport fencers',
       version = '1.0',
       long_description = \
