@@ -70,7 +70,7 @@
 ;Language Selection Dialog Settings
 
   ;Remember the installer language
-  !define MUI_LANGDLL_REGISTRY_ROOT "HKCU" 
+  !define MUI_LANGDLL_REGISTRY_ROOT "HKCU"
   !define MUI_LANGDLL_REGISTRY_KEY "Software\Felo" 
   !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
 
@@ -101,34 +101,35 @@
   
   !insertmacro MUI_RESERVEFILE_LANGDLL
 
+Function .onInit
+  UserInfo::GetAccountType
+  Pop $1
+  StrCmp $1 "Admin" 0 noadmin
+    SetShellVarContext all
+    Goto exit
+  noadmin:
+    SetShellVarContext current
+    StrCpy $INSTDIR "$PROFILE\Felo"
+  exit:
+FunctionEnd
 
 Section "Felo"
   SetOutPath "$INSTDIR"
   File /r "..\dist\*"
   File "..\src\felo.ico"
-  WriteRegStr HKCU "Software\Felo" "" "$INSTDIR"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "DisplayName" "Felo"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "UninstallString" "$INSTDIR\uninstall.exe"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "DisplayIcon" "$INSTDIR\felo.ico"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "Publisher" "Torsten Bronger, Aachen"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+  WriteRegStr SHCTX "Software\Felo" "" "$INSTDIR"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "DisplayName" "Felo"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "UninstallString" "$INSTDIR\uninstall.exe"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "DisplayIcon" "$INSTDIR\felo.ico"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "Publisher" "Torsten Bronger, Aachen"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
               "HelpLink" "http://sourceforge.net/forum/forum.php?forum_id=638727"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "URLInfoAbout" "http://felo.sourceforge.net"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "DisplayVersion" "1.0"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "VersionMajor" 1
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "VersionMinor" 0
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "NoModify" 1
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
-              "NoRepair" 1
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "URLInfoAbout" "http://felo.sourceforge.net"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "DisplayVersion" "1.0"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "VersionMajor" 1
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "VersionMinor" 0
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "NoModify" 1
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "NoRepair" 1
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
@@ -136,20 +137,42 @@ Section "Felo"
   CreateDirectory "$SMPROGRAMS\Felo"
   CreateShortCut "$SMPROGRAMS\Felo\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   CreateShortCut "$SMPROGRAMS\Felo\Felo.lnk" "$INSTDIR\felo.exe"
-  CreateShortCut "$SMSTARTUP\Felo.lnk" "$INSTDIR\felo.exe"
+
+  ;Create file association
+  !define Index "Line${__LINE__}"
+    ReadRegStr $1 HKCR ".felo" ""
+    StrCmp $1 "" "${Index}-NoBackup"
+      StrCmp $1 "FeloFile" "${Index}-NoBackup"
+      WriteRegStr HKCR ".felo" "backup_val" $1
+  "${Index}-NoBackup:"
+    WriteRegStr HKCR ".felo" "" "FeloFile"
+    ReadRegStr $0 HKCR "FeloFile" ""
+    StrCmp $0 "" 0 "${Index}-Skip"
+          WriteRegStr HKCR "FeloFile" "" "Felo File with bout and fencer data"
+          WriteRegStr HKCR "FeloFile\shell" "" "open"
+          WriteRegStr HKCR "FeloFile\DefaultIcon" "" "$INSTDIR\felo.exe,0"
+  "${Index}-Skip:"
+    WriteRegStr HKCR "FeloFile\shell\open\command" "" '$INSTDIR\felo.exe "%1"'
+    WriteRegStr HKCR "FeloFile\shell\edit" "" "Edit Felo File"
+    WriteRegStr HKCR "FeloFile\shell\edit\command" "" '$INSTDIR\felo.exe "%1"'
+
+    System::Call 'Shell32::SHChangeNotify(i 0x8000000, i 0, i 0, i 0)'
+  !undef Index
 SectionEnd
 
 ;--------------------------------
-;Installer Functions
+;Uninstaller Functions
 
-; Function .onInit
-;   !define MUI_LANGDLL_WINDOWTITLE "Sprachauswahl für den Installer"
-;   !define MUI_LANGDLL_INFO "Bitte wählen Sie eine Sprache aus:"
-;   !insertmacro MUI_LANGDLL_DISPLAY
-;   !undef MUI_LANGDLL_WINDOWTITLE
-;   !undef MUI_LANGDLL_INFO
-; FunctionEnd
-
+Function un.onInit
+  UserInfo::GetAccountType
+  Pop $1
+  StrCmp $1 "Admin" 0 noadmin
+    SetShellVarContext all
+    Goto exit
+  noadmin:
+    SetShellVarContext current
+  exit:
+FunctionEnd
 
 Section "Uninstall"
   # I do everything separately because an RMDir /r "$INSTDIR" seems to dangerous to me.
@@ -189,20 +212,35 @@ Section "Uninstall"
   RMDir /r "$INSTDIR\po"
   RMDir "$INSTDIR"
 
+  UserInfo::GetAccountType
+  Pop $1
+  StrCmp $1 "Admin" 0 noadmin
+    SetShellVarContext all
+  noadmin:
+
   Delete "$SMPROGRAMS\Felo\Uninstall.lnk"
   Delete "$SMPROGRAMS\Felo\Felo.lnk"
   RMDir "$SMPROGRAMS\Felo"
 
-  Delete "$SMSTARTUP\Felo\Felo.lnk"
+  DeleteRegKey /ifempty SHCTX "Software\Felo"
+  DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo"
 
-  DeleteRegKey /ifempty HKCU "Software\Felo"
-  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo"
+  ;Uninstall file association
+  !define Index "Line${__LINE__}"
+    ReadRegStr $1 HKCR ".felo" ""
+    StrCmp $1 "FeloFile" 0 "${Index}-NoOwn" ; only do this if we own it
+      ReadRegStr $1 HKCR ".felo" "backup_val"
+      StrCmp $1 "" 0 "${Index}-Restore" ; if backup="" then delete the whole key
+        DeleteRegKey HKCR ".felo"
+      Goto "${Index}-NoOwn"
+  "${Index}-Restore:"
+        WriteRegStr HKCR ".felo" "" $1
+        DeleteRegValue HKCR ".felo" "backup_val"
+
+      DeleteRegKey HKCR "FeloFile" ;Delete key with association settings
+
+      System::Call 'Shell32::SHChangeNotify(i 0x8000000, i 0, i 0, i 0)'
+  "${Index}-NoOwn:"
+  !undef Index
 SectionEnd
 
-
-;--------------------------------
-;Uninstaller Functions
-
-; Function un.onInit
-;   !insertmacro MUI_UNGETLANGUAGE
-; FunctionEnd
