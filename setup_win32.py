@@ -49,7 +49,7 @@ except:
 languages = ("de",)
 language_data_files = []
 for language in languages:
-    language_path = language + "/LC_MESSAGES"
+    language_path = "po/" + language + "/LC_MESSAGES"
     language_data_files.append((language_path, ["po/" + language + "/felo.mo"]))
 
 setup(name = 'Felo',
