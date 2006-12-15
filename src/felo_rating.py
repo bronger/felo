@@ -428,8 +428,8 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
         return
     elif fencers[second_fencer].freshman:
         fencers[second_fencer].total_weighting += weighting
-        Freshman.freshmen[second_fencer].total_result += (0.5 - result_first) * weighting
-        Freshman.freshmen[second_fencer].total_felo_rating_opponents += \
+        fencers[second_fencer].total_result += (0.5 - result_first) * weighting
+        fencers[second_fencer].total_felo_rating_opponents += \
             fencers[first_fencer].felo_rating_exact * weighting
         return
     # Use current (rather than preliminary) numbers for the calculation.  Just
