@@ -243,12 +243,31 @@ Felo-Zahlen bislang noch nicht groß ist.
 @menu
 * Installation unter Windows::  Das, was wirklich wichtig ist.
 * Installation von Zusatzprogrammen::  Nur wenn man Plots braucht.
-* Installation unter Linux::
+* Installation unter Linux::    
 @end menu
 
 
 @node Installation unter Windows
 @section Installation unter Windows
+
+Als erstes lädt man sich das Programm von
+@uref{http://sourceforge.net/project/showfiles.php?group_id=183431, der
+Projektseite auf Sourceforge} herunter.  Die EXE-Datei, die man erhält,
+startet man.  Es gibt dabei zwei Möglichkeiten.  Entweder man tut das
+als @emph{Administrator}.  In diesem Fall wird Felo für @emph{alle}
+Benutzer installiert.  Oder man startet die EXE-Datei, während man als
+@emph{normaler Benutzer} eingeloggt ist.  Dann wird Felo nur für diesen
+Benutzer installiert.
+
+Ansonsten ist die Installation puppeneinfach.  Es sollte reichen, ein
+paar Mal auf ,,Okay`` zu klicken.  Übrigens geht die De-Installation
+genauso leicht.  Du mußt nur aufpassen, als derselbe Benutzer/Admin wie
+bei der Installation eingeloggt zu sein, ansonsten könnte es passieren,
+daß Felo nicht restlos entfernt wird.
+
+Wenn du kein Interesse daran hast, auch grafische Plots mit den
+Felo-Zahlen der Fechtgruppe zu machen, kannst du gleich bei
+@ref{Benutzen des Programms} weiterlesen.
 
 
 @node Installation von Zusatzprogrammen
@@ -279,6 +298,112 @@ Felo-Zahlen bislang noch nicht groß ist.
 
 @node Benutzen des Programms
 @chapter Benutzen des Programms
+
+Starte das Programm Felo.  Es öffnet sich das Programmfenster mit einer
+leeren Editor-Fläche.  Darin kannst du die Felo-Datei eingeben.  Die
+Felo-Datei enthält alle Fechter und Gefechte einer Fechtgruppe, für die
+die Felo-Zahlen ausgerechnet werden sollen.  Mit der Zeit wächst die
+Felo-Datei mehr und mehr, weil die neuen Gefechte unten angehängt
+werden.
+
+Zur Zeit weißt du vermutlich noch nicht, wie eine Felo-Datei überhaupt
+auszusehen hat.  Kein Problem.  Wähle im Menü ,,Datei`` den ersten Punkt
+,,Neu`` aus.  Es wird dann eine Beispiel-Datei in den Editor geladen:
+
+@image{felo-screen-1-de,10cm,,Die Beispiel-Felo-Datei}
+
+Eine Felo-Datei besteht aus drei Teilen:
+
+@enumerate
+@item
+Parameter
+
+@item
+Fechterliste
+
+@item
+Gefechte
+
+@end enumerate
+
+@noindent
+Diese drei Teile sind durch Linien, die aus Gleichheitszeichen bestehen,
+voneinander getrennt (die Anzahl der Gleichheitszeichen ist egal).  Im
+einzelnen bedeuten die drei Teile folgendes:
+
+@table @strong
+@item Parameter
+Parameter können der Name der Gruppe sein (z.@s{}B. für die
+Unterscheidung der Waffengattungen und/oder Geschlechter innerhalb eines
+Vereins), oder Angaben, die das Aussehen der Plots beeinflussen, sowie
+Einstellungen bezüglich der mathematischen Berechnung der Felo-Zahlen.
+
+Jeder Parameter steht in einer eigenen Zeile mit zwei Spalten.  In der
+ersten Spalte ist der Name des Parameters (z.@s{}B. ,,Gruppenname``) und
+in der zweiten Spalte der Wert dieses Parameters (z.@s{}B. ,,Florett``).
+
+Im Prinzip kann man den Parameter-Teil einfach leer lassen, dann werden
+die Vorgabe-Werte genommen, die in den meisten Fällen ausreichen.
+Ansonsten werde ich auf die Parameter später nochmal detailliert
+eingehen.
+
+@item Fechterliste
+Hier muß man alle Fechter der Gruppe aufführen, einen pro Zeile.  Auch
+in diesem Teil gibt es zwei Spalten, nämlich für den Namen und für die
+Anfangs-Felo-Zahl (wie man auf die kommt, erkläre ich später).
+
+Wichtig ist, daß für Fechter, deren Namen in Klammern @samp{(...)}
+stehen, keine Felo-Zahlen berechnet werden.  Das ist für Fechter
+gedacht, die eben nicht interessiert sind an ihrer Felo-Zahl und auch
+nicht irgendwo genannt werden wollen.  Trotzdem sollten ihre Gefechte
+notiert werden (es sei denn, sie haben etwas dagegen), denn es hilft,
+die Felo-Zahlen der anderen genauer zu berechnen.
+
+@item Gefechte
+Hier werden die Gefechte notiert, eines pro Zeile (Leerzeilen sind
+erlaubt, wie auch sonst in einer Felo-Datei).  Jede Zeile besteht aus
+drei Spalten, nämlich dem Datum, der Paarung und dem Ergebnis.  Das
+Datum @emph{muß} in der Form @samp{JJJJ-MM-TT} angegeben werden, also
+erst das Jahr, dann der Monat, dann der Tag, alles durch Bindestriche
+getrennt.
+
+Die Paarung muß in der Form @samp{Erster -- Zweiter} angegeben werden,
+d.@s{}h.@: die Fechter werden durch zwei Bindestriche voneinander
+getrennt.
+@end table
+
+
+@cartouche
+@strong{Wichtig: Spalten werden in Felo-Dateien durch Tabstopps
+voneinander getrennt.  Wieviele, ist egal, Hauptsache mindestens einer,
+und Tabstopps dürfen auch nur für Spaltentrennung benutzt werden.}
+@end cartouche
+
+Wenn man möchte, kann man an beliebigen Stellen in der Felo-Datei
+Kommentare einfügen, die vom Programm ignoriert werden.  So kann man
+z.@s{}B. Gefechte markieren, deren Ergebnis man nochmal überprüfen
+möchte, oder Stellen, wo noch Gefechte fehlen, weil einem die Ergebnisse
+noch nicht vorlagen.  Zeilen, in denen man solche Kommentare einstreut,
+müssen mit einem @samp{#} beginnen -- Felo schert sich dann um diese
+Zeilen genausowenig wie um Zeilen, in denen gar nichts steht.
+
+Noch ein Wort zu den Gefechten: Man kann an das Datum noch einen
+Tagesindex anhängen.  Das macht allerdings nur Sinn, wenn man weiß, in
+welcher Reihenfolge die Gefechte an diesem Tag gefochen wurden.  In
+diesem Fall kann man die Gefechte durchnummerieren, in dem man
+@samp{.Index} an das Datum hängt:
+
+@example
+2006-12-07.1    Peter -- Jens           15:12
+2006-12-07.2    Peter -- Julia          13:15
+2006-12-07.3    Julia -- Jens           8:15
+2006-12-07.4    Jens -- Max             10:14 /15
+@end example
+
+@noindent
+Die letzte Zeile zeigt, wie Gefechte, die über die Zeit beendet wurden,
+eingegebn werden.  Damit Felo weiß, auf wieviele Punkte gefochten wurde,
+wird noch ein @samp{/15} angehängt.
 
 @menu
 * Bestimmen von Anfangs-Felo-Zahlen::  
@@ -320,15 +445,15 @@ Anhaltspunkt zu nehmen und nur auf 100@tie{}Punkte genau zu schätzen.
 Dabei könnte beispielsweise herauskommen:
 
 @example
-Alexander               1600
-Alp                     1400
-Christian               1600
-Doro                    1300
-Franzi                  1500
-Georg                   1500
-Harald                  1700
-Katrin                  1400
-Liska                   1700
+Alexander          1600
+Julia              1400
+Christian          1600
+Jens               1300
+Max                1500
+Georg              1500
+Peter              1700
+Christine          1400
+Schorsch           1700
 @end example
 
 Die zweite wichtige Zutat sind Fechtergebnisse, je mehr, desto besser,
@@ -339,14 +464,25 @@ Bedingungen nicht streng erfüllt.  Die Fechtergebnisse gibt man ein und
 führt das sogenannte @emph{Bootstrapping} durch.  Dabei berechnet das
 Felo-Programm vollautomatisch die idealen Startwerte.
 
-Wenn ihr bislang noch keine Gefechte aufgeschrieben haben, könnt ihr
-auch mit den geschätzen Felo-Zahlen anfangen.  Dann müßt ihr aber damit
-rechnen, daß die Zahlen in den ersten Wochen sich etwas wild verhalten,
-weil sie erst noch ihren wahren Wert finden müssen.
+Dazu klickt man im Menü ,,Berechnen`` auf ,,Bootstrapping``:
 
-Habt ihr hingegen schon sehr viele Gefechte aufgeschrieben, solltet ihr
-nur den ersten Teil davon (z.B. das erste halbe Jahr) für das
-Bootstrapping verwenden.
+@image{felo-screen-2-de,5cm,,Auf Bootstrapping klicken}
+
+Danach klickt man nochmal auf ,,Ja`` und wartet einen kurzen Moment.
+Die Anfangszahlen aller Fechter werden daraufhin in der Datei auf die
+bestmöglichen Startwerte gesetzt, die sich aus den bisherigen Gefechten
+ergeben.  Die Datei sollte man daraufhin speichern und die Startwerte
+nie wieder anfassen, es sei denn, man weiß genau, was man tut.  Von da
+an werden nur noch Gefechte (und neue Fechter) hinzugefügt.
+
+Wenn ihr bislang noch keine Gefechte aufgeschrieben haben, könnt ihr
+auch mit den von euch selber geschätzen Felo-Zahlen anfangen.  Dann müßt
+ihr aber damit rechnen, daß die Zahlen in den ersten Wochen sich etwas
+wild verhalten, weil sie erst noch ihren wahren Wert finden müssen.
+
+Habt ihr hingegen schon @emph{sehr} viele Gefechte aufgeschrieben,
+solltet ihr nur den ersten Teil davon (z.@s{}B. das erste halbe Jahr)
+für das Bootstrapping verwenden.
 
 
 @node Schätzen von Neueinsteigern
