@@ -97,7 +97,7 @@
 
 @copying
 Die Anleitung erläutert das Felo-Programm, mit dem eine objektive
-Einschätzung der Spielstärke von Fechtern möglich ist.  Es lehnt sich
+Einschätzung der Fechtstärke von Fechtern möglich ist.  Es lehnt sich
 dabei an das Elo-System beim Schach an.
 
 Copyright @copyright{} 2006 Torsten Bronger
@@ -113,7 +113,7 @@ oder modifizieren unter den Bedingungen der @acronym{MIT}-Lizenz.
 @finalout
 @titlepage
 @title Felo
-@subtitle Objektive Spielstärken beim Fechten
+@subtitle Objektive Fechtstärken beim Fechten
 @subtitle Version @value{VERSION}
 @sp 2
 @author Torsten Bronger
@@ -141,24 +141,21 @@ Eindruck von der Spielstärke eines Fechters.  Das Programm ist gedacht
 für Fechtgruppen, um einen weiteren Trainings-Anreiz zu schaffen, oder
 sogar um ein Kriterium für Setzlisten oder Teamauswahl zu haben.
 
-Zuverlässige Zahlen sind schon bei einer handvoll Fechter möglich.  Nach
-oben die die Grenze eher logistischer Natur.  Es müssen nur die
-Ergebnisse von allen Gefechten müssen eingesammelt und eingegeben
-werden; die Berechnung selber geht sehr schnell.
+Einigermaßen zuverlässige Zahlen sind schon bei einer handvoll Fechter
+nach einigen Trainingstagen möglich.  Nach oben die die Grenze nahezu
+offen.  Es müssen nur die Ergebnisse von allen Gefechten eingesammelt
+und eingegeben werden; die Berechnung selber geht sehr schnell.
 
-@c Das Programm besteht aus mehreren Komponenten, die es erlauben, das
-@c Programm auf unterschiedliche Art und Weise zu benutzen, entweder in
-@c Form eines bequemen Fenster-Programms, oder in Form eines
-@c Kommandozeilen-Programms.  Die Felo-Zahlen sind natürlich jedesmal
-@c dieselben, nur die Bedienung ist anders.
-
-@c Außerdem ist es möglich, nur den Kern des Felo-Programms zu benutzen und
-@c ein eigenes Programm drumherum zu stricken, um z.@s{}B. eine Webseite
-@c automatisch zu aktualisieren.
+Das Programm ist bequem über eine grafische Oberfläche zu bedienen.  Für
+die Bastler unter euch ist es außerdem möglich, nur den Kern des
+Felo-Programms zu benutzen und ein eigenes Programm drumherum zu
+stricken, um z.@s{}B. eine Webseite automatisch zu aktualisieren.
 
 @menu
 * Felo-Zahlen::                 Was sind Felo-Zahlen?
-* Bestimmen von Anfangs-Felo-Zahlen::  
+* Installation::                Installation von Felo.
+* Benutzen des Programms::      Wie man Felo-Zahlen bestimmt.
+* Weiteres über Felo-Zahlen::   Erklärungen für wirklich Interessierte.
 @end menu
 @end ifnottex
 
@@ -190,11 +187,11 @@ verschlechtert.  So hat der Fechter einen Eindruck davon, wie gut er
 momentan ist.  Innerhalb einer Gruppe sind Felo-Zahlen sehr akkurat,
 aber im Prinzip kann man sie sogar global vergleichen.
 
-Die Idee dahinter ist alles andere als neu.  Inspiriert ist das ganze
-von den Elo-Zahlen beim Schachspiel.  Sie werden seit 35@tie{}Jahren
-benutzt, um die Schach-Weltrangliste aufzustellen, und sie funktionieren
-dort prächtig.  Nicht nur, daß sie eine plausible Rangfolge ermöglichen,
-sie lassen sogar sehr präzise Aussagen über Siegchancen bei anstehenden
+Die Idee dahinter ist nicht neu.  Inspiriert ist das ganze von den
+Elo-Zahlen beim Schachspiel.  Sie werden seit 35@tie{}Jahren benutzt, um
+die Schach-Weltrangliste aufzustellen, und sie funktionieren dort
+prächtig.  Nicht nur, daß sie eine plausible Rangfolge ermöglichen, sie
+lassen sogar sehr präzise Aussagen über Siegchancen bei anstehenden
 Matches zu.
 
 Die Elo-Zahlen sind in der Folgezeit erfolgreich auf Go und
@@ -236,13 +233,59 @@ Anfänger
 untere rechnerische Grenze
 @end table
 
-Zum Teil beruht diese Tabelle auf eigenen Beobachten, zum Teil auf der
-Schach-Elo-Zahl.  Die Tabelle ist mit Vorsicht zu genießen, weil die
-Erfahrungen mit Felo-Zahlen bislang noch nicht groß ist.
+Die Tabelle ist mit Vorsicht zu genießen, weil die Erfahrungen mit
+Felo-Zahlen bislang noch nicht groß ist.
 
+
+@node Installation
+@chapter Installation
+
+@menu
+* Installation unter Windows::  Das, was wirklich wichtig ist.
+* Installation von Zusatzprogrammen::  Nur wenn man Plots braucht.
+* Installation unter Linux::
+@end menu
+
+
+@node Installation unter Windows
+@section Installation unter Windows
+
+
+@node Installation von Zusatzprogrammen
+@section Installation von Zusatzprogrammen
+
+@menu
+* Gnuplot::                     Das Programm für die Plots.
+* Ghostscript::                 Für die Umwandlung Plot --> PDF.
+* ImageMagick::                 Für die Umwandlung PDF --> PNG.
+@end menu
+
+
+@node Gnuplot
+@subsection Gnuplot
+
+
+@node Ghostscript
+@subsection Ghostscript
+
+
+@node ImageMagick
+@subsection ImageMagick
+
+
+@node Installation unter Linux
+@section Installation unter Linux
+
+
+@node Benutzen des Programms
+@chapter Benutzen des Programms
+
+@menu
+* Bestimmen von Anfangs-Felo-Zahlen::  
+@end menu
 
 @node Bestimmen von Anfangs-Felo-Zahlen
-@chapter Bestimmen von Anfangs-Felo-Zahlen
+@section Bestimmen von Anfangs-Felo-Zahlen
 
 Es gibt zwei sehr unterschiedliche Situationen, in denen eine
 Anfangs-Felo-Zahl geschätzt werden muß: Wenn die ganze Fechtegruppe
@@ -256,7 +299,7 @@ dazukommt.
 
 
 @node Anfangs-Felo-Zahlen für die ganze Gruppe
-@section Anfangs-Felo-Zahlen für die ganze Gruppe
+@subsection Anfangs-Felo-Zahlen für die ganze Gruppe
 
 Das Bestimmen der Start-Felo-Zahlen für eine Fechtergruppe ist der
 einzige kniffelige Teil bei der Sache und meist das allererste, was man
@@ -294,21 +337,20 @@ fünf bis zehn Gefechte pro Fechter sollten es schon sein, verteilt auf
 maximal ein halbes Jahr.  Es ist aber kein Beinbruch, wenn ihr diese
 Bedingungen nicht streng erfüllt.  Die Fechtergebnisse gibt man ein und
 führt das sogenannte @emph{Bootstrapping} durch.  Dabei berechnet das
-Felo-Programm die idealen Startwerte.
+Felo-Programm vollautomatisch die idealen Startwerte.
 
 Wenn ihr bislang noch keine Gefechte aufgeschrieben haben, könnt ihr
 auch mit den geschätzen Felo-Zahlen anfangen.  Dann müßt ihr aber damit
 rechnen, daß die Zahlen in den ersten Wochen sich etwas wild verhalten,
 weil sie erst noch ihren wahren Wert finden müssen.
 
-Habt ihr schon sehr viele Gefechte aufgeschrieben, könnt ihr euch den
-Luxus leisten und nur den ersten Teil davon (z.B. das erste halbe Jahr)
-für das Bootstrapping verwenden.  Der Rest kann bereits für Diagramme
-mit den Felo-Verläufen benutzt werden.
+Habt ihr hingegen schon sehr viele Gefechte aufgeschrieben, solltet ihr
+nur den ersten Teil davon (z.B. das erste halbe Jahr) für das
+Bootstrapping verwenden.
 
 
 @node Schätzen von Neueinsteigern
-@section Schätzen von Neueinsteigern
+@subsection Schätzen von Neueinsteigern
 
 Ein gänzlich anderes Problem ist, wenn ein neuer Fechter in die Gruppe
 einsteigen möchte und er hat noch keine Felo-Zahl.  Das geht so: Der
@@ -320,6 +362,11 @@ fertig.
 
 So ganz genau kann man nicht angeben, wieviele Gefechte für die
 Schätzung nötig sind.  Das Felo-Programm wird selbstständig entscheiden,
-ob die Zahl der Gefecht wenigstens das absolute Minimum erfüllt, aber
+ob die Zahl der Gefechte wenigstens das absolute Minimum erfüllt, aber
 man kann nach eigenem Gutdünken auch noch ein paar Gefechte mehr
 abwarten, bevor man die Einstiegs-Felo-Zahl berechnet.
+
+
+@node Weiteres über Felo-Zahlen
+@chapter Weiteres über Felo-Zahlen
+
