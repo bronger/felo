@@ -953,7 +953,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             return xtics
     def construct_supplement(path):
         if os.name == 'nt':
-            return "I looked for it at '%s.'  " % name
+            return "(I looked for it at '%s'.)  " % path
         else:
             return ""
 
