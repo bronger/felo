@@ -151,6 +151,14 @@ die Bastler unter euch ist es außerdem möglich, nur den Kern des
 Felo-Programms zu benutzen und ein eigenes Programm drumherum zu
 stricken, um z.@s{}B. eine Webseite automatisch zu aktualisieren.
 
+Das Programm ist freie Software, was insbesondere bedeutet, daß es
+kostenlos verteilt wird und jeder den Quellcode haben und verändern
+darf.  Der Autor freut sich als Gegenleistung über eine Postkarte, die
+man ihm schickt (T.@tie{}Bronger, Lochnerstraße@tie{}7,
+52064@tie{}Aachen).  Außerdem kann man helfen, Felo in
+@uref{http://felo.sourceforge.net/translations.html,andere Sprachen zu
+übersetzen}.
+
 @menu
 * Felo-Zahlen::                 Was sind Felo-Zahlen?
 * Installation::                Installation von Felo.
@@ -460,14 +468,14 @@ diese Info gebraucht.
 Unter Freizeitfechtern ist das ohnehin nicht wichtig, weil es dort sehr
 selten ist, daß ein Gefecht über die Zeit beendet wird.}
 
-@unnumberedsubsec Einzelgefechte in einem Mannschaftsturnier
+@unnumberedsubsec Einzelgefechte in einem Mannschaftsmatch
 
 Es ist zwar auf den ersten Blick ein bißchen ungewöhnlich, aber jedes
-Gefecht in einem Mannschaftsturnier ist ja auch ein Einzelgefecht --
-wieso also nicht auch zur Berechnung der Felo-Zahlen heranziehen.  Nun
+Gefecht in einem Mannschaftsmatch ist ja auch ein Einzelgefecht -- wieso
+also nicht auch zur Berechnung der Felo-Zahlen heranziehen.  Nun
 passiert es dabei gerne mal (gerade unter Freizeitspielern), daß dabei
-ein recht starker Fechter einen Anfänger haushoch von der Planche
-putzt.  Obwohl das aus mathematischer Sicht die Felo-Zahlen nicht unfair
+ein recht starker Fechter einen Anfänger haushoch von der Planche putzt.
+Obwohl das aus mathematischer Sicht die Felo-Zahlen nicht unfair
 beeinflußt, könnte das vom Anfänger als Grund angesehen werden, gar
 nicht mitzumachen.  Deshalb kann man solche Team-Gefechte mit einem
 @samp{*} markieren:
@@ -486,6 +494,33 @@ Solche Gefechte werden dann immer so gewichtet wie ein Gefecht
 auf@tie{}5, egal, wie es ausgeht.  Da ein Team-Wettkampf ohnehin eigene
 Regeln zu haben scheint, ist es vermutlich ganz generell sinnvoll, ihn
 nicht zu hoch zu gewichten.
+
+@unnumberedsubsec Fremdfechter und Gefechte in Fremdgruppen
+
+Fremdfechter (super Begriff) sind Fechter, die nicht zur Gruppe gehören
+(sondern zu einer anderen), aber mal für einen Trainigstag
+vorbeischauen.  Oder es sind Fechter, denen man auf einem Turnier
+begegnet.  Wie auch immer, sie haben zwar eine aktuelle Felo-Zahl,
+werden aber nicht in der Datei geführt.  Sie dort einzutragen wäre
+Blödsinn, weil sie beim nächsten Besuch eine andere Felo-Zahl haben
+werden, die man ja nicht selber ausrechnen kann, weil sie in ihrem
+Heimatverein zustande gekommen ist.
+
+Trotzdem können und sollen sie in die Rechnung eingehen:
+
+@example
+2006-10-14      Anakin -- Riker <1764>  0:5
+@end example
+
+@noindent
+Man gibt also ihre Felo-Zahl (bei der sie hoffentlich nicht mogeln) in
+spitzen Klammern in die Gefechtzeile ein.  Man kann auch deren Namen
+weglassen, Felo interessiert sich nur für die Zahl in den spitzen
+Klammern.
+
+Umgekehrt kann ein Fechter melden, daß er/sie gestern in einem
+Fremdverein gegen einen 1453-er Fechter 15:11 gewonnen hat.  Das kann
+man dann genauso eintragen.
 
 
 @node Felo-Zahlen berechnen
@@ -791,4 +826,114 @@ entsprechen soll.  @emph{(Vorgabewert: 1.0)}
 @node Felo-Zahlen -- etwas Hintergrund
 @chapter Felo-Zahlen -- etwas Hintergrund
 
-Felo-Zahlen 
+@menu
+* Die Berechnung der Felo-Zahl::  
+* Globales Vergleichen von Felo-Zahlen::  
+* Felo und andere Sportarten::  
+@end menu
+
+
+@node Die Berechnung der Felo-Zahl
+@section Die Berechnung der Felo-Zahl
+
+Die Berechnung der neuen Felo-Zahl geschieht in drei Schritten:
+
+@enumerate
+@item
+Es wird der Resultatwert für den Fechter berechnet.  Das ist der Anteil
+der Einzeltreffer, die er gesetzt hat.  Beispiel: Gewinnt der Fechter
+15:10, ist der Resultatwert @math{15/(15+10)=0.6}.
+
+@item
+Dann wird aus der Differenz der Felo-Zahlen beider Fechter der
+@emph{erwartete} Resultatwert berechnet.  Die Formel dazu findet man
+z.@s{}B. im
+@uref{http://de.wikipedia.org/wiki/Elo-Zahl#Berechnung,Wikipedia-Artikel zur
+Elo-Zahl}.
+
+@item
+Die Differenz zwischen Resultat und erwartetem Resultat nenne ich mal
+die @emph{Überraschung}.  Die Überraschung wird nun multipliziert mit
+der Zahl der Einzeltreffer des Gefechts und zur alten Felo-Zahl
+addiert.  Das ergibt die neue Felo-Zahl des Fechters.
+@end enumerate
+
+Um genau zu sein, wird die Überraschung auch mit dem sogenannten
+@emph{k-Faktor} multipliziert, @xref{Liste aller Parameter}.  Das hört
+sich geheimnisvoller an, als es ist.  Der k-Faktor bestimmt, wie stark
+sich die Felo-Zahlen ändern.  Ist er zu groß, wackeln die Felo-Zahlen zu
+stark hin und her.  Ist er zu klein, dauert es zu lange, bis sich die
+Felo-Zahl eines Fechter auf der wahren Spielstärke eingependelt hat.
+
+
+@node Globales Vergleichen von Felo-Zahlen
+@section Globales Vergleichen von Felo-Zahlen
+
+Felo-Zahlen können nur Fechter innerhalb einer Fechtgruppe @emph{relativ}
+vergleichen.  Damit man auch zwischen Gruppen vergleichen kann
+(z.@s{}B. zwischen zwei Vereinen), muß man bei der 
+Einschätzung der Anfangs-Felo-Zahlen (@pxref{Anfangs-Felo-Zahlen für die
+ganze Gruppe}) sehr realistisch und sorgfältig vorgegangen sein.  Nun
+gebe ich zu, daß Angaben wie ,,starke Freizeitspieler`` ziemlich
+schwammig sind, deshalb ist das nur begrenzt realistisch.  Ein ganz
+gutes Vergleichen sollte dennoch möglich sein.
+
+Wesentlich besser ist es natürlich, wenn ein paar Fechter in beiden
+Gruppen fechten.  Sie verbinden quasi die Felo-Zahlen beider Gruppen und
+machen sie so vergleichbar.  Man kann dafür beide Gruppen zu einer
+zusammenlegen.  Theoretisch reicht ein einzelner Fechter dafür aus, aber
+der hat dann viel zu tun.  Wurde eine der beiden Fechtgruppen zu gut
+bewertet, schaufelt er dann quasi die Punkte zur anderen Gruppe, bis
+alles stimmig ist.
+
+Man kann dazu natürlich auch die vielen Fechtturniere benutzen, ist aber
+viel Arbeit: Man sammelt die Felo-Zahlen aller Fechter, gegen die die
+eigenen Leute fechten @emph{und} die überhaupt eine Felo-Zahl haben,
+ein.
+
+Wie auch immer, es gibt leider noch zu wenig Erfahrung mit Felo-Zahlen,
+um zu wissen, wie gut man Gruppen Felo-technisch durch gemeinsame
+Fechter und/oder Turniere verbinden kann (so gut sie auch innerhalb
+einer Gruppe funktionieren).
+
+Übrigens lassen sich verschiedene Waffengattung nie richtig miteinander
+verbinden, weil sie ja nie gegeneinander fechten können.  Da ist man
+dann allein auf die realistische Einschätzung angewiesen.
+
+
+@node Felo und andere Sportarten
+@section Felo und andere Sportarten
+
+Kann man das Felo-Programm auch in anderen Sportarten einsetzen?
+
+Ja, man kann, allerdings funktionieren Teamsportarten nicht so gut.
+Auch bei Sportarten, bei denen die Zeit ein Match beendet, funktioniert
+es nicht so dolle.
+
+Was Teamsportarten angeht, klappt Felo gar nicht, wenn man eine fixe
+Gruppe aus @math{x}@tie{}Personen hat, aus denen an jedem Traingstag
+zwei beliebige Mannschaften zusammengestellt werden.  Wie soll man das
+auch eintragen.  Nur, wenn man @math{x}@tie{}@emph{Teams} hat, die immer
+aus den mehr oder weniger gleichen Leuten bestehen, kann man die Teams
+als Sportler führen und ihre Ergebnisse aufschreiben.  Das schränkt die
+Brauchbarkeit von Felo zugegebenermaßen deutlich ein, insbesondere im
+Freizeitsport.
+
+Bei Sportarten, die über die Zeit entschieden werden, kann man nur die
+drei möglichen Ergebnisse 1:0, 0:1 und 1:1 benutzen, für Sieg,
+Niederlage und unentschieden.  Allerdings fällt mir jetzt spontan keine
+solche Sportart ein, die nicht auch eine Mannschaftssportart wäre.
+
+Für alle anderen Sportarten mit einem Sportler-Sportler-Duell,
+z.@s{}B. Tennis, Badminton, Tischtennis, Armdrücken, Wettblinzeln oder
+Ostereiertitschen, gibt es an sich keine Schwierigkeiten.  Existiert
+kein richtiger Endstand sondern nur Sieger und Verlierer (oder
+unentschieden), dann siehe oben, ansonsten trägt man eben das Ergebnis
+ein.
+
+Es ist übrigens nicht so wichtig, ob man bei Sportarten mit Sätzen die
+Sätze, Spiele oder Punkte als Grundlage nimmt.  Groß wird der
+Unterschied nicht sein.  Beim Tennis kann man ein 6:4@tie{}6:3 entweder
+als 2:0 oder als 12:7 eintragen.  (Man kann auch die Einzelpunkte
+zählen, wenn man zuviel Zeit hat.)  Grundsätzlich gilt natürlich: Je
+feiner, desto besser.
