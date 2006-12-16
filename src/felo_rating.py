@@ -474,10 +474,10 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
     Return values:
     A list with all bouts that were read.
     """
-    line_pattern = re.compile("\\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2})"
-                              "(?:\\.(?P<index>\\d+))?"
+    line_pattern = re.compile("\\s*(?:(?:(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2}))?"
+                              "(?:\\.?(?P<index>\\d+))?"
                               +separator+
-                              "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)"+separator+
+                              ")?(?P<first>.+?)\\s*--\\s*(?P<second>.+?)"+separator+
                               "(?P<points_first>\\d+):(?P<points_second>\\d+)\\s*"+
                               "(?P<fenced_to>(?:/\\d+)|\\*)?\\s*\\Z")
     bouts = []
@@ -507,6 +507,13 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
             raise LineError(_('Fencer "%s" is unknown.') % second_fencer, input_file.name, linenumber)
         if not index:
             index = "0"
+        if year:
+            last_year, last_month, last_day = year, month, day
+        else:
+            try:
+                year, month, day = last_year, last_month, last_day
+            except NameError:
+                raise LineError(_('No date found for this bout.'), input_file.name, linenumber)
         bouts.append(Bout(int(year), int(month), int(day), int(index), first_fencer, second_fencer,
                                 points_first, points_second, fenced_to))
     return bouts
@@ -537,11 +544,14 @@ def parse_felo_file(felo_file):
                                _(u"weighting team bout"): "weighting team bout"}
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
-    try:
-        for native_name, value in parameters_native_language.items():
+    for native_name, value in parameters_native_language.items():
+        if native_name in english_parameter_names:
             parameters[english_parameter_names[native_name]] = value
-    except KeyError, e:
-        raise FeloFormatError(_(u"Parameter \"%s\" is unknown.") % e[0])
+        elif native_name in english_parameter_names.values():
+            # The non-English user used an English parameter name
+            parameters[native_name] = value
+        else:
+            raise FeloFormatError(_(u"Parameter \"%s\" is unknown.") % native_name)
     given_parameters = list(parameters)
     parameters.setdefault("k factor top fencers", 25)
     parameters.setdefault("felo rating top fencers", 2400)
@@ -639,8 +649,9 @@ def write_felo_file(filename, parameters, fencers, bouts):
         line = fill_with_tabs(fill_with_tabs(bout.date_string, 2) +
                                "%s -- %s" % (bout.first_fencer, bout.second_fencer), 5) + \
                                "%d:%d" % (bout.points_first, bout.points_second)
-        if bout.fenced_to == 0 or (bout.points_first != bout.fenced_to and
-                                          bout.points_second != bout.fenced_to):
+        if bout.fenced_to == 0:
+            line += " *"
+        elif bout.points_first != bout.fenced_to and bout.points_second != bout.fenced_to:
             line += "/" + str(bout.fenced_to)
         print>>felo_file, line
     felo_file.close()
