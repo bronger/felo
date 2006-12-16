@@ -172,7 +172,7 @@ man ihm schickt (T.@tie{}Bronger, Lochnerstraße@tie{}7,
 @ifhtml
 Diese Anleitung existiert auch als
 @uref{http://felo.sourceforge.net/de/,Sammlung von @HTML{}-Dateien} (auch in
-@uref{http://felo.sourceforge.net/felo-de.zip,gezippter Form}), als
+@uref{http://felo.sourceforge.net/felo-de-handbuch.zip,gezippter Form}), als
 @uref{http://felo.sourceforge.net/felo-de.html,einzelne @HTML{}-Seite} und als
 @uref{http://felo.sourceforge.net/felo-de.pdf,@PDF{}-Datei}.
 @end ifhtml
@@ -293,17 +293,34 @@ Felo-Zahlen der Fechtgruppe zu machen, kannst du gleich bei
 @node Gnuplot
 @subsection Gnuplot
 
+Als ersten muß man sich
+@uref{http://sourceforge.net/project/showfiles.php?group_id=2055&package_id=1996,Gnuplot
+als ZIP-Datei} herunterladen.  Der Dateiname ist @file{gp400win32.zip},
+wobei @file{400} die Versionnummer ist.  Diese ZIP-Datei entpackt man am
+besten in das Verzeichnis @file{C:\Programme\gnuplot}.
+
 
 @node Ghostscript
 @subsection Ghostscript
+
+Ghostscript kann man auf dem
+@uref{ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs854/,FTP Mirror
+für Ghostscript} herunterladen (man braucht die EXE-Datei).  Es ist
+wichtig, daß man diese Datei als Administrator ausführt!
 
 
 @node ImageMagick
 @subsection ImageMagick
 
+Auf der @uref{http://www.imagemagick.org,Homepage von ImageMagick}
+klickt man links auf ``Binary Releases'' -- ``Windows'', lädt dann eine
+der dort angebotenen EXE-Dateien herunter und startet sie (möglichst als
+Administrator).
+
 
 @node Installation unter Linux
 @section Installation unter Linux
+
 
 
 @node Benutzen des Programms
@@ -760,6 +777,30 @@ Die maximale Anzahl von Tagen (Kalendertage, nicht Trainingstage), die
 in den Plot aufgenommen werden.  Das verhindert, daß der Zeitraum, der
 durch den Plot abgedeckt wird, immer mehr anwächst und sich alles immer
 dichter drängt.  @emph{(Vorgabewert: 366)}
+
+@end table
+
+Die folgenden Parameter sind nur unter Windows interessant.  Unter Linux
+werden die Programme -- sofern sie installiert sind -- gewöhnlich ohne
+Probleme gefunden.  Für Hinweise zur Installation dieser Programme
+@xref{Installation von Zusatzprogrammen}.
+
+@table @code
+
+@item Pfad von Gnuplot
+Der vollständige Pfad zum Gnuplot-Programm.  Unter Windows heißt diese
+Datei @file{pgnuplot.exe}.  Wenn Felo Gnuplot nicht findet, sagt es in
+einer Fehlermeldung, wo es gesucht hat.
+
+@item Pfad von convert
+Der vollständige Pfad zum convert-Programm von ImageMagick.  Unter
+Windows heißt diese Datei @file{convert.exe}.  Wenn Felo Gnuplot nicht
+findet, sagt es in einer Fehlermeldung, wo es gesucht hat.
+
+@item Pfad von ps2pdf
+Der vollständige Pfad zum ps2pdf-Programm von Ghostscript.  Unter
+Windows heißt diese Datei @file{ps2pdf.bat}.  Wenn Felo ps2pdf nicht
+findet, sagt es in einer Fehlermeldung, wo es gesucht hat.
 
 @end table
 
