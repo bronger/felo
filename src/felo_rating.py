@@ -546,7 +546,10 @@ def parse_felo_file(felo_file):
                                _(u"earliest date in plot"): "earliest date in plot",
                                _(u"maximal days in plot"): "maximal days in plot",
                                _(u"threshold bootstrapping"): "threshold bootstrapping",
-                               _(u"weighting team bout"): "weighting team bout"}
+                               _(u"weighting team bout"): "weighting team bout",
+                               _(u"path of gnuplot"): "path of gnuplot",
+                               _(u"path of convert"): "path of convert",
+                               _(u"path of ps2pdf"): "path of ps2pdf"}
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
     for native_name, value in parameters_native_language.items():
@@ -575,6 +578,9 @@ def parse_felo_file(felo_file):
     parameters.setdefault("min distance of plot tics", 7)
     parameters.setdefault("earliest date in plot", "1980-01-01")
     parameters.setdefault("maximal days in plot", "366")
+    parameters.setdefault("path of gnuplot", "gnuplot")
+    parameters.setdefault("path of convert", "convert")
+    parameters.setdefault("path of ps2pdf", "ps2pdf")
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
     fencers = {}
@@ -945,6 +951,11 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         if plot:
             data_file.close()
             return xtics
+    def construct_supplement(path):
+        if os.name == 'nt':
+            return "I looked for it at '%s.'  " % name
+        else:
+            return ""
 
     visible_fencers = [fencer for fencer in fencers.values()
                        if not (fencer.hidden or fencer.freshman or fencer.foreign_fencer)]
@@ -984,29 +995,29 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             if i < len(visible_fencers) - 1:
                 gnuplot_script += ", "
         try:
-            gnuplot = Popen(["gnuplot", "-"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            gnuplot = Popen([parameters["path of gnuplot"], "-"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except OSError:
-            raise ExternalProgramError(_(u'The program "gnuplot" wasn\'t found.  '
+            raise ExternalProgramError(_(u'The program "Gnuplot" wasn\'t found.  %s'
                                          u'However, it is needed for the plots.  '
-                                         u'Please install it from http://www.gnuplot.info/ and '
-                                         u'set it into the PATH.'))
+                                         u'Please install it from http://www.gnuplot.info/.') %
+                                       construct_supplement(parameters["path of gnuplot"]))
         gnuplot.communicate(gnuplot_script)
         try:
-            call(["convert", bouts_base_filename+".ps", "-rotate", "90",
+            call([parameters["path of convert"], bouts_base_filename+".ps", "-rotate", "90",
                   parameters["output folder"] + "/" + bouts_base_filename+".png"])
         except OSError:
-            raise ExternalProgramError(_(u'The program "convert" of ImageMagick wasn\'t found.  '
+            raise ExternalProgramError(_(u'The program "convert" of ImageMagick wasn\'t found.  %s'
                                          u'However, it is needed for the plots.  '
-                                         u'Please install it from http://www.imagemagick.org/ and '
-                                         u'set it into the PATH.'))
+                                         u'Please install it from http://www.imagemagick.org/.') %
+                                       construct_supplement(parameters["path of convert"]))
         try:
-            call(["ps2pdf", bouts_base_filename+".ps",
+            call([parameters["path of ps2pdf"], bouts_base_filename+".ps",
                   parameters["output folder"] + "/" + bouts_base_filename+".pdf"])
         except OSError:
-            raise ExternalProgramError(_(u'The program "ps2pdf" of Ghostscript wasn\'t found.  '
+            raise ExternalProgramError(_(u'The program "ps2pdf" of Ghostscript wasn\'t found.  %s'
                                          u'However, it is needed for the plots.  '
-                                         u'Please install it from http://www.cs.wisc.edu/~ghost/ and '
-                                         u'set it into the PATH.'))
+                                         u'Please install it from http://www.cs.wisc.edu/~ghost/.') %
+                                       construct_supplement(parameters["path of ps2pdf"]))
     if estimate_freshmen:
         return [fencer for fencer in fencers.values() if fencer.freshman]
     return visible_fencers
