@@ -69,8 +69,8 @@ class Editor(wx.py.editor.EditWindow):
         self.SetScrollWidth(self.TextWidth(wx.stc.STC_STYLE_DEFAULT, 68*"0"))
         self.SetLexer(wx.stc.STC_LEX_CONTAINER)
         self.Bind(wx.stc.EVT_STC_STYLENEEDED, self.OnStyling)
-        self.bout_line_pattern = re.compile(u"\\s*(?P<date>\\d{4}-\\d{1,2}-\\d{1,2}(?:\\.\\d+)?)"
-                                            u"\\s*\t+\\s*"
+        self.bout_line_pattern = re.compile(u"\\s*(?:(?P<date>(?:\\d{4}-\\d{1,2}-\\d{1,2})?(?:\\.?\\d+)?)"
+                                            u"\\s*\t+\\s*)?"
                                             u"(?P<first>.+?)\\s*--\\s*(?P<second>.+?)\\s*\t+\\s*"
                                             u"(?P<score>\\d+:\\d+\\s*(?P<fenced_to>(?:/\\d+)|\\*)?)\\s*\\Z")
         self.item_line_pattern = re.compile(u"\\s*(?P<name>[^\t]+?)\\s*\t+\\s*(?P<value>.+?)\\s*\\Z")
@@ -101,7 +101,7 @@ class Editor(wx.py.editor.EditWindow):
 
 class ResultFrame(wx.Frame):
     def __init__(self, title, fencerlist, *args, **keyw):
-        wx.Frame.__init__(self, None, wx.ID_ANY, size=(300, 600), title=title, *args, **keyw)
+        wx.Frame.__init__(self, None, wx.ID_ANY, size=(300, 500), title=title, *args, **keyw)
         self.SetIcon(App.icon)
         grid = wx.FlexGridSizer(2, 1)
         grid.AddGrowableRow(0, 1)
@@ -219,7 +219,7 @@ class ProgressFrame(wx.Frame):
 
 class Frame(wx.Frame):
     def __init__(self, *args, **keyw):
-        wx.Frame.__init__(self, None, wx.ID_ANY, size=(700, 700), title="Felo", *args, **keyw)
+        wx.Frame.__init__(self, None, wx.ID_ANY, size=(600, 600), title="Felo", *args, **keyw)
         self.SetIcon(App.icon)
 
         menu_bar = wx.MenuBar()
