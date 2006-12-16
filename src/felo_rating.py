@@ -60,7 +60,7 @@ __version__ = "$Revision$"
 # $HeadURL$
 distribution_version = "1.0"
 
-import codecs, re, os.path, datetime, time, shutil
+import codecs, re, os.path, datetime, time, shutil, glob
 # This strange construction is necessary because on Windows, the file may be
 # put into a ZIP file (by py2exe), so we have to delete the last *two* parts of
 # the path.
@@ -578,9 +578,17 @@ def parse_felo_file(felo_file):
     parameters.setdefault("min distance of plot tics", 7)
     parameters.setdefault("earliest date in plot", "1980-01-01")
     parameters.setdefault("maximal days in plot", "366")
-    parameters.setdefault("path of gnuplot", "gnuplot")
-    parameters.setdefault("path of convert", "convert")
-    parameters.setdefault("path of ps2pdf", "ps2pdf")
+    if os.name == 'nt':
+        programs_path = os.environ["ProgramFiles"]
+        parameters.setdefault("path of gnuplot", os.path.join(programs_path, r"gnuplot\bin\pgnuplot.exe"))
+        best_path = glob.glob(os.path.join(programs_path, "ImageMagick*"))[0]
+        parameters.setdefault("path of convert", os.path.join(best_path, "convert.exe"))
+        best_path = glob.glob(os.path.join(programs_path, "gs", "gs*"))[0]
+        parameters.setdefault("path of ps2pdf", os.path.join(best_path, "lib", "ps2pdf.bat"))
+    else:
+        parameters.setdefault("path of gnuplot", "gnuplot")
+        parameters.setdefault("path of convert", "convert")
+        parameters.setdefault("path of ps2pdf", "ps2pdf")
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
     fencers = {}
@@ -1011,8 +1019,11 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                                          u'Please install it from http://www.imagemagick.org/.') %
                                        construct_supplement(parameters["path of convert"]))
         try:
+            gs_path = os.path.dirname(os.path.dirname(parameters["path of ps2pdf"]))
             call([parameters["path of ps2pdf"], bouts_base_filename+".ps",
-                  parameters["output folder"] + "/" + bouts_base_filename+".pdf"])
+                  parameters["output folder"] + "/" + bouts_base_filename+".pdf"],
+                 env={"PATH": os.environ["PATH"]+";"+os.path.join(gs_path, "bin")+
+                      ";"+os.path.join(gs_path, "lib")})
         except OSError:
             raise ExternalProgramError(_(u'The program "ps2pdf" of Ghostscript wasn\'t found.  %s'
                                          u'However, it is needed for the plots.  '
