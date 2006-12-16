@@ -1,0 +1,44 @@
+#! /bin/sh
+
+case "$1" in
+    --help | "")
+	echo "Usage: texi2latex TEXINFO-FILE [NAME=VALUE]..."
+	echo
+	echo "Translate Texinfo source documentation to LaTeX."
+	echo
+	echo "General options:"
+	echo "      --version               display version information and exit."
+	echo "      --help                  display this help and exit."
+	echo
+	echo "XSLT parameters (\"name=value\" pairs):"
+	echo "  document-class              LaTeX document class.  Default is 'book'."
+	echo "  global-options              global options to the document class"
+	echo "                                (e.g. '12pt,twocolumn')"
+	echo "  ignore-tabs                 Ignore tabulator characters in @verbatim."
+	echo "                                Default is 'no'."
+	exit
+	;;
+    --version)
+	echo "texi2latex 0.9.4"
+	echo
+	echo "Copyright (C) 2005 Torsten Bronger"
+	echo "There is NO warranty.  You may redistribute this software"
+	echo "under the terms of the GNU General Public License."
+	echo "For more information about these matters, see the files named COPYING."
+	exit
+	;;
+    -*)
+	echo "Unrecognised option" $1
+	exit 1
+	;;
+esac
+
+DTD_PATH=/usr/local/share/xml/texi2latex/texinfo.dtd
+XSLT_PATH=/usr/local/share/xml/texi2latex
+
+LC_ALL=de_DE ; makeinfo --xml -o - $1 | \
+sed -e "1,2s%http://www.gnu.org/software/texinfo/dtd/[\\.0-9]\+/texinfo.dtd%$DTD_PATH%" | \
+sed -e "1,2s%<?xml version=\"1.0\"?>%<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>%" | \
+# xalan -XSL $XSLT_PATH/texi2latex.xsl -IN /dev/stdin -OUT /dev/stdout | \
+saxon /dev/stdin $XSLT_PATH/texi2latex.xsl $2 $3 $4 $5 $6 $7 $8 $9 | \
+tbrplent > ${1%.*}.ltx
