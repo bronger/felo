@@ -116,6 +116,7 @@ oder modifizieren unter den Bedingungen der @acronym{MIT}-Lizenz.
 @subtitle Objektive Fechtstärken beim Fechten
 @subtitle Version @value{VERSION}
 @sp 2
+@image{felo-logo,10cm,,Felo logo}
 @author Torsten Bronger
 @page
 @vskip 0pt plus 1filll
@@ -384,7 +385,7 @@ getrennt.
 
 @cartouche
 @strong{Wichtig: Spalten werden in Felo-Dateien durch Tabstopps
-@key{TAB} voneinander getrennt.  Wieviele, ist egal, Hauptsache
+@key{Tab} voneinander getrennt.  Wieviele, ist egal, Hauptsache
 mindestens einer.}
 @end cartouche
 
@@ -417,7 +418,7 @@ simpel:
 @end example
 
 @noindent
-Die drei Spalten werden dabei durch Tabstopps @kbd{TAB} getrennt.
+Die drei Spalten werden dabei durch Tabstopps @key{Tab} getrennt.
 
 Bei Gefechten eines Tages muß bloß das erste Gefecht mit dem Datum
 versehen sein.  Damit kann man die Liste etwas übersichtlicher
@@ -444,29 +445,34 @@ durchnummerieren, in dem man @samp{.Index} an das Datum hängt:
 2006-12-07.1    Peter -- Jens           15:12
            2    Peter -- Julia          13:15
            3    Julia -- Jens           8:15
-           4    Jens -- Max             10:14 /15
+           4    Jens -- Max             10:15
 @end example
 
 @noindent
-Gefechte ohne Index bekommen intern allesamt den Index@tie{}`0' vom
-Programm zugewiesen.
+Gefechte ohne Index bekommen intern allesamt den Index@tie{}`@math{0}'
+vom Programm zugewiesen.
 
-@unnumberedsubsec Gefechte, die über die Zeit entschieden werden
+@c @unnumberedsubsec Gefechte, die über die Zeit entschieden werden
 
-Die letzte Zeile im obigen Beispiel zeigt, wie Gefechte, die über die
-Zeit beendet wurden, eingegeben werden.  Damit Felo weiß, auf wieviele
-Punkte gefochten wurde, wird noch ein @samp{/15}
-angehängt.@footnote{Fairerweise muß ich zugeben, daß dies ein Relikt aus
-einer älteren Fassung des Programms ist.  Der aktuelle Algorithmus zur
-Berechnung der Felo-Zahl nutzt diese Info gar nicht -- aber es kann bei
-einer Änderung der Spielregeln für die Felo-Zahlen signifikant werden.
-Beispielsweise kann lokal eine Fechtgruppe alle Gefechte gewichten nach
-der Siegpunktzahl und nicht nach der Anzahl der gefochtenen Treffer.
-Dafür muß sie zwar den Quellcode etwas modifizieren, aber dann wird
-diese Info gebraucht.
+@c Das folgende Gefecht
 
-Unter Freizeitfechtern ist das ohnehin nicht wichtig, weil es dort sehr
-selten ist, daß ein Gefecht über die Zeit beendet wird.}
+@c @example
+@c                 Schröder -- Kohl        4:5 /15
+@c @end example
+
+@c ist über die Zeit beendet worden.  Damit Felo weiß, auf wieviele Punkte
+@c gefochten wurde, wird noch ein @samp{/15}
+@c angehängt.@footnote{Fairerweise muß ich zugeben, daß dies ein Relikt aus
+@c einer älteren Fassung des Programms ist.  Der aktuelle Algorithmus zur
+@c Berechnung der Felo-Zahl nutzt diese Info gar nicht -- aber es kann bei
+@c einer Änderung der Spielregeln für die Felo-Zahlen signifikant werden.
+@c Beispielsweise kann lokal eine Fechtgruppe alle Gefechte gewichten nach
+@c der Siegpunktzahl und nicht nach der Anzahl der gefochtenen Treffer.
+@c Dafür muß sie zwar den Quellcode etwas modifizieren, aber dann wird
+@c diese Info gebraucht.
+
+@c Unter Freizeitfechtern ist das ohnehin nicht wichtig, weil es dort sehr
+@c selten ist, daß ein Gefecht über die Zeit beendet wird.}
 
 @unnumberedsubsec Einzelgefechte in einem Mannschaftsmatch
 
@@ -514,13 +520,18 @@ Trotzdem können und sollen sie in die Rechnung eingehen:
 
 @noindent
 Man gibt also ihre Felo-Zahl (bei der sie hoffentlich nicht mogeln) in
-spitzen Klammern in die Gefechtzeile ein.  Man kann auch deren Namen
+spitzen Klammern in die Gefechtzeile ein.  Man kann deren Namen auch
 weglassen, Felo interessiert sich nur für die Zahl in den spitzen
 Klammern.
 
 Umgekehrt kann ein Fechter melden, daß er/sie gestern in einem
 Fremdverein gegen einen 1453-er Fechter 15:11 gewonnen hat.  Das kann
 man dann genauso eintragen.
+
+Es ist übrigens gar nicht so blöd, Gefechte mit Frendfechtern auch mit
+einem @samp{*} zu markieren, siehe oben, weil ihre Felo-Zahl nicht so
+vertrauenswürdig ist wie die der hauseigenen Fechter.  Einen großen
+UNterschied macht das aber nicht.
 
 
 @node Felo-Zahlen berechnen
@@ -565,9 +576,9 @@ Verzeichnis speichern oder das Verzeichnis ausdrücklich angeben.
 Letzteres geht mit dem Parameter ,,Ausgabeordner``.  Man kann
 z.@s{}B. in der Felo-Datei bei den Parametern
 
-@example
+@smallexample
 Ausgabeordner           C:\Dokumente und Einstellungen\bronger\Eigene Dateien
-@end example
+@end smallexample
 
 @noindent
 eintragen.  Dann werden die im ,,Eigene-Dateien``-Ordner abgelegt.
@@ -683,7 +694,7 @@ aber nur der Neuling (oder die Neulinge) eine Anfangs-Felo-Zahl
 bekommen.
 
 Das geht so: Der Fechter wird erst als ,,Neuling`` geführt, indem seine
-Felo-Zahl von dir auf eine eine symbolische `0' gesetzt wird, um
+Felo-Zahl von dir auf eine eine symbolische `@math{0}' gesetzt wird, um
 klarzumachen, daß er noch gar keine hat.  Nach
 ca.@tie{}10@tie{}Gefechten auf 5@tie{}Treffer (oder z.@s{}B. 4
 auf@tie{}15), kann das Felo-Programm einen Startwert schätzen.  Dazu
@@ -697,8 +708,9 @@ eingetragen.@footnote{Das muß nicht genau die sein, die sich dann für
 ihn nach dem durchrechnen aller Gefechte ergibt, denn es ist ja nur
 seine @emph{Anfangs-}Felo-Zahl.}  Falls die Zahl der Gefechte von
 Obi@tie{}Wan noch nicht ausreicht, um eine Anfangszahl zu schätzen,
-beläßt das Programm sie einfach auf@tie{}`0'.  Dann hat er eben Pech
-gehabt und muß noch ein paar Traingstage lang Ergebnisse produzieren.
+beläßt das Programm sie einfach auf@tie{}`@math{0}'.  Dann hat er eben
+Pech gehabt und muß noch ein paar Traingstage lang Ergebnisse
+produzieren.
 
 
 @node Liste aller Parameter
@@ -718,27 +730,6 @@ wir in meinem Verein eh gemischt Fechten, haben wir das nicht gemacht.
 Wenn der Gruppenname nicht angegeben wird, wird einfach der Dateiname
 dafür genommen, also @file{florett.felo} enthält dann die Daten der
 Gruppe ,,Florett``.
-
-@end table
-
-@unnumberedsubsec Parameter für die Schätzung von Anfangs-Zahlen
-
-@table @code
-
-@item 5er-Gefechte für Schätzung
-Die Zahl der 5er-Gefechte, die ein Neuling bestritten haben muß, damit
-Felo mit der Funktion ,,Berechnen`` -- ,,Neulinge einschätzen`` eine
-Schätzung wagt, @xref{Schätzen von Neueinsteigern}.  Diese Gefechtszahl
-ist nur ein Richtwert, weil die genaue Zahl auch davon abhängt, wie
-knapp die Gefechte ausgegangen sind.  Außerdem zählen Gefechte auf 10
-oder 15 natürlich wie mehrere 5er-Gefechte.  @emph{(Vorgabewert: 10)}
-
-@item Schwellwert Bootstrapping
-Die Genauigkeit, die die Anfangs-Felo-Zahlen, die beim Bootstrapping
-(@pxref{Anfangs-Felo-Zahlen für die ganze Gruppe}) berechnet werden,
-mindestens haben müssen.  Scheitert das Bootstrapping, ist es sinnvoll,
-diesen Wert zu erhöhen, z.@s{}B. um Faktor@tie{}10.  @emph{(Vorgabewert:
-0.001)}
 
 @end table
 
@@ -769,6 +760,27 @@ Die maximale Anzahl von Tagen (Kalendertage, nicht Trainingstage), die
 in den Plot aufgenommen werden.  Das verhindert, daß der Zeitraum, der
 durch den Plot abgedeckt wird, immer mehr anwächst und sich alles immer
 dichter drängt.  @emph{(Vorgabewert: 366)}
+
+@end table
+
+@unnumberedsubsec Parameter für die Schätzung von Anfangs-Zahlen
+
+@table @code
+
+@item 5er-Gefechte für Schätzung
+Die Zahl der 5er-Gefechte, die ein Neuling bestritten haben muß, damit
+Felo mit der Funktion ,,Berechnen`` -- ,,Neulinge einschätzen`` eine
+Schätzung wagt, @xref{Schätzen von Neueinsteigern}.  Diese Gefechtszahl
+ist nur ein Richtwert, weil die genaue Zahl auch davon abhängt, wie
+knapp die Gefechte ausgegangen sind.  Außerdem zählen Gefechte auf 10
+oder 15 natürlich wie mehrere 5er-Gefechte.  @emph{(Vorgabewert: 10)}
+
+@item Schwellwert Bootstrapping
+Die Genauigkeit, die die Anfangs-Felo-Zahlen, die beim Bootstrapping
+(@pxref{Anfangs-Felo-Zahlen für die ganze Gruppe}) berechnet werden,
+mindestens haben müssen.  Scheitert das Bootstrapping, ist es sinnvoll,
+diesen Wert zu erhöhen, z.@s{}B. um Faktor@tie{}10.  @emph{(Vorgabewert:
+0.001)}
 
 @end table
 
