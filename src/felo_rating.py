@@ -445,7 +445,7 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
         # this simple linear interpolating, convergence is significantly more
         # difficult than without the winning-hit adjustment at all.  This
         # adjustment is only necessary if a bout is not weighted according to
-        # the total points fenced.  AT the moment, this is only the case for
+        # the total points fenced.  At the moment, this is only the case for
         # single bouts in a team relay competition.
         expectation_first = (apparent_expectation_values[int(expectation_first*100)+1][max_points-1] -
                              apparent_expectation_values[int(expectation_first*100)][max_points-1]) * \
@@ -475,9 +475,8 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
     A list with all bouts that were read.
     """
     line_pattern = re.compile("\\s*(?:(?:(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2}))?"
-                              "(?:\\.?(?P<index>\\d+))?"
-                              +separator+
-                              ")?(?P<first>.+?)\\s*--\\s*(?P<second>.+?)"+separator+
+                              "(?:\\.?(?P<index>\\d+))?"+separator+")?"+
+                              "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)"+separator+
                               "(?P<points_first>\\d+):(?P<points_second>\\d+)\\s*"+
                               "(?P<fenced_to>(?:/\\d+)|\\*)?\\s*\\Z")
     bouts = []
@@ -502,9 +501,15 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
         if fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
             raise LineError(_("One fencer has more points than the winning points."), input_file.name, linenumber)
         if first_fencer not in fencers:
-            raise LineError(_('Fencer "%s" is unknown.') % first_fencer, input_file.name, linenumber)
+            if first_fencer.find("<") == -1:
+                raise LineError(_('Fencer "%s" is unknown.') % first_fencer, input_file.name, linenumber)
+            # The -1 is irrelevant; it is set in the constructor anyway
+            fencers[first_fencer] = Fencer(first_fencer, -1, parameters)
         if second_fencer not in fencers:
-            raise LineError(_('Fencer "%s" is unknown.') % second_fencer, input_file.name, linenumber)
+            if second_fencer.find("<") == -1:
+                raise LineError(_('Fencer "%s" is unknown.') % second_fencer, input_file.name, linenumber)
+            # The -1 is irrelevant; it is set in the constructor anyway
+            fencers[second_fencer] = Fencer(second_fencer, -1, parameters)
         if not index:
             index = "0"
         if year:
@@ -583,8 +588,8 @@ def parse_felo_file(felo_file):
                 initial_felo_rating = int(initial_felo_rating[:position_opening_parenthesis])
             except ValueError:
                 raise FeloFormatError(_(u"Felo rating of \"%s\" is invalid.") % name)
-        aktueller_fechter = Fencer(name, initial_felo_rating, parameters, initial_total_weighting)
-        fencers[aktueller_fechter.name] = aktueller_fechter
+        current_fencer = Fencer(name, initial_felo_rating, parameters, initial_total_weighting)
+        fencers[current_fencer.name] = current_fencer
 
     bouts = parse_bouts(felo_file, linenumber, fencers, parameters)
     return parameters, given_parameters, fencers, bouts
@@ -806,6 +811,14 @@ class Fencer(object):
         self.total_weighting = self.initial_total_weighting = self.total_weighting_preliminary = \
             initial_total_weighting
         self.__k_factor = self.parameters["k factor others"]
+        self.foreign_fencer = name.find("<") != -1
+        if self.foreign_fencer:
+            try:
+                self.__felo_rating = int(re.search(r"<(\d+)>", name).group(1))
+                if self.__felo_rating <= 0:
+                    raise ValueError
+            except (ValueError, AttributeError):
+                raise Error("Foreign fencer '%s' has invalid Felo rating" % name)
         self.freshman = felo_rating == 0
         if not self.freshman:
             self.felo_rating = self.initial_felo_rating = self.felo_rating_preliminary = felo_rating
@@ -830,7 +843,7 @@ class Fencer(object):
     def __get_felo_rating(self):
         return int(round(self.felo_rating_exact))
     def __set_felo_rating(self, felo_rating):
-        if not self.freshman:
+        if not self.freshman and not self.foreign_fencer:
             self.__felo_rating = max(felo_rating, self.parameters["minimal felo rating"])
             if self.__felo_rating >= self.parameters["felo rating top fencers"]:
                 self.__k_factor = self.parameters["k factor top fencers"]
@@ -933,7 +946,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             data_file.close()
             return xtics
 
-    visible_fencers = [fencer for fencer in fencers.values() if not fencer.hidden and not fencer.freshman]
+    visible_fencers = [fencer for fencer in fencers.values()
+                       if not (fencer.hidden or fencer.freshman or fencer.foreign_fencer)]
     for index, fencer in enumerate(visible_fencers):
         # Store the column index of the data file in the fencer object.  Needed
         # by Gnuplot.
