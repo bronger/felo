@@ -53,7 +53,7 @@
   InstallDir "$PROGRAMFILES\Felo"
   InstallDirRegKey HKCU "Software\Felo" ""
 
-;  SetCompressor /SOLID lzma
+  SetCompressor /SOLID lzma
 
 ;--------------------------------
 ;Interface Settings
