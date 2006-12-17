@@ -247,6 +247,7 @@ Felo-Zahlen bislang noch nicht groß ist.
 
 @menu
 * Hilfe bekommen::              Bei Fragen, Wünschen und Problemen ...
+* Danksagungen::                
 @end menu
 
 @node Hilfe bekommen
@@ -276,6 +277,30 @@ einsehen.
 Hier kann man Verbesserungsvorschläge einreichen.
 @end table
 
+
+@node Danksagungen
+@section Danksagungen
+
+Im großen und ganzen ist Felo bislang -- seufz -- das Projekt eines
+Einzelkämpfers.  (Bitte kein Mitleid, es hat natürlich Spaß gemacht.)
+Allerdings hatte ich schon ein bißchen Hilfe.
+
+@table @asis
+@item Marc Ensenbach
+hat mit als gelernter Mathematiker bestätigt, daß das was ich mache,
+weitgehend sinnvoll ist, und gleichzeitig Fehler gefunden, die ich
+dann ausgemerzt habe.
+
+@item Stefan Mainka
+hat fleißig all unsere Fechtergebnisse aufgeschrieben, lange bevor es
+Felo gab.  Für mich war das natürlich ein Glücksfall, weil ich so recht
+schnell das Konzept testen konnte.  Ich danke auch der ganzen
+RWTH-Fechtgruppe, weil niemand Einspruch erhoben hat, als ich diese doch
+recht personenbezogenen Daten ins (interne) Web stellen wollte.
+
+@item Roberto Pereira
+hat das Programm ins Spanische übersetzt.
+@end table
 
 
 @node Installation
@@ -1104,4 +1129,4 @@ Programme mit Felo-Zahlen zu schreiben.
 @c  LocalWords:  Tics Mindestdatum pgnuplot exe convert pdf pxref Mindest dolle
 @c  LocalWords:  Wettblinzeln Ostereiertitschen rating help plots bootstrap max
 @c  LocalWords:  fuer cycles estimate freshmen write back zurueck version
-@c  LocalWords:  output stdout
+@c  LocalWords:  output stdout Roberto Pereira
