@@ -31,25 +31,12 @@
 
 """Core library for the Felo program, with the Felo numbers calculating code.
 
-Exported functions:
-
-parse_felo_file() -- reads from a Felo file parameters, fencers, and bouts
-write_felo_file() -- writes parameters, fencers, and bouts to a Felo file
-write_back_fencers() -- write only the fencers data back into a Felo buffer
-write_back_fencers_to_file() -- write only the fencers data back into a Felo
-    file
-calculate_felo_ratings() -- update the Felo ratings of fencers
-expectation_value() -- returns the mean winning value of a fencer in a bout
-prognosticate_bout() -- calculates the winning chance and the result in a bout
-
-Exported classes:
-
-Bout -- fencing bout
-Fencer -- fencer and his/her Felo number
-
-Exported variables: None
-
+:author: Torsten Bronger
+:copyright: 2006, Torsten Bronger
+:license: MIT license
+:contact: Torsten Bronger <bronger@physik.rwth-aachen.de>
 """
+__docformat__ = "restructuredtext en"
 
 __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_felo_ratings",
            "expectation_value", "prognosticate_bout", "write_back_fencers",
@@ -81,6 +68,16 @@ separator = "\s*\t+\s*"
 
 def clean_up_line(line):
     """Removes leading and trailing whitespace and comments from the line.
+
+    :Parameters:
+      - `line`: the line to be cleaned-up
+
+    :type line: string
+
+    :Return:
+      - the cleaned-up string
+
+    :rtype: string
     """
     hash_position = line.find("#")
     if hash_position != -1:
@@ -93,14 +90,22 @@ def parse_items(input_file, linenumber=0):
     e.g. equal signs that acts as a separator between the sections in the Felo
     file.
 
-    Parameters:
-    input_file -- an open file object where the items are read from.
-    linenumer -- number of already read lines in the input_file.
+    :Parameters:
+      - `input_file`: an *open* file object where the items are read from
+      - `linenumber`: number of already read lines in the input_file
 
-    Return value:
-    A dictionary with the key--value pairs, and the new number of already read
+    :type input_file: file
+    :type linenumber: int
+
+    :Return:
+      - A dictionary with the key--value pairs, and the new number of already read
         lines.
-    The new current number of lines aready read in the file.
+      - The new current number of lines aready read in the file.
+
+    :rtype: dict, int
+
+    :Exceptions:
+      - `LineError`: if a line has not the "name <TAB> value" format
     """
     items = {}
     line_pattern = re.compile("\s*(?P<name>[^\t]+?)"+separator+"(?P<value>.+?)\s*\\Z")
@@ -133,17 +138,27 @@ class Bout(object):
                  points_first=0, points_second=0, fenced_to=10):
         """Class constructor.
 
-        Parameters:
-        year -- year of the bout.
-        month -- month of the bout.
-        day -- day of the bout.
-        index -- a number for bringing the bouts of a day in an order.
-        first_fencer -- name of the first fencer.
-        second_fencer -- name of the second fencer.
-        points_first -- points won by the first fencer.
-        points_second -- points won by the second fencer.
-        fenced_to -- winning points of the bout.  May be e.g. 5, 10, or 15.
+        :Parameters:
+          - `year`: year of the bout
+          - `month`: month of the bout
+          - `day`: day of the bout
+          - `index`: a number for bringing the bouts of a day in an order
+          - `first_fencer`: name of the first fencer
+          - `second_fencer`: name of the second fencer
+          - `points_first`: points won by the first fencer
+          - `points_second`: points won by the second fencer
+          - `fenced_to`: winning points of the bout.  May be e.g. 5, 10, or 15.
             "0" means that the bout was part of a relay team competition.
+
+        :type year: int
+        :type month: int
+        :type day: int
+        :type index: int
+        :type first_fencer: string
+        :type second_fencer: string
+        :type points_first: int
+        :type points_second: int
+        :type fenced_to: int
         """
         self.date = datetime.date(year, month, day)
         self.index = index
@@ -395,13 +410,15 @@ def set_preliminary_felo_ratings(fencers, bout, parameters):
     without knowing the order.  Then only preliminary values are determined and
     merged with the real ones when all bouts of that day have been considered.
 
-    Parameters:
-    fencers -- a dictionary containing all fencers.  The two fencers in it
-        which take part in the bout are modified.
-    bout -- the bout that is to be calculated.
-    parameters -- a dictionary with all Felo parameters.
+    :Parameters:
+      - `fencers`: all fencers.  The two fencers in it which take part in the
+        bout are modified.
+      - `bout`: the bout that is to be calculated.
+      - `parameters`: all Felo parameters.
 
-    Result: None
+    :type fencers: dict
+    :type bout: Bout
+    :type parameters: dict
     """
     first_fencer, second_fencer, points_first, points_second = \
         bout.first_fencer, bout.second_fencer, \
@@ -465,14 +482,24 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
     It reads till the end of the file since the bouts are the last section in a
     Felo file.
 
-    Parameters:
-    input_file -- an open file object where the items are read from.
-    linenumber -- number of already read lines in the input_file.
-    fencers -- a dictionary with all fencers.  It remains untouched.
-    parameters -- a dictionary with all Felo parameters.
+    :Parameters:
+      - `input_file`: an *open* file object where the items are read from
+      - `linenumber`: number of already read lines in the input_file
+      - `fencers`: all fencers.  Foreign fencers may be added to it
+      - `parameters`: all Felo parameters
 
-    Return values:
-    A list with all bouts that were read.
+    :type input_file: file
+    :type linenumber: int
+    :type fencers: dict
+    :type parameters: dict
+
+    :Return:
+      - list with all bouts that were read.
+
+    :rtype: list
+
+    :Exceptions:
+      - `LineError`: if a line does not follow the Felo file syntax
     """
     line_pattern = re.compile("\\s*(?:(?:(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2}))?"
                               "(?:\\.?(?P<index>\\d+))?"+separator+")?"+
@@ -526,12 +553,21 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
 def parse_felo_file(felo_file):
     """Reads from a Felo file parameters, fencers, and bouts.
 
-    Parameters:
-    felo_file -- an open file object.
+    :Parameters:
+      - `felo_file`: the *open* file to be parsed
 
-    Return values:
-    Felo parameters as a dictionary, a list with all really in the file given
-    parameters, fencers as a dictionary (name: Fencer object), bouts as a list.
+    :type felo_file: file
+
+    :Return:
+      - Felo parameters as a dictionary
+      - a list with all really in the file given parameters
+      - fencers as a dictionary (in the form "name: Fencer object")
+      - bouts as a list.
+
+    :rtype: dict, list, dict, list
+
+    :Exceptions:
+      - `FeloFormatError`: if an initial Felo rating or weighting is invalid
     """
     english_parameter_names = {_(u"k factor top fencers"): "k factor top fencers",
                                _(u"felo rating top fencers"): "felo rating top fencers",
@@ -611,13 +647,18 @@ def parse_felo_file(felo_file):
 def fill_with_tabs(text, tab_col):
     """Adds tabs to a string until a certain column is reached.
 
-    Parameters:
-    text -- the string that should be expanded to a certain column.
-    tab_col -- the tabulator column to which should be filled up.  It is *not*
+    :Parameters:
+      - `text`: the string that should be expanded to a certain column
+      - `tab_col`: the tabulator column to which should be filled up.  It is *not*
         a character column, so a value of, say, "4" means character column 32.
 
-    Return value:
-    The expanded string, i.e., "text" plus one or more tabs.
+    :type text: string
+    :type tab_col: int
+
+    :Return:
+      - The expanded string, i.e., "text" plus one or more tabs.
+
+    :rtype: string
     """
     number_of_tabs = tab_col - len(text.expandtabs()) / 8
     return text + max(number_of_tabs, 1) * "\t"
@@ -626,13 +667,16 @@ def write_felo_file(filename, parameters, fencers, bouts):
     """Write Felo parameters, fencers, and bouts to a Felo file, which is
     overwritten if already existing.
 
-    Parameters:
-    filename -- path to the Felo file to be written.
-    parameters -- dictionary containing Felo parameters.
-    fencers -- dictionary with all fencers.
-    bouts -- list of all bouts.
+    :Parameters:
+      - `filename`: path to the Felo file to be written
+      - `parameters`: Felo parameters
+      - `fencers`: all fencers
+      - `bouts`: all bouts
 
-    Return values: None
+    :type filename: string
+    :type parameters: dict
+    :type fencers: dict
+    :type bouts: list
     """
     felo_file = codecs.open(filename, "w", "utf-8")
     print>>felo_file, _("# Parameters")
@@ -676,6 +720,28 @@ def write_felo_file(filename, parameters, fencers, bouts):
     felo_file.close()
 
 def write_back_fencers(felo_file_contents, fencers):
+    """Write *only* the fencers section back into a Felo file, given as a string
+    instead of a file.  The rest of the Felo file remains untouched.  Moreover,
+    all introducing comments and empty lines in the fencers section remain
+    untouched, too.
+
+    :Parameters:
+      - `felo_file_contents`: the old version of the Felo file
+      - `fencers`: all fencers, which replace the fencers section in the Felo
+        file
+
+    :type felo_file_contents: string
+    :type fencers: dict
+
+    :Return:
+      - the new Felo file as a string
+
+    :rtype: string
+
+    :Exceptions:
+      - `FeloFormatError`: if the original Felo file is invalid concerning the
+        so-called "boundaries" (the "=====" lines)
+    """
     lines = felo_file_contents.splitlines()
     fencer_limits = []
     for linenumber, line in enumerate(lines):
@@ -702,6 +768,22 @@ def write_back_fencers(felo_file_contents, fencers):
     return "\n".join(lines[:fencer_limits[0]+1] + fencer_lines + lines[fencer_limits[1]:]) + "\n"
 
 def write_back_fencers_to_file(filename, fencers):
+    """Write *only* the fencers section back into a Felo file.  The rest of the
+    Felo file remains untouched.  Moreover, all introducing comments and empty
+    lines in the fencers section remain untouched, too.
+
+    :Parameters:
+      - `filename`: path to the old version of the Felo file
+      - `fencers`: all fencers, which replace the fencers section in the Felo
+        file
+
+    :type filename: string
+    :type fencers: dict
+
+    :Exceptions:
+      - `FeloFormatError`: if the original Felo file is invalid concerning the
+        so-called "boundaries" (the "=====" lines)
+    """
     filename_backup = os.path.splitext(filename)[0] + ".bak"
     if os.path.isfile(filename_backup):
         raise Error(_(u"First delete the backup (.bak) file."))
@@ -719,8 +801,10 @@ class Error(Exception):
     def __init__(self, description):
         """Class constructor.
 
-        Parameters:
-        description -- error message.
+        :Parameters:
+          - `description`: error message
+
+        :type description: string
         """
         self.description = description
         if isinstance(description, unicode):
@@ -734,11 +818,15 @@ class LineError(Error):
     def __init__(self, description, filename, linenumber):
         """Class constructor.
 
-        Parameters:
-        description -- error message.
-        filename -- Felo file name.
-        linenumber -- number of the line in the Felo file where the error
-           occured.
+        :Parameters:
+          - `description`: error message
+          - `filename`: Felo file name
+          - `linenumber`: number of the line in the Felo file where the error
+            occured
+
+        :type description: string
+        :type filename: string
+        :type linenumber: int
         """
         self.linenumber = linenumber
         self.naked_description = description
@@ -755,8 +843,10 @@ class FeloFormatError(Error):
     def __init__(self, description):
         """Class constructor.
 
-        Parameters:
-        description -- error message.
+        :Parameters:
+          - `description`: error message
+
+        :type description: string
         """
         Error.__init__(self, description)
 
@@ -766,8 +856,10 @@ class BootstrappingError(Error):
     def __init__(self, description):
         """Class constructor.
 
-        Parameters:
-        description -- error message.
+        :Parameters:
+          - `description`: error message
+
+        :type description: string
         """
         Error.__init__(self, description)
 
@@ -777,8 +869,10 @@ class ExternalProgramError(Error):
     def __init__(self, description):
         """Class constructor.
 
-        Parameters:
-        description -- error message.
+        :Parameters:
+          - `description`: error message
+
+        :type description: string
         """
         Error.__init__(self, description)
 
@@ -801,18 +895,25 @@ def adopt_preliminary_felo_ratings():
 class Fencer(object):
     """Class for fencer data.  Basically, it is a mere container for the
     attributes.
+
+    :cvar fencers_with_preliminary_felo_rating: all fencers which still have
+      their Felo number in felo_rating_preliminary, so that it must be copied to
+      felo_rating is a bout day is completely processed.
+    
+    :type fencers_with_preliminary_felo_rating: set
     """
     fencers_with_preliminary_felo_rating = set()
-    """Set with all fencers which still have their Felo number in
-    felo_rating_preliminary, so that it must be copied to felo_rating is a bout
-    day is completely processed."""
     def __init__(self, name, felo_rating, parameters, initial_total_weighting=0):
         """Class constructor.
 
-        Parameters:
-        name -- name of the fencer.
-        felo_rating -- initial Felo rating.
-        parameters -- dictionary with all Felo parameters.
+        :Parameters:
+          - `name`: name of the fencer
+          - `felo_rating`: initial Felo rating
+          - `parameters`: all Felo parameters
+
+        :type name: string
+        :type felo_rating: int
+        :type parameters: dict
         """
         self.hidden = name.startswith(u"(")
         if self.hidden:
@@ -862,13 +963,17 @@ class Fencer(object):
             if self.__felo_rating >= self.parameters["felo rating top fencers"]:
                 self.__k_factor = self.parameters["k factor top fencers"]
     felo_rating_exact = property(__get_felo_rating_exact, __set_felo_rating,
-                                 doc="""Felo rating with decimal fraction.""")
-    felo_rating = property(__get_felo_rating, __set_felo_rating, doc="""Felo rating, rounded to integer.""")
+                                 doc="""Felo rating with decimal fraction.
+                                        @type: float""")
+    felo_rating = property(__get_felo_rating, __set_felo_rating,
+                           doc="""Felo rating, rounded to integer.
+                                  @type: int""")
     def __get_k_factor(self):
         if self.total_weighting < self.parameters["5 point bouts freshmen"]:
             return self.parameters["k factor freshmen"]
         return self.__k_factor
-    k_factor = property(__get_k_factor)
+    k_factor = property(__get_k_factor, doc="""k factor (see Elo formula) of this fencer.
+                                               @type: int""")
     def __cmp__(self, other):
         """Sort by Felo rating, descending."""
         return -cmp(self.felo_rating_exact, other.felo_rating_exact)
@@ -885,25 +990,42 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
     account.  If wanted, generate plots with the development of the Felo
     numbers.
 
-    Parameters:
-    parameters -- dictionary with all Felo parameters.
-    fencers -- dictionary with all fencers.
-    bouts -- list of bouts, which is sorted chronologically if necessary.
-    plot -- if True, plots as PNG and PDF are generated.  The file name is the
+    :Parameters:
+      - `parameters`: all Felo parameters
+      - `fencers`: all fencers
+      - `bouts`: all bouts, which is sorted chronologically by this function if
+        necessary
+      - `plot`: if True, plots as PNG and PDF are generated.  The file name is the
         group name in the Felo parameters.
-    bootstrapping -- if True, try to estimate good starting Felo numbers by
+      - `bootstrapping`: if True, try to estimate good starting Felo numbers by
         going through the bouts multiple times, using the result numbers as new
         starting numbers, until the numbers have converged.
-    maxcycles -- the maximal number of cycles in the bootstrapping process.  If
-        it is not enough, an exception is raised.
-    estimate_freshmen -- if True, try to calculate estimates for freshmen.
-    bootstrapping_callback -- callabale object which takes as the only
+      - `maxcycles`: the maximal number of cycles in the bootstrapping process.
+        If it is not enough, an exception is raised.
+      - `estimate_freshmen`: if True, try to calculate estimates for freshmen.
+      - `bootstrapping_callback`: callabale object which takes as the only
         parameter a float between 0 and 1 indicating the progress while
         bootstrapping.  It may update a progress bar, for example.
 
-    Return values: A list (not a dictionary!) of all visible fencers, sorted by
-    descending Felo number.
-    If estimate_fresmen is True, a list with all freshmen.    
+    :type parameters: dict
+    :type fencers: dict
+    :type bouts: list
+    :type plot: boolean
+    :type bootstrapping: boolean
+    :type maxcycles: int
+    :type estimate_freshmen: boolean
+    :type bootstrapping_callback: callable
+
+    :Return:
+      - list (not a dictionary!) of all visible fencers, sorted by descending
+        Felo number
+      - If C{estimate_freshmen} is True, a list with all freshmen
+
+    :rtype: list, list
+
+    :Exceptions:
+      - `BootstrappingError`: if the bootstrapping didn't converge
+      - `ExternalProgramError`: if an external program is not found
     """
     def calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename=None):
         """Calculate the new Felo ratings, taking a whole bunch of bouts into
@@ -911,13 +1033,13 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         numbers.  Some things that are necessary before and after are not done
         here, because it is only the "core" routine.
 
-        Parameters:
-        parameters -- dictionary with all Felo parameters.
-        fencers -- dictionary with all fencers.
-        bouts -- list of bouts, which is sorted chronologically if necessary.
-        plot -- If True, plots as PNG and PDF are generated.  The file name is the
+        :Parameters:
+          - `parameters`: dictionary with all Felo parameters
+          - `fencers`: dictionary with all fencers
+          - `bouts`: list of bouts, which is sorted chronologically if necessary
+          - `plot`: If True, plots as PNG and PDF are generated.  The file name is the
             group name in the Felo parameters.
-        bouts_base_filename -- just a copy of the variable of the same name
+          - `bouts_base_filename`: just a copy of the variable of the same name
             from the enclosing scope.  It's the filename before the "." of the
             plot graphics files.
 
@@ -960,6 +1082,19 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             data_file.close()
             return xtics
     def construct_supplement(path):
+        """Builds a message with the path where felo_rating.py looked for an
+        external program but didn't find it.
+
+        :Parameters:
+          - `path`: path where it was looked for the program
+
+        :type path: string
+
+        :Return:
+          - the error message supplement as a string
+
+        :rtype: string
+        """
         if os.name == 'nt':
             return "(I looked for it at '%s'.)  " % path
         else:
@@ -1039,29 +1174,40 @@ def expectation_value(first_fencer, second_fencer):
     points.  I.e., an expectation value of 0.7 means that the first fencer will
     make 70% of the points.
 
-    Parameters:
-    first_fencer -- first fencer, for whom the expectation value is to be
-        calculated.
-    second_fencer -- second fencer, opponent in the bout.
+    :Parameters:
+      - `first_fencer`: first fencer, for whom the expectation value is to be
+        calculated
+      - `second_fencer`: second fencer, opponent in the bout
 
-    Return value:
-    Expected winning value, with 0 <= value <= 1.
+    :type first_fencer: Fencer
+    :type second_fencer: Fencer
+
+    :Return:
+      - expected winning value, with 0 S{<=} value S{<=} 1.
+
+    :rtype: float
     """
     return 1 / (1 + 10**((second_fencer.felo_rating_exact - first_fencer.felo_rating_exact)/400.0))
 
 def prognosticate_bout(first_fencer, second_fencer, fenced_to):
     """Estimates the most probable result of a bout.
 
-    Parameters:
-    first_fencer -- first fencer, for whom the winning chance is to be
+    :Parameters:
+      - `first_fencer`: first fencer, for whom the winning chance is to be
         calculated.
-    second_fencer -- second fencer, opponent in the bout.
-    fenced_to -- number of winning points in the bout.  Can be e.g. 5, 10, or
+      - `second_fencer`: second fencer, opponent in the bout.
+      - `fenced_to`: number of winning points in the bout.  Can be e.g. 5, 10, or
         15.
 
-    Return values:
-    Points of the first fencer, points of the second fencer, and the winning
-    probability of the first fencer in percent.
+    :type first_fencer: Fencer
+    :type second_fencer: Fencer
+    :type fenced_to: int
+
+    :Return:
+      - Points of the first fencer, points of the second fencer, and the
+        winning probability of the first fencer in percent.
+
+    :rtype: int, int, int
     """
     expectation_first = expectation_value(first_fencer, second_fencer)
     if expectation_first > 0.5:
