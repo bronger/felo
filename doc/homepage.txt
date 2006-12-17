@@ -32,7 +32,7 @@
 Felo -- estimating sport fencers
 =====================================
 
-:Date: $Date: 2006/11/24 07:57:53 $
+:Date: $Date$
 :Author: Torsten Bronger <bronger@physik.rwth-aachen.de>
 
 
