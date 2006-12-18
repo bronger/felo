@@ -921,169 +921,138 @@ The calculation of new Felo ratings is a three-steps process:
 
 @enumerate
 @item
-
-Es wird der Resultatwert für den Fechter berechnet.  Das ist der Anteil
-der Einzeltreffer, die er gesetzt hat.  Beispiel: Gewinnt der Fechter
-15:10, ist der Resultatwert @math{15/(15+10)=0.6}.
-
-@item
-Dann wird aus der Differenz der Felo-Zahlen beider Fechter der
-@emph{erwartete} Resultatwert berechnet.  Die Formel dazu findet man
-z.@s{}B. im
-@uref{http://de.wikipedia.org/wiki/Elo-Zahl#Berechnung,Wikipedia-Artikel zur
-Elo-Zahl}.
+The result value for the fencer is calculated.  This is the faction of
+single hits that he won.  For example, if the fencer won 15:10, his
+result value is @math{15/(15+10)=0.6}.
 
 @item
-Die Differenz zwischen Resultat und erwartetem Resultat nenne ich mal
-die @emph{Überraschung}.  Die Überraschung wird nun multipliziert mit
-der Zahl der Einzeltreffer des Gefechts und zur alten Felo-Zahl
-addiert.  Das ergibt die neue Felo-Zahl des Fechters.
+The difference of the Felo ratings of both fencers yields the
+@emph{expected} result value.  The formula for this can be found
+e.@s{}g.@: in the
+@uref{http://en.wikipedia.org/wiki/Elo_rating_system#Mathematical_details,Wikipedia
+article about the Elo rating system}.
+
+@item
+Let us call the difference between the result value and the expected
+result value the @emph{surprise}.  The surprise is multiplied by the
+total number of points in the bout, and the so-called k@tie{}factor,
+@xref{List of all parameters}.  The result is added to the old Felo
+rating.  This yields the new one.
+
 @end enumerate
 
-Um genau zu sein, wird die Überraschung auch mit dem sogenannten
-@emph{k-Faktor} multipliziert, @xref{List of all parameters}.  Das hört
-sich geheimnisvoller an, als es ist.  Der k-Faktor bestimmt, wie stark
-sich die Felo-Zahlen ändern.  Ist er zu groß, wackeln die Felo-Zahlen zu
-stark hin und her.  Ist er zu klein, dauert es zu lange, bis sich die
-Felo-Zahl eines Fechter auf der wahren Spielstärke eingependelt hat.
+This k@tie{}factor is some sort of damping parameter.  If it is too
+high, the Felo ratings will oscillate too heavily.  If it is too low,
+the Felo ratings will converge too slowly.
 
 
 @node Universal comparison of Felo ratings
 @section Universal comparison of Felo ratings
 
-Felo-Zahlen können nur Fechter innerhalb einer Fechtgruppe @emph{relativ}
-vergleichen.  Damit man auch zwischen Gruppen vergleichen kann
-(z.@s{}B. zwischen zwei Vereinen), muß man bei der 
-Einschätzung der Anfangs-Felo-Zahlen (@pxref{Anfangs-Felo-Zahlen für die
-ganze Gruppe}) sehr realistisch und sorgfältig vorgegangen sein.  Nun
-gebe ich zu, daß Angaben wie ,,starke Freizeitspieler`` ziemlich
-schwammig sind, deshalb ist das nur begrenzt realistisch.  Ein ganz
-gutes Vergleichen sollte dennoch möglich sein.
+Felo ratings can only compare relatively fencers within a fencing
+group.  In order to compare between groups (e.@s{}g.@: between two
+fencing clubs), the initial values must have been estimated
+realistically and carefully.  Unfortunately, descriptions like ``above
+1600 are the strong leisure fencers'' are not very precise.  The
+comparison should work quite well nevertheless.
 
-Wesentlich besser ist es natürlich, wenn ein paar Fechter in beiden
-Gruppen fechten.  Sie verbinden quasi die Felo-Zahlen beider Gruppen und
-machen sie so vergleichbar.  Man kann dafür beide Gruppen zu einer
-zusammenlegen.  Theoretisch reicht ein einzelner Fechter dafür aus, aber
-der hat dann viel zu tun.  Wurde eine der beiden Fechtgruppen zu gut
-bewertet, schaufelt er dann quasi die Punkte zur anderen Gruppe, bis
-alles stimmig ist.
+Of course, it is much better if some fencers fence in both groups.  They
+connect the groups statistically and make the Felo ratings compatible.
+If appropriate, you may merge the groups in one Felo file, although only
+few fencers fence in both groups.  Theoretically, one common fencer is
+sufficient, however, he has a lot to do then.  For example, if one of
+both groups was estimated too highly, he shovel the points to the other
+group until everything is consistent.
 
-Man kann dazu natürlich auch die vielen Fechtturniere benutzen, ist aber
-viel Arbeit: Man sammelt die Felo-Zahlen aller Fechter, gegen die die
-eigenen Leute fechten @emph{und} die überhaupt eine Felo-Zahl haben,
-ein.
+Additionally, you can use tournaments for this but it is a lot of work:
+You must collect all current Felo ratings of all opponents of your
+fellow fencers.
 
-Wie auch immer, es gibt leider noch zu wenig Erfahrung mit Felo-Zahlen,
-um zu wissen, wie gut man Gruppen Felo-technisch durch gemeinsame
-Fechter und/oder Turniere verbinden kann (so gut sie auch innerhalb
-einer Gruppe funktionieren).
+Be this as it may, the experience with Felo ratings is still to little
+in order to know how well you can make Felo ratings of different groups
+comparable by common fencers or tournaments.  At least, @emph{within} a
+group they work very nicely.
 
-Übrigens lassen sich verschiedene Waffengattung nie richtig miteinander
-verbinden, weil sie ja nie gegeneinander fechten können.  Da ist man
-dann allein auf die realistische Einschätzung angewiesen.
+By the way, Felo ratings of different weapon can never be made really
+comparable because they can never fence against each other.  Here, a
+good initial estimation is the only way to get close to it.
 
 
 @node Felo for other sports
 @section Felo for other sports
 
-Kann man das Felo-Programm auch in anderen Sportarten einsetzen?
+Can one use the Felo program for other sports, too?
 
-Ja, man kann, allerdings funktionieren Teamsportarten nicht so gut.
-Auch bei Sportarten, bei denen die Zeit ein Match beendet, funktioniert
-es nicht so dolle.
+Yes, one can, however, Felo doesn't work well with team sports.
+Moreover, sports that are ended after a certain amount of time doesn't
+work well either.
 
-Was Teamsportarten angeht, klappt Felo gar nicht, wenn man eine fixe
-Gruppe aus @math{x}@tie{}Personen hat, aus denen an jedem Trainigstag
-zwei beliebige Mannschaften zusammengestellt werden.  Wie soll man das
-auch eintragen.  Nur, wenn man @math{x}@tie{}@emph{Teams} hat, die immer
-aus den mehr oder weniger gleichen Leuten bestehen, kann man die Teams
-als Sportler führen und ihre Ergebnisse aufschreiben.  Das schränkt die
-Brauchbarkeit von Felo zugegebenermaßen deutlich ein, insbesondere im
-Freizeitsport.
+As far as team sports are concerned, Felo isn't usable at all if you
+have a groups of people, and on every training day, you compose two
+completely new teams out of it.  The only possibly situation is a set of
+@emph{teams} rather than people.  Every team can be treated like one
+fencer in a Felo file.  This limits Felo heavily in team sports,
+especially for leisure sport groups.
 
-Bei Sportarten, die über die Zeit entschieden werden, kann man nur die
-drei möglichen Ergebnisse 1:0, 0:1 und 1:1 benutzen, für Sieg,
-Niederlage und unentschieden.  Allerdings fällt mir jetzt spontan keine
-solche Sportart ein, die nicht auch eine Mannschaftssportart wäre.
+As far as sports with time limit are concerned, you can only use the
+three possible results 1:0, 0:1, and 1:1 for win, loss, and even.
+However, I don't know a sport with time limit that isn't a team sport at
+the same time.
 
-Für alle anderen Sportarten mit einem Sportler-Sportler-Duell,
-z.@s{}B. Tennis, Badminton, Tischtennis, Armdrücken, Wettblinzeln oder
-Ostereiertitschen, gibt es an sich keine Schwierigkeiten.  Existiert
-kein richtiger Endstand sondern nur Sieger und Verlierer (oder
-unentschieden), dann siehe oben, ansonsten trägt man eben das Ergebnis
-ein.
+For all other sports with a sportsman vs.@: sportsman bout like tennis,
+badminton, table tennis, arm wrestling, and staring contest, there
+souldn't be problems.  If there is no real score but only winner and
+loser, see above, in all other cases you simply put the result in the
+Felo file.
 
-Es ist übrigens nicht so wichtig, ob man bei Sportarten mit Sätzen die
-Sätze, Spiele oder Punkte als Grundlage nimmt.  Groß wird der
-Unterschied nicht sein.  Beim Tennis kann man ein 6:4@tie{}6:3 entweder
-als 2:0 oder als 12:7 eintragen.  (Man kann auch die Einzelpunkte
-zählen, wenn man zuviel Zeit hat.)  Grundsätzlich gilt natürlich: Je
-feiner, desto besser.
+By the way, it is not very important whether you count single point,
+(tennis) games, or sets.  It won't make much difference.  For example,
+in tennis you may record a 6:4@tie{}6:3 either as 2:0 or as 12:7.  (If
+you have too much time, you may even count the single points.)  On the
+other hand, the more information, the better.
 
 
 @node Felo for programmers
 @section Felo for programmers
 
-Dieser Abschnitt ist für Programmierer gedacht, die Felo in eigenen
-Programmen benutzen wollen.
+This section is inteded for programmers who want to use Felo in their
+own programs.
 
-Eine grafische Bedienoberfläche ist nett, aber mit der kann man kaum
-etwas automatisieren.  Beispielsweise ist es damit unmöglich, die
-aktuellen Felo-Zahlen einer Fechtergruppe in eine bestehende Webseite
-perfekt zu integrieren.  Insbesondere kann man mit dem
-Standard-Felo-Programm nicht die Zahlen von Florett- und Degenfechtern
-auf @emph{einer} Web-Seite unterbringen.
+A graphical user interface is a nice thing to have but you cannot
+automate anything with it.  For example, it is impossible to get really
+custom-made web pages with it, maybe with all weapons on a single HTML
+page.
 
-Für die meisten wird das kein Beinbruch sein, aber wer die totale
-Kontrolle haben möchte, bekommt sie, und zwar gleich auf zwei
-verschiedene Arten.
+For most of Felo's users, this limitation is unimportant.  However,
+those who want to have full control will get it, and even in two ways.
 
-Zum einen kann man das Python-Modul @file{felo_rating.py} als
-Kommandozeilen-Programm aufrufen.  Ich gebe hier mal nur den Hilfe-Text
-dieses Programms an:
+First, you can call the Python module @file{felo_rating.py} as a
+command-line program.  This is its help text:
 
 @example
-Aufruf: felo_rating.py [Optionen]
+usage: felo_rating.py [options]
 
-Optionen:
-  -h, --help            Zeige diese Meldung und beende das Programm
-  -p, --plots           Erzeuge Plots der Felo-Zahlen
-  -b, --bootstrap       Versuche, gute Start-Felo-Zahlen fuer alle zu
-                        berechnen
-  --max-cycles=NUMMER   Maximale Iterationsschritte beim Bootstrapping.
+options:
+  -h, --help            show this help message and exit
+  -p, --plots           Generate plots with the Felo ratings
+  -b, --bootstrap       Try to estimage good initial values for all fencers
+  --max-cycles=NUMBER   Maximal iteration steps during bootstrapping.
                         Default: 1000
-  --estimate-freshmen   Versuche, Neueinsteiger zu bewerten
-  --write-back          Schreibe die neuen Startzahlen zurueck in die Felo-
-                        Datei
-  --version             Zeige Versionsnummer und Lizenz-Informationen
-  -o DATEINAME, --output=DATEINAME
-                        Name der Ausgabedatei.  Default: Ausgabe auf dem
-                        Bildschirm (stdout)
+  --estimate-freshmen   Try to estimate freshmen
+  --write-back          Write the new initial values back into the Felo file
+  --version             Print out version number and copying information
+  -o FILENAME, --output=FILENAME
+                        Name of the output file.  Default: output to the
+                        screen (stdout)
 @end example
 
 @noindent
-Wer Felo als GUI-Programm einigermaßen verstanden hat, wird wissen, was
-die einzelnen Optionen bedeuten.  Selbstverständlich ist das
-Eingabeformat genau dasselbe Dateiformat wie in der GUI-Version.  Das
-Ausgabeformat ist recht simpel und kann von einem eigenen Programm
-eingelesen werden.
+If you have understood the GUI version of this program, you should
+intuitively know what the options mean.  Of course, its input file
+format is the very same used by the GUI version.  The output format is
+very simple and can be parsed by an own program.
 
-Zum anderen kann man auch direkt in Python ein eigenes Programm
-schreiben und @file{felo_rating.py} als Modul einbinden.  Man kann dann
-@uref{http://felo.sourceforge.net/api/,Felos API} nutzen, um eigene
-Programme mit Felo-Zahlen zu schreiben.
-
-@c  LocalWords:  Felo Elo copyright email quotation acronym end copying title
-@c  LocalWords:  finalout titlepage subtitle value image felo logo author page
-@c  LocalWords:  vskip filll insertcopying dircategory Miscellaneous direntry
-@c  LocalWords:  iftex hyphenation logue logues ifnottex node top tie uref menu
-@c  LocalWords:  ifhtml the table contents beginning chapter asis item section
-@c  LocalWords:  EXE emph puppeneinfach Admin ref Gnuplot Ghostscript file win
-@c  LocalWords:  subsection zip gnuplot Tar screen enumerate noindent strong
-@c  LocalWords:  samp JJJJ cartouche Tabstopps key Tab example Elmer Wile math
-@c  LocalWords:  Coyote unnumberedsubsec Info super Riker xref smallexample Obi
-@c  LocalWords:  bronger Schmankerl Extra William Wan code Weiblein florett
-@c  LocalWords:  Tics Mindestdatum wgnuplot exe convert pdf pxref Mindest dolle
-@c  LocalWords:  Wettblinzeln Ostereiertitschen rating help plots bootstrap max
-@c  LocalWords:  fuer cycles estimate freshmen write back zurueck version
-@c  LocalWords:  output stdout Roberto Pereira
+Secondly, you can write a program in Python that imports the
+@code{felo_rating} module.  You can then use
+@uref{http://felo.sourceforge.net/api/,Felo's API} to write own programs
+with the Felo ratings.
