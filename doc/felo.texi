@@ -1,0 +1,1089 @@
+% -*- mode: texinfo; coding: latin-1; ispell-local-dictionary: "british" -*-
+\def\niceracronym#1{#1}
+%\def\rmdefault{ppl}\def\ne{\mathrel{\not{}\mskip-8mu=}}\input pstexinfo
+\input texinfo
+@c@let@acronym@niceracronym
+
+@c======================================================================@>
+@c    felo.texi - Manual for the Felo program                           @>
+@c    Copyright 2006 Torsten Bronger                                    @>
+@c                   <bronger@physik.rwth-aachen.de>                    @>
+@c                                                                      @>
+@c  This program may be distributed and/or modified under the           @>
+@c  conditions of the MIT licence with the following constraint:        @>
+@c  If you copy or distribute a modified version of this Software, the  @>
+@c  entire resulting derived work must be given a different name and    @>
+@c  distributed under the terms of a permission notice identical to     @>
+@c  this one.                                                           @>
+@c                                                                      @>
+@c  Permission is hereby granted, free of charge, to any person         @>
+@c  obtaining a copy of this software and associated documentation      @>
+@c  files (the ``Software''), to deal in the Software without           @>
+@c  restriction, including without limitation the rights to use, copy,  @>
+@c  modify, merge, publish, distribute, sublicense, and/or sell copies  @>
+@c  of the Software, and to permit persons to whom the Software is      @>
+@c  furnished to do so, subject to the following conditions:            @>
+@c                                                                      @>
+@c      The above copyright notice and this permission notice shall be  @>
+@c      included in all copies or substantial portions of the           @>
+@c      Software.                                                       @>
+@c                                                                      @>
+@c      If you copy or distribute a modified version of this Software,  @>
+@c      the entire resulting derived work must be given a different     @>
+@c      name and distributed under the terms of a permission notice     @>
+@c      identical to this one.                                          @>
+@c                                                                      @>
+@c  The Software is provided ``as is'', without warranty of any kind,   @>
+@c  express or implied, including but not limited to the warranties of  @>
+@c  merchantability, fitness for a particular purpose and               @>
+@c  noninfringement.  In no event shall the authors or copyright        @>
+@c  holders be liable for any claim, damages or other liability,        @>
+@c  whether in an action of contract, tort or otherwise, arising from,  @>
+@c  out of or in connection with the Software or the use or other       @>
+@c  dealings in the Software.                                           @>
+@c======================================================================@>
+
+@c %**start of header
+@setchapternewpage odd
+@setfilename felo-de.info
+
+@set VERSION 1.0
+@set SHORTVERSION 10
+
+@settitle Felo @value{VERSION}
+@documentencoding ISO-8859-1
+@documentlanguage en
+@c %**end of header
+
+@defindex kw
+@syncodeindex kw cp
+
+@macro HTML {}
+@acronym{HTML}
+@end macro
+
+@macro RSS {}
+@acronym{RSS}
+@end macro
+
+@macro PDF {}
+@acronym{PDF}
+@end macro
+
+@macro PNG {}
+@acronym{PNG}
+@end macro
+
+@macro RWTH {}
+@acronym{RWTH}
+@end macro
+
+@macro s {}
+@tex
+@kern0.1667em%
+@end tex
+@end macro
+
+@macro xmarksthespot {}
+@tex
+`@math{@times{}}'@ignorespaces
+@end tex
+@ifnottex
+`x'@c
+@end ifnottex
+@end macro
+
+@copying
+This manual is about the Felo program which allows to estimate sport
+fencers in an objective manner.  It is ispired by the Elo rating system
+in chess.
+
+Copyright @copyright{} 2006 Torsten Bronger
+@t{<}@email{bronger@@physik.rwth-aachen.de}@t{>}.
+
+
+@quotation
+This documentation is Free Software; you can distribute it and modify it
+freely under the terms of the @acronym{MIT} license.
+@end quotation
+@end copying
+
+@finalout
+@titlepage
+@title Felo
+@subtitle Estimate the fencing strength
+@subtitle Version @value{VERSION}
+@sp 2
+@image{felo-logo,10cm,,Felo logo}
+@author Torsten Bronger
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@dircategory Miscellaneous
+@direntry
+* Felo: (Felo).           Calculating Felo ratings
+@end direntry
+
+@iftex
+@hyphenation{ca-ta-logue ca-ta-logues}
+@end iftex
+
+
+@ifnottex
+@node Top
+@top The Felo program for estimating sport fencers objectively
+
+Felo calculates Felo ratings for fencers.  Felo ratings give a good
+impression about a fencer's fencing strength.  The program is intended
+for fencing groups for having an additional incentive, or even for
+having a criterium for team selections and seedings.
+
+Quite reliable ratings for a couple of fencer is already possible after
+a few intensive training days.  There is no real upper limit.  The only
+thing necessary is the the results of as many bouts as possibly must be
+collected and typed into the computer; the calculation itself is very
+quick.
+
+The program can be used conveniently through a graphical user interface.
+Additionally, for the enthusiasts among you, it is possible to use just
+the core of this program in order to build own applications around it,
+e.@s{}g.@: for updating a club webpage automatically.
+
+The Felo program is Free Software.  In particular, this means that it
+can be distributed freely, and everybody is allowed to download and to
+change the source code.  Its author, however, would be very happy if you
+-- in case you use the program -- would send him a postcard
+(T.@tie{}Bronger, Lochnerstraße@tie{}7, 52064@tie{}Aachen, Germany;
+please include the RWTH fencers in your greetings, we are glad to hear
+from fellow fencing groups).  Additionally, you can help by
+@uref{http://felo.sourceforge.net/translations.html,providing a
+translation to a foreign language}.
+
+@menu
+* Felo ratings::                That are Felo ratings?
+* Installation::                Installation of Felo.
+* Using Felo::                  How to determine Felo ratings.
+* Felo ratings -- some background::  Explanations for the really
+                                  interested.
+@end menu
+@end ifnottex
+
+@ifhtml
+This manual also exists as
+@uref{http://felo.sourceforge.net/felo/,Collection of @HTML{} files}
+(also @uref{http://felo.sourceforge.net/felo-manual.zip,zipped}), as
+@uref{http://felo.sourceforge.net/felo.html,one single @HTML{} page},
+and as @uref{http://felo.sourceforge.net/felo.pdf,@PDF{} file}.
+@end ifhtml
+
+@c Output the table of the contents at the beginning.
+@contents
+
+@ifnottex
+@insertcopying
+@end ifnottex
+
+
+@node Felo ratings
+@chapter What are Felo ratings?
+
+Felo ratings are a wonderful new method to estimate the strength of
+sport fencers, without this annoying luck component which is typical of
+elimination tournaments and single bouts. The new Felo rating is
+calculated after every bout.  Thus, it is always present and
+up-to-date.  As a result, the fencer has a quite clear impression about
+how good he or she is currently.  Whithin a group, the Felo ratings are
+very accurate, however, they can even be compared globally.
+
+The underlying idea is all but new.  It is inspired by the Elo ratings
+in chess.  There, they have been used for 35@tie{}years for determining
+the official word ranking list, which works terrificly.  Not only that
+it yields a plausible ranking, it also allows for precise calculations
+of chances in upcoming chess matches.
+
+Over the yeras, the Elo ratings have been adapted sucessfully to other
+sports such as Go, college football, and international soccer.  With the
+Felo program, they can now be used in fencing, too.  ``Felo'' is nothing
+else but ``fencing Elo''.  In contrast to other Elo sports, Felo ratings
+take also the exact bout result into account.  Therefore, a 15:14 win is
+rated lower than a 15:0.  This sounds obvious but in chess, there's only
+win, loss, and draw.
+
+In typical leisure fencing groups, the Felo ratings will be between 1300
+and 1800.  Here is a rough overview of how Felo ratings should be
+interpreted:
+
+@table @asis
+@item above 2500
+fencing like a young god
+
+@item above 2400
+international masters
+
+@item above 2200
+national masters
+
+@item above 1800
+very good club fencers
+
+@item above 1600
+strong leisure fencers
+
+@item above 1400
+weak and average leisure fencers
+
+@item above 1300
+beginners
+
+@item 1200
+lower limit
+@end table
+
+The tables shouldn't be taken too seriously because there isn't yet much
+experience with Felo ratings so far.
+
+@menu
+* Getting help::                Question, wished, problems, ...
+* Acknowledgements::            
+@end menu
+
+@node Getting help
+@section Getting help
+
+If you have problems of questions regarding the Felo ratings in general
+and the Felo program in particular, there are the folling places where
+to ask:
+
+@table @uref
+@item http://sourceforge.net/forum/forum.php?forum_id=638727
+A web-based forum for the Felo program
+
+@item https://lists.sourceforge.net/lists/listinfo/felo-general
+The Felo mailing list.  This is explicitly not only for discussions
+about the program but also for discussions about the Felo rating
+concept.  By the way, you can get this maling list also as a so-called
+@uref{http://dir.gmane.org/gmane.sports.fencing.felo-rating,newsgroup}
+(including the possibility of using a web interface and getting an RSS
+feed).
+
+@item http://sourceforge.net/tracker/?group_id=183431&atid=905214
+Here, you can report bugs in the Felo program and its documentation.
+Additionally, you can browse through bugs that other have already
+reported.
+
+@item http://sourceforge.net/tracker/?atid=905217&group_id=183431
+Here, you can submit feature requests.
+@end table
+
+
+@node Acknowledgements
+@section Acknowledgements
+
+By and large, Felo is -- sigh -- the product of a lone fighter so far.
+(Please no pity, it was fun.)  However, I did have some help from
+others.
+
+@table @asis
+@item Marc Ensenbach
+being a skilled mathematician, has verified my concept as far as this
+was at all possible, and has pointed out errors (which I corrected).
+
+@item Stefan Mainka
+has archived the bout results in my university fencing group long before
+the Felo program came into existance.  For me, this was a great luck of
+course because I could test the concept rather quickly.  I also thank
+the RWTH fencing group in general for allowing me to publish out Felo
+ratings on the (internal) web pages, which was pretty encouraging.
+
+@item Roberto Pereira
+has translated the program to Spanish.
+@end table
+
+
+@node Installation
+@chapter Installation
+
+@menu
+* Installation on Windows::     
+* Installation of auxilliary programs::  Only if you need plots.
+* Installation on Linux::       
+@end menu
+
+
+@node Installation on Windows
+@section Installation on Windows
+
+First, download the program from
+@uref{http://sourceforge.net/project/showfiles.php?group_id=183431,
+Felo's project page on Sourceforge} as an EXE file, and start it.
+There are two alternatives: You can start is as an ordinary user or as
+an administrator.  In the latter case, it is installed for all users on
+this computer.
+
+Installation itself is very simple.  It should be sufficient to click on
+``Ok'' a couple of times.  The uninstallation is euqallay simple but
+assure that you are logged in on the same account you used for the
+installation because otherwise, Felo may not be completely removed.
+
+If you are not interested in graphical plots of the Felo ratings, you
+can proceed with @ref{Using Felo}.
+
+
+@node Installation of auxilliary programs
+@section Installation of auxilliary programs
+
+@menu
+* Gnuplot::                     The program for the plots.
+* Ghostscript::                 For the conversion plot --> PDF.
+* ImageMagick::                 For the conversion PDF --> PNG.
+@end menu
+
+
+@node Gnuplot
+@subsection Gnuplot
+
+First you have to download
+@uref{http://sourceforge.net/project/showfiles.php?group_id=2055&package_id=1996,Gnuplot
+as a ZIP file}.  The file name is @file{gp400win32.zip} or something
+similar, where @file{400} is the version number.  Extract this ZIP file
+into the folder @file{C:\Programme\gnuplot}.
+
+
+@node Ghostscript
+@subsection Ghostscript
+
+Ghostscript can be downloaded from the
+@uref{ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs854/,FTP mirror
+for Ghostscript} (you need the EXE file).  It is important to be
+administrator when executing this file!
+
+
+@node ImageMagick
+@subsection ImageMagick
+
+On the @uref{http://www.imagemagick.org,homepage of ImageMagick} you
+click on ``Binary Releases'' -- ``Windows'', download one of the EXE
+files and start is (as administrator if possible).
+
+
+@node Installation on Linux
+@section Installation on Linux
+
+The program is avaiable at
+@uref{http://sourceforge.net/project/showfiles.php?group_id=183431,
+Felo's project page} in two variants for Linux, namely as an RPM and as
+a tar ball.  The RPM contains Python as its only dependency, however, it
+also needs @uref{http://www.wxpython.org/,wxPython}, at least for the
+GUI part.  Since this has become a standard package, it shouldn't be a
+problem.
+
+If you are interested in having plots, you need the very same three
+programs as the Windows users, namely
+@uref{http://www.gnuplot.info,Gnuplot},
+@uref{http://www.cs.wisc.edu/~ghost/,Ghostscript}, and
+@uref{http://www.imagemagick.org,ImageMagick}.  They are standard
+packages, too, so it shouldn't be a problem either.
+
+
+@node Using Felo
+@chapter Using Felo
+
+Star the Felo program.  This opens the program window with an empty
+editor area.  There you can entrer the Felo file.  The Felo file
+contains all fencers and gouts of a fencing group for which Felo
+ratings should be calculated.  Over time, the felo file will grow
+further and further since new bouts are constantly appended to it.
+
+At the moement you probably don't know yet how a Felo file looks like.
+No problem.  Just click an the menu ``File'' -- ``New''.  This loads a
+sample Felo file into the editor:
+
+@image{felo-screen-1-de,10cm,,Sample Felo file}
+
+A Felo file consists of three parts:
+
+@enumerate
+@item
+parameters
+
+@item
+fencer list
+
+@item
+bout list
+
+@end enumerate
+
+@noindent
+These three parts are separated by lines made of equal signs (their
+length is irrelevant).  Let's have a look at what the parts contain:
+
+@table @strong
+@item parameters
+Parameters can be the name of the group (e.@s{}g.@: for the distinction
+between the three weapons, and/or between men and women), or settings
+which change the appearance of the plots, or settings modifying the
+calculation of the Felo ratings.
+
+Every parameter is in a row of its own, with two columns.  In the first
+column, the name of the parameter (e.@s{}g.@: ``groupname''), and in the
+second column, the value of this parameter (e.@s{}g.@: ``foil'') is
+given.
+
+You may well leave the parameter part empty.  In this case, Felo assumes
+default values which will be sensible mostly.  For more info, @xref{List
+of all parameters}.
+
+@item fencer list
+Here, you have to list all fencers of the group, one per row.  This
+part, too, has two columns, for the fencer's name and his or her
+@emph{initial} Felo rating.  AT the beginning, nobody has Felo number
+yet, but I'll explain below how to get them, @xref{Getting initial Felo
+ratings}.
+
+An important feature is that all fencers whose name are put in
+parentheses @samp{(...)} won't get a Felo number.  This is for fencers
+who are afraid of knowing their fencing strength, or who are concerned
+about their privacy.  Nevertheless, their bouts should be included
+anyway because it helps with calculation the other's Felo ratings,
+unless of course they object to it.
+
+@item bout list
+Here you list all bouts and their results, one per row.  Empty lines
+inbetween are allowed, as is also the case for the rest of a Felo file.
+Every line consists of three columns, namely the date of the bout, the
+opponents, and the result.  The date @emph{must} be given in the form
+@samp{YYYY-MM-DD}, i.@s{}e.@: year, month, day, separated by dashes.
+
+The opponents must be given in the form @emph{first -- second},
+i.@s{}e.@: both fencers are separated by two dashes.
+
+@end table
+
+
+@cartouche
+@strong{Important: In Felo files, columns are separated by tab stops
+@key{Tab}.  It doesn't matter how many, but it must be at least one.}
+@end cartouche
+
+You may add comments at arbitrary places in a Felo file.  For example,
+you may mark bouts, for which you'd like to double-check the result, or
+you may mark places where a couple of bouts are still missing.  Lines
+with commens start with a @samp{#} sign.  Felo ignores such lines
+completely.
+
+@menu
+* Additional data for bouts::   
+* Calculating Felo ratings::    
+* Putting the Felo ratings on the Web::  
+* Getting initial Felo ratings::  
+* List of all parameters::      
+@end menu
+
+
+@node Additional data for bouts
+@section Additional data for bouts
+
+Most of the time you will enter bouts.  There are a couple of further
+things you should know concerning entering bouts.  In principle, the
+format of a bout is very straightforward:
+
+@example
+2006-12-24      Jesus -- Gabriel        15:3
+@end example
+
+@noindent
+The three columns are separated by tab stops @key{Tab}.
+
+If you have a sequence of bouts of the same day, only the forst one
+needs to have a date.  This makes is possible to make the bout list
+somewhat clearer:
+
+@example
+2006-05-01      Anakin -- Elmer         5:3
+                Anakin -- Wile Coyote   5:1
+                Elmer -- Wile Coyote    5:3
+                Elmer -- Anakin         1:5
+                Wile Coyote -- Anakin   2:5
+                Elmer -- Wile Coyote    5:10
+                Anakin -- Wile Coyote   9:10
+@end example
+
+@unnumberedsubsec Day index
+
+If you know the chronological order of the bouts of one day, you can be
+very fussy and add a so-called day index to the date, counting
+from@tie{}1:
+
+@example
+2006-12-07.1    Peter -- Mike           15:12
+           2    Peter -- Julia          13:15
+           3    Julia -- Mike           8:15
+           4    Mike -- Max             10:15
+@end example
+
+@noindent
+(Bouts without an index get the index@tie{}`@math{0}' internally.)
+
+@c @unnumberedsubsec Gefechte, die über die Zeit entschieden werden
+
+@c Das folgende Gefecht
+
+@c @example
+@c                 Schröder -- Kohl        4:5 /15
+@c @end example
+
+@c ist über die Zeit beendet worden.  Damit Felo weiß, auf wieviele Punkte
+@c gefochten wurde, wird noch ein @samp{/15}
+@c angehängt.@footnote{Fairerweise muß ich zugeben, daß dies ein Relikt aus
+@c einer älteren Fassung des Programms ist.  Der aktuelle Algorithmus zur
+@c Berechnung der Felo-Zahl nutzt diese Info gar nicht -- aber es kann bei
+@c einer Änderung der Spielregeln für die Felo-Zahlen signifikant werden.
+@c Beispielsweise kann lokal eine Fechtgruppe alle Gefechte gewichten nach
+@c der Siegpunktzahl und nicht nach der Anzahl der gefochtenen Treffer.
+@c Dafür muß sie zwar den Quellcode etwas modifizieren, aber dann wird
+@c diese Info gebraucht.
+
+@c Unter Freizeitfechtern ist das ohnehin nicht wichtig, weil es dort sehr
+@c selten ist, daß ein Gefecht über die Zeit beendet wird.}
+
+@unnumberedsubsec Single bouts in a team match
+
+Every single bout within a tema relay match is a quite ordinary single
+bout -- so why not use it for the Felo rating.  Unfortunately, it
+happens that a strong player beats a weak player with an extremly high
+result, say,@tie{}18:1.  Mathematically, this doesn't effect the
+fairness and reliability of Felo ratings, however, beginners could
+become reluctant in taking part in a team match at all.  Therefore, you
+can mark team bouts with a@tie{}@samp{*}:
+
+@example
+2006-10-12.1    Anakin -- Elmer         5:0 *
+           2    Wile Coyote -- Anakin   3:10*
+           3    Wile Coyote -- Elmer    5:5 *
+           4    Anakin -- Elmer         8:0 *
+           5    Wile Coyote -- Anakin   3:10*
+           6    Wile Coyote -- Elmer    3:5 *
+@end example
+
+@noindent
+Such bouts are weighted like a 5@tie{}points bout, no matter of the
+result.  Weighting them not too highly probably is a good idea anyway
+since team matches seem to follow their own rules.
+
+@unnumberedsubsec Foreign fencers and fencing in a foreign group
+
+Foreign fencers are fencers who belong to another club or college (for
+example) but they come for a training day nevertheless.  They may also
+be fencer you meet on a tournament.  Be that as it may, they have a
+current Felo rating, yet they are not listed in the Felo file.  It would
+make sense to add them since they fence in another group normally, so
+you cannot keep track of their Felo rating.
+
+Despite this, bouts with them should be used in the calculation:
+
+@example
+2006-10-14      Anakin -- Riker <1764>      0:5
+@end example
+
+@noindent
+Thus, you give their Felo rating (hopefully they don't fib about it) in
+angle brackets @samp{<...>}.  You can add their name, too; the Felo
+program doesn't care.
+
+This works in both direction of course.  If a fencer of your group
+reports to have won in another group or on a tournament against a 1452
+fencer 15:11, you can add it accordingly.
+
+By the way, it may be appropriate to makr bouts with foreign fencers
+with a @samp{*} as well because their Felo rating is not as credible
+and/or compatible as a local Felo rating.
+
+
+@node Calculating Felo ratings
+@section Calculating Felo ratings
+
+Calculating the current Felo numbers is almost trivial.  Click on the
+menu ``Calculate'' -- ``Calculare Felo ratings''.  A window with the
+Felo ratings table for the current group opens.  Freshman are excluded
+from this list, @xref{Estimating freshmen}, as are fencers who doesn't
+want to have a Felo rating.
+
+@image{felo-screen-4-de,10cm,,Calculated Felo ratings}
+
+By clicking on ``copy to clipboard'', the table is copied to the Windows
+clipboard in a form which can easily be inserted into Word or Excel, in
+order to make it facnier, or to print or archive it.
+
+
+@node Putting the Felo ratings on the Web
+@section Putting the Felo ratings on the Web
+
+The simplest way to tell all fencers in the group their Felo ratings is
+to publish in on a Web page.  How to get webspace and how to manage it
+is beyond this manual, however, the Felo program can help you with
+generating the Web page itself.
+
+Click on the menu ``Calculate'' -- ``Generate HTML''.  The following
+dialog window opens:
+
+@image{felo-screen-5-de,4cm,,Generate HTML dialog}
+
+@noindent
+First you should check whether the folder Felo wants to write the Web
+page makes sense.  Per default, it is the folder of the Felo file.  You
+can set this folder explicitly with the parameter ``output folder''.
+For example, you can say in the parameters part of your Felo file
+
+@smallexample
+output folder           C:\Documents and Settings\myname\My Files
+@end smallexample
+
+@noindent
+Then all Web-relevant files are written to your ``My Files'' folder.
+
+But let's go back to the dialog window above.  When you click on
+``Okay'', the HTML file with the Felo ratings list is written to the
+given folder and -- in case your marked the checkbox -- a preview window
+is displayed.
+
+A special feature is the generation of plots on which the fencer can see
+the chronological development of his or her Felo rating.
+@strong{Attention:} Gnuplot, Ghostscript, and ImageMagick must be
+installed so that this works, @xref{Installation of auxilliary
+programs}.  On the screenshot below you can see the whole picture,
+i.@s{}e.@: with plot.
+
+At the same time, Felo reports in an extra windows which files must be
+uploaded to the Web server.
+
+By the way, the HTML file includes a CSS stylesheet called
+@file{felo.css}.  If it exists, it influences the whole layout of the
+Web page.  I cannot discuss it in further detail here, people capable of
+CSS will know what to do anyway.
+
+@image{felo-screen-6-de,8cm,,HTML preview with plot}
+
+
+@node Getting initial Felo ratings
+@section Getting initial Felo ratings
+
+There are two quite different situations where it is necessary to
+estimate an initial Felo rating: First, when the whole fencing group
+must get initial values, and secondly, when a freshman arrives at a
+group that has already Felo ratings.
+
+@menu
+* Initial Felo ratings for the whole group::  The bootstrapping.
+* Estimating freshmen::         When a freshman should be added.  
+@end menu
+
+
+@node Initial Felo ratings for the whole group
+@subsection Initial Felo ratings for the whole group
+
+Estimating the @emph{initial} Felo ratings for a fencing group is the
+only tricky part when using Felo.  Fortunately, it has to be done only
+once.  It is necessary because the Felo system can only calculate
+@emph{changes} in the Felo rating, hence the initial value must come
+from somewhere else.
+
+So, the starting point are a bunch of fencing Felo-virgins.  Somebody
+trustable of the group must estimate everybody with @emph{preliminary}
+initial values.  This shouldn't be too critical since Felo will
+recalculate all numbers anyway; more or less, it is only about
+determining the mean fencing strength of the group.
+
+I recommend to use the table in section @ref{Felo ratings} as a guide,
+and to round all values to 100@tie{}points.  Thus, a possible result
+could be:
+
+@example
+Alexander          1600
+Julia              1400
+Christian          1600
+Mike               1300
+Max                1500
+George             1500
+Peter              1700
+Christine          1400
+William            1700
+@end example
+
+The second important ingredient are bout result, the more the better,
+although they should not be spread over a too long period of time.  Five
+to ten bouts per fencer are a soft minimum, having taken place within
+half a year.  It's not a big deal if you don't fulfil these
+preconditions, though.  You enter the bout results and do the so-called
+@emph{bootstrapping}.  Is means that the Felo program calculates the
+best initial values from the preliminary ones provided by you.
+
+For doing this, click on ``Calculate'' -- ``Bootstrapping'':
+
+@image{felo-screen-2-de,5cm,,clicking on bootstrapping}
+
+Then you click on ``Yes'' and wait for a couple of seconds (at most).
+The new initial values are inserted into the file.  You should save the
+file and you shouldn't touch the initial Felo ratings again, unless you
+know what you're doing.  From now on, only bouts and new fencers are
+added to the file.
+
+If you haven't listed any bouts for far, you can use the preliminary
+initial values, too, however, you must expect some wild behavious during
+the first weeks, until the Felo ratings have found their true values.
+
+On the other hand, if you already have a lot of bouts data, you should
+use only the first part of it (e.@s{}g.@: the first six months) for the
+bootstrapping.
+
+
+@node Estimating freshmen
+@subsection Estimating freshmen
+
+A completely different task is adding freshmen (well, this includes all
+fencers who come new into the group of course).  If the freshman already
+has a current Felo rating, this is used for his or her initial value.
+However, if he has not, it must be estimated.  Bootstrapping is
+impossible since not all fencers must get a new initial value.
+
+This works this way: The fencer is included into the fencer list as
+``freshman'', which means that his initial value is set to a
+symbolic@tie{}`@math{0}'.  After approx.@: ten 5@tie{}point@tie{}bouts
+(or, e.@s{}g., four 15@tie{}point@tie{}bouts), the Felo program can
+estimate an initial value.  Just click on the menu ``Calculate'' --
+``Estimate freshmen'':
+
+@image{felo-screen-3-de,5cm,,Estimate freshmen}
+
+In this case, Obi Wan hasn't had a Felo rating yet.  After the
+``Estimate freshmen'', his estimate is inserted into the
+file.@footnote{This needn't be the same number which is calculated as
+the @emph{current} Felo rating after calculating all bouts but it should
+be very close to it.}  If the number of bouts of Obi@tie{}Wan is not yet
+enough for estimating a reliable initial value, his initial value
+remains@tie{}`@math{0}'.  In this case, he simply has to fence a little
+bit more, and you must try again.
+
+
+@node List of all parameters
+@section List of all parameters
+
+@unnumberedsubsec General parameters
+
+@table @code
+
+@item groupname
+The name of the group that this Felo file belongs to.  A fencing club is
+divided in the weapons, i.@s{}e.@: one group for each weapon and thus
+one Felo file.  If appropriate, you may distinguish between women and
+men as well, however, we didn't do this because we fence mixed anyway.
+
+If you don't give a groupname, Felo constructs one from the filename.
+For example, the file @file{foil.felo} gets the groupname ``Foil''.
+
+@end table
+
+@unnumberedsubsec Plot and HTML parameters
+
+These parameters modify the appearance of the plot and the handling of
+the HTML output, @xref{Putting the Felo ratings on the Web}.
+
+@table @code
+
+@item output folder
+The folder to which the HTML files as well as the plot (if there is one)
+are written.  Its default is the folder of the Felo file.
+
+@item min distance of plot tics
+The shotest distance in days between two training days in the plot that
+get a text label.  This avoids two labels to overlap.  @emph{(Default:
+7)}
+
+@item earliest date in plot
+The start day in the plot, i.@s{}e.@: from this day on training days are
+included in the plot.  The format must be YYYY-MM-DD as usual.
+@emph{(Default: 1980-01-01)}
+
+@item maximal days in plot
+The maximal number of day being included in the plot.  This prevents the
+plot from becoming too tight due to a large time interval being covered.
+@emph{(Default: 366)}
+
+@end table
+
+The following parameters are only interesting to Windows users.  On
+Linux, these programs are usually found without problems.  For
+information about installing these programms, @xref{Installation of
+auxilliary programs}.
+
+@table @code
+
+@item path of gnuplot
+The full path to gnuplot.  On Windows, the file is called
+@file{wgnuplot.exe}.  If Felo doesn't find the file, it says in the
+error message where it looked for it.  This should give you a clue how
+to remedy.
+
+@item path of convert
+The full path to convert of ImageMagick.  On Windows, the file is called
+@file{convert.exe}.  If Felo doesn't find the file, it says in the
+error message where it looked for it.  This should give you a clue how
+to remedy.
+
+@item path of ps2pdf
+The full path to ps2pdf of Ghostscript.  On Windows, the file is called
+@file{ps2pdf.bat}.  If Felo doesn't find the file, it says in the
+error message where it looked for it.  This should give you a clue how
+to remedy.
+
+@end table
+
+@unnumberedsubsec Parameters for estimating initial Felo ratings
+
+@table @code
+
+@item 5 point bouts for estimate
+The number of 5@tie{}point bouts that a freshman must have in order to
+be estimated by Felo, @xref{Estimating freshmen}.  This bout number is
+only a guiding value as the exact number depends on the actual results.
+Besides, 10 or 15@tie{}point bouts count more.  @emph{(Default: 10)}
+
+@item threshold bootstrapping
+The minimal accuracy of the initial Felo ratings that Felo calculates
+during bootstrapping, @xref{Initial Felo ratings for the whole group}.
+If the bootstrapping fails, you should increase this parameter,
+e.@s{}g.@: by a factor of@tie{}10.  @emph{(Default: 0.001)}
+
+@end table
+
+@unnumberedsubsec Special parameters for calculating Felo ratings
+
+These parameters should only be used if you really know what you're
+doing.
+
+@table @code
+
+@item k factor top fencers
+The ka factor which is used for @emph{very} good fencers.
+@emph{(Default: 25)}
+
+@item felo rating top fencers
+The minimal Felo rating of a top fencer.  If a fencer exceeds this limit
+once, he or she is listed as a top fencer.  This only changes the
+k@tie{}factor.  @emph{(Default: 2400)}
+
+@item k factor others
+The k factor used for ordinary fencers.  @emph{(Default: 32)}
+
+@item k factor freshmen
+The k factor used for (already estimated) freshmen.  Because their
+number must find its true value yet, their k@tie{}factor usually is a
+little bit higher than for ordinary fencers.  @emph{(Default: 40)}
+
+@item 5 point bouts freshmen
+The number of 5@tie{}point bouts that a freshman must have fenced in
+order to become an ordinary -- or regular -- fencer.  This only changes
+the k@tie{}factor.  This bout number is only a guiding value as the
+exact number depends on the actual results.  Besides, 10 or
+15@tie{}point bouts count more.  @emph{(Default: 15)}
+
+@item minimal felo rating
+The lowest possible Felo rating.  If a fencer would drop below this
+limit, his rating is set exactly to this limit.  @emph{(Default: 1200)}
+
+@item weighting team bout
+Single bouts within a team match -- or other bouts -- are weighted like
+5@tie{}point bouts if they are marked with@tie{}@samp{*},
+@xref{Additional data for bouts}.  This parameters is the number of
+typical 5@tie{}point bouts which are supposed to be equivalent to a bout
+marked with@tie{}@samp{*}.  @emph{(Default: 1.0)}
+
+@end table
+
+
+@node Felo ratings -- some background
+@chapter Felo ratings -- some background
+
+@menu
+* The calculation::             
+* Universal comparison of Felo ratings::  
+* Felo for other sports::       
+* Felo for programmers::        
+@end menu
+
+
+@node The calculation
+@section The calculation
+
+The calculation of new Felo ratings is a three-steps process:
+
+@enumerate
+@item
+
+Es wird der Resultatwert für den Fechter berechnet.  Das ist der Anteil
+der Einzeltreffer, die er gesetzt hat.  Beispiel: Gewinnt der Fechter
+15:10, ist der Resultatwert @math{15/(15+10)=0.6}.
+
+@item
+Dann wird aus der Differenz der Felo-Zahlen beider Fechter der
+@emph{erwartete} Resultatwert berechnet.  Die Formel dazu findet man
+z.@s{}B. im
+@uref{http://de.wikipedia.org/wiki/Elo-Zahl#Berechnung,Wikipedia-Artikel zur
+Elo-Zahl}.
+
+@item
+Die Differenz zwischen Resultat und erwartetem Resultat nenne ich mal
+die @emph{Überraschung}.  Die Überraschung wird nun multipliziert mit
+der Zahl der Einzeltreffer des Gefechts und zur alten Felo-Zahl
+addiert.  Das ergibt die neue Felo-Zahl des Fechters.
+@end enumerate
+
+Um genau zu sein, wird die Überraschung auch mit dem sogenannten
+@emph{k-Faktor} multipliziert, @xref{List of all parameters}.  Das hört
+sich geheimnisvoller an, als es ist.  Der k-Faktor bestimmt, wie stark
+sich die Felo-Zahlen ändern.  Ist er zu groß, wackeln die Felo-Zahlen zu
+stark hin und her.  Ist er zu klein, dauert es zu lange, bis sich die
+Felo-Zahl eines Fechter auf der wahren Spielstärke eingependelt hat.
+
+
+@node Universal comparison of Felo ratings
+@section Universal comparison of Felo ratings
+
+Felo-Zahlen können nur Fechter innerhalb einer Fechtgruppe @emph{relativ}
+vergleichen.  Damit man auch zwischen Gruppen vergleichen kann
+(z.@s{}B. zwischen zwei Vereinen), muß man bei der 
+Einschätzung der Anfangs-Felo-Zahlen (@pxref{Anfangs-Felo-Zahlen für die
+ganze Gruppe}) sehr realistisch und sorgfältig vorgegangen sein.  Nun
+gebe ich zu, daß Angaben wie ,,starke Freizeitspieler`` ziemlich
+schwammig sind, deshalb ist das nur begrenzt realistisch.  Ein ganz
+gutes Vergleichen sollte dennoch möglich sein.
+
+Wesentlich besser ist es natürlich, wenn ein paar Fechter in beiden
+Gruppen fechten.  Sie verbinden quasi die Felo-Zahlen beider Gruppen und
+machen sie so vergleichbar.  Man kann dafür beide Gruppen zu einer
+zusammenlegen.  Theoretisch reicht ein einzelner Fechter dafür aus, aber
+der hat dann viel zu tun.  Wurde eine der beiden Fechtgruppen zu gut
+bewertet, schaufelt er dann quasi die Punkte zur anderen Gruppe, bis
+alles stimmig ist.
+
+Man kann dazu natürlich auch die vielen Fechtturniere benutzen, ist aber
+viel Arbeit: Man sammelt die Felo-Zahlen aller Fechter, gegen die die
+eigenen Leute fechten @emph{und} die überhaupt eine Felo-Zahl haben,
+ein.
+
+Wie auch immer, es gibt leider noch zu wenig Erfahrung mit Felo-Zahlen,
+um zu wissen, wie gut man Gruppen Felo-technisch durch gemeinsame
+Fechter und/oder Turniere verbinden kann (so gut sie auch innerhalb
+einer Gruppe funktionieren).
+
+Übrigens lassen sich verschiedene Waffengattung nie richtig miteinander
+verbinden, weil sie ja nie gegeneinander fechten können.  Da ist man
+dann allein auf die realistische Einschätzung angewiesen.
+
+
+@node Felo for other sports
+@section Felo for other sports
+
+Kann man das Felo-Programm auch in anderen Sportarten einsetzen?
+
+Ja, man kann, allerdings funktionieren Teamsportarten nicht so gut.
+Auch bei Sportarten, bei denen die Zeit ein Match beendet, funktioniert
+es nicht so dolle.
+
+Was Teamsportarten angeht, klappt Felo gar nicht, wenn man eine fixe
+Gruppe aus @math{x}@tie{}Personen hat, aus denen an jedem Trainigstag
+zwei beliebige Mannschaften zusammengestellt werden.  Wie soll man das
+auch eintragen.  Nur, wenn man @math{x}@tie{}@emph{Teams} hat, die immer
+aus den mehr oder weniger gleichen Leuten bestehen, kann man die Teams
+als Sportler führen und ihre Ergebnisse aufschreiben.  Das schränkt die
+Brauchbarkeit von Felo zugegebenermaßen deutlich ein, insbesondere im
+Freizeitsport.
+
+Bei Sportarten, die über die Zeit entschieden werden, kann man nur die
+drei möglichen Ergebnisse 1:0, 0:1 und 1:1 benutzen, für Sieg,
+Niederlage und unentschieden.  Allerdings fällt mir jetzt spontan keine
+solche Sportart ein, die nicht auch eine Mannschaftssportart wäre.
+
+Für alle anderen Sportarten mit einem Sportler-Sportler-Duell,
+z.@s{}B. Tennis, Badminton, Tischtennis, Armdrücken, Wettblinzeln oder
+Ostereiertitschen, gibt es an sich keine Schwierigkeiten.  Existiert
+kein richtiger Endstand sondern nur Sieger und Verlierer (oder
+unentschieden), dann siehe oben, ansonsten trägt man eben das Ergebnis
+ein.
+
+Es ist übrigens nicht so wichtig, ob man bei Sportarten mit Sätzen die
+Sätze, Spiele oder Punkte als Grundlage nimmt.  Groß wird der
+Unterschied nicht sein.  Beim Tennis kann man ein 6:4@tie{}6:3 entweder
+als 2:0 oder als 12:7 eintragen.  (Man kann auch die Einzelpunkte
+zählen, wenn man zuviel Zeit hat.)  Grundsätzlich gilt natürlich: Je
+feiner, desto besser.
+
+
+@node Felo for programmers
+@section Felo for programmers
+
+Dieser Abschnitt ist für Programmierer gedacht, die Felo in eigenen
+Programmen benutzen wollen.
+
+Eine grafische Bedienoberfläche ist nett, aber mit der kann man kaum
+etwas automatisieren.  Beispielsweise ist es damit unmöglich, die
+aktuellen Felo-Zahlen einer Fechtergruppe in eine bestehende Webseite
+perfekt zu integrieren.  Insbesondere kann man mit dem
+Standard-Felo-Programm nicht die Zahlen von Florett- und Degenfechtern
+auf @emph{einer} Web-Seite unterbringen.
+
+Für die meisten wird das kein Beinbruch sein, aber wer die totale
+Kontrolle haben möchte, bekommt sie, und zwar gleich auf zwei
+verschiedene Arten.
+
+Zum einen kann man das Python-Modul @file{felo_rating.py} als
+Kommandozeilen-Programm aufrufen.  Ich gebe hier mal nur den Hilfe-Text
+dieses Programms an:
+
+@example
+Aufruf: felo_rating.py [Optionen]
+
+Optionen:
+  -h, --help            Zeige diese Meldung und beende das Programm
+  -p, --plots           Erzeuge Plots der Felo-Zahlen
+  -b, --bootstrap       Versuche, gute Start-Felo-Zahlen fuer alle zu
+                        berechnen
+  --max-cycles=NUMMER   Maximale Iterationsschritte beim Bootstrapping.
+                        Default: 1000
+  --estimate-freshmen   Versuche, Neueinsteiger zu bewerten
+  --write-back          Schreibe die neuen Startzahlen zurueck in die Felo-
+                        Datei
+  --version             Zeige Versionsnummer und Lizenz-Informationen
+  -o DATEINAME, --output=DATEINAME
+                        Name der Ausgabedatei.  Default: Ausgabe auf dem
+                        Bildschirm (stdout)
+@end example
+
+@noindent
+Wer Felo als GUI-Programm einigermaßen verstanden hat, wird wissen, was
+die einzelnen Optionen bedeuten.  Selbstverständlich ist das
+Eingabeformat genau dasselbe Dateiformat wie in der GUI-Version.  Das
+Ausgabeformat ist recht simpel und kann von einem eigenen Programm
+eingelesen werden.
+
+Zum anderen kann man auch direkt in Python ein eigenes Programm
+schreiben und @file{felo_rating.py} als Modul einbinden.  Man kann dann
+@uref{http://felo.sourceforge.net/api/,Felos API} nutzen, um eigene
+Programme mit Felo-Zahlen zu schreiben.
+
+@c  LocalWords:  Felo Elo copyright email quotation acronym end copying title
+@c  LocalWords:  finalout titlepage subtitle value image felo logo author page
+@c  LocalWords:  vskip filll insertcopying dircategory Miscellaneous direntry
+@c  LocalWords:  iftex hyphenation logue logues ifnottex node top tie uref menu
+@c  LocalWords:  ifhtml the table contents beginning chapter asis item section
+@c  LocalWords:  EXE emph puppeneinfach Admin ref Gnuplot Ghostscript file win
+@c  LocalWords:  subsection zip gnuplot Tar screen enumerate noindent strong
+@c  LocalWords:  samp JJJJ cartouche Tabstopps key Tab example Elmer Wile math
+@c  LocalWords:  Coyote unnumberedsubsec Info super Riker xref smallexample Obi
+@c  LocalWords:  bronger Schmankerl Extra William Wan code Weiblein florett
+@c  LocalWords:  Tics Mindestdatum wgnuplot exe convert pdf pxref Mindest dolle
+@c  LocalWords:  Wettblinzeln Ostereiertitschen rating help plots bootstrap max
+@c  LocalWords:  fuer cycles estimate freshmen write back zurueck version
+@c  LocalWords:  output stdout Roberto Pereira
