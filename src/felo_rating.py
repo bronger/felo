@@ -35,6 +35,28 @@
 :copyright: 2006, Torsten Bronger
 :license: MIT license
 :contact: Torsten Bronger <bronger@physik.rwth-aachen.de>
+
+:var datapath: the path to the directory where to expect the data files, in
+  particular the auf*.dat files.  Normally, this is the same directory where
+  this module was read from.
+:var distribution_version: the version number of the current distribution of
+  this module
+:var separator: column separator in a Felo file
+:var apparent_expectation_values: This list of lists is the solution for the
+  winning-hit problem.  The winner of a bout is rated too highly because he
+  ends the bout with his point.  This array contains the actually "measured"
+  result values if the ideal expected result value is known (e.g. by using
+  Elo's formula).
+
+  The list contains 101 lists, for result values 0, 0.01, 0.02, ... 1.  (This
+  happens to be the first element of each list, too.)  Every list contains 15
+  values, for bouts fenced to 1, 2, ... 15 points.
+
+
+:type datapath: string
+:type distribution_version: string
+:type separator: string
+:type apparent_expectation_values: list
 """
 __docformat__ = "restructuredtext en"
 
@@ -47,7 +69,7 @@ __version__ = "$Revision$"
 # $HeadURL$
 distribution_version = "1.0"
 
-import codecs, re, os.path, datetime, time, shutil, glob
+import codecs, re, os.path, datetime, time, shutil, glob, tempfile
 # This strange construction is necessary because on Windows, the file may be
 # put into a ZIP file (by py2exe), so we have to delete the last *two* parts of
 # the path.
@@ -64,7 +86,6 @@ _ = t.ugettext
 
 
 separator = "\s*\t+\s*"
-"""Column separator in a Felo file"""
 
 def clean_up_line(line):
     """Removes leading and trailing whitespace and comments from the line.
@@ -393,14 +414,6 @@ apparent_expectation_values = \
      [0.99, 0.993234, 0.992483, 0.991987, 0.991655, 0.991418, 0.99124, 0.991102,
       0.990992, 0.990902, 0.990826, 0.990763, 0.990708, 0.990661, 0.990619],
      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-"""This list of lists is the solution for the winning-hit problem.  The winner
-of a bout is rated too highly because he ends the bout with his point.  This
-array contains the actually "measured" result values if the ideal expected
-result value is known (e.g. by using Elo's formula).
-
-The list contains 101 lists, for result values 0, 0.01, 0.02, ... 1.  (This
-happens to be the first element of each list, too.)  Every list contains 15
-values, for bouts fenced to 1, 2, ... 15 points."""
 
 def set_preliminary_felo_ratings(fencers, bout, parameters):
     """Calculates the new Felo numbers of the two fencers of a given bout and
@@ -616,11 +629,20 @@ def parse_felo_file(felo_file):
     parameters.setdefault("maximal days in plot", "366")
     if os.name == 'nt':
         programs_path = os.environ["ProgramFiles"]
-        parameters.setdefault("path of gnuplot", os.path.join(programs_path, r"gnuplot\bin\pgnuplot.exe"))
-        best_path = glob.glob(os.path.join(programs_path, "ImageMagick*"))[0]
-        parameters.setdefault("path of convert", os.path.join(best_path, "convert.exe"))
-        best_path = glob.glob(os.path.join(programs_path, "gs", "gs*"))[0]
-        parameters.setdefault("path of ps2pdf", os.path.join(best_path, "lib", "ps2pdf.bat"))
+        parameters.setdefault("path of gnuplot", os.path.join(programs_path, r"gnuplot\bin\wgnuplot.exe"))
+        # ImageMagick and Ghostscript include a version number into their
+        # paths, thus I have to do some extra work.
+        possible_paths = glob.glob(os.path.join(programs_path, "ImageMagick*"))
+        if possible_paths:
+            parameters.setdefault("path of convert", os.path.join(possible_paths[0], "convert.exe"))
+        else:
+            parameters.setdefault("path of convert", "convert")
+        # Now Ghostscript
+        possible_paths = glob.glob(os.path.join(programs_path, "gs", "gs*"))
+        if possible_paths:
+            parameters.setdefault("path of ps2pdf", os.path.join(possible_paths[0], "lib", "ps2pdf.bat"))
+        else:
+            parameters.setdefault("path of ps2pdf", "ps2pdf")
     else:
         parameters.setdefault("path of gnuplot", "gnuplot")
         parameters.setdefault("path of convert", "convert")
@@ -1027,7 +1049,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
       - `BootstrappingError`: if the bootstrapping didn't converge
       - `ExternalProgramError`: if an external program is not found
     """
-    def calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename=None):
+    def calculate_felo_ratings_core(parameters, fencers, bouts, plot, data_file_name=None):
         """Calculate the new Felo ratings, taking a whole bunch of bouts into
         account.  If wanted, generate plots with the development of the Felo
         numbers.  Some things that are necessary before and after are not done
@@ -1039,15 +1061,23 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
           - `bouts`: list of bouts, which is sorted chronologically if necessary
           - `plot`: If True, plots as PNG and PDF are generated.  The file name is the
             group name in the Felo parameters.
-          - `bouts_base_filename`: just a copy of the variable of the same name
-            from the enclosing scope.  It's the filename before the "." of the
-            plot graphics files.
+          - `data_file_name`: just a copy of the variable of the same name
+            from the enclosing scope.  It's the filename of the datafile
+            plotted by Gnuplot.
 
-        Return values: None if plot==False.  If plot==True, the accumulated
-        xtics are returned.
+        :type parameters: dict
+        :type fencers: dict
+        :type bouts: list
+        :type plot: boolean
+        :type data_file_name: string
+
+        :Return:
+          - the accumulated xtics, but only if C{plot==True}
+
+        :rtype: string
         """
         if plot:
-            data_file = open(bouts_base_filename + ".dat", "w")
+            data_file = open(data_file_name, "w")
             # xtics holds the Gnuplot command for the x axis labels (i.e. the dates).
             xtics = ""
             last_xtics_daynumber = 0
@@ -1107,6 +1137,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         # by Gnuplot.
         fencer.columnindex = index + 2
     bouts_base_filename = parameters["groupname"].lower()
+    data_file_name = os.path.join(tempfile.gettempdir(), bouts_base_filename + ".dat")
     bouts.sort()
     if bootstrapping:
         for i in range(maxcycles):
@@ -1122,29 +1153,33 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                 break
         if i == maxcycles - 1:
             raise BootstrappingError(_("The bootstrapping didn't converge."))
-    xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, bouts_base_filename)
+    xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, data_file_name)
     visible_fencers.sort()    # Descending by Felo rating
     if plot:
         # Call Gnuplot, convert, and ps2pdf to generate the PNG and PDF plots.
         # Note: We don't generate HTML tables here.  These must be provided
         # separately.
-        gnuplot_script = "set term postscript color; set output '" + bouts_base_filename + ".ps';"
-        gnuplot_script += "set key outside; set xtics rotate; set grid xtics;"
-        gnuplot_script += "set xtics nomirror (%s);" % xtics[:-1]
-        gnuplot_script += "plot "
+        gnuplot_script_file_name = os.path.join(tempfile.gettempdir(), bouts_base_filename + ".gp")
+        gnuplot_script = codecs.open(gnuplot_script_file_name, "w", encoding="utf-8")
+        gnuplot_script.write(u"set term postscript color; set output '" + bouts_base_filename + ".ps';"
+                             u"set key outside; set xtics rotate; set grid xtics;"
+                             u"set xtics nomirror (%s);" % xtics[:-1] +
+                             u"plot ")
         for i, fencer in enumerate(visible_fencers):
-            gnuplot_script += "'%s.dat' using 1:%d with lines lw 5 title '%s'" % \
-                (bouts_base_filename, fencer.columnindex, fencer.name)
+            gnuplot_script.write(u"'%s' using 1:%d with lines lw 5 title '%s'" %
+                                 (data_file_name, fencer.columnindex, fencer.name))
             if i < len(visible_fencers) - 1:
-                gnuplot_script += ", "
+                gnuplot_script.write(", ")
+        gnuplot_script.close()
         try:
-            gnuplot = Popen([parameters["path of gnuplot"], "-"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            call([parameters["path of gnuplot"], gnuplot_script_file_name])
         except OSError:
             raise ExternalProgramError(_(u'The program "Gnuplot" wasn\'t found.  %s'
                                          u'However, it is needed for the plots.  '
                                          u'Please install it from http://www.gnuplot.info/.') %
                                        construct_supplement(parameters["path of gnuplot"]))
-        gnuplot.communicate(gnuplot_script)
+        os.remove(data_file_name)
+        os.remove(gnuplot_script_file_name)
         try:
             call([parameters["path of convert"], bouts_base_filename+".ps", "-rotate", "90",
                   parameters["output folder"] + "/" + bouts_base_filename+".png"])
