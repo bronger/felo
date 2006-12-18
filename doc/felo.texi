@@ -95,7 +95,7 @@
 
 @copying
 This manual is about the Felo program which allows to estimate sport
-fencers in an objective manner.  It is ispired by the Elo rating system
+fencers in an objective manner.  It is inspired by the Elo rating system
 in chess.
 
 Copyright @copyright{} 2006 Torsten Bronger
@@ -138,7 +138,7 @@ freely under the terms of the @acronym{MIT} license.
 Felo calculates Felo ratings for fencers.  Felo ratings give a good
 impression about a fencer's fencing strength.  The program is intended
 for fencing groups for having an additional incentive, or even for
-having a criterium for team selections and seedings.
+having a criterion for team selections and seedings.
 
 Quite reliable ratings for a couple of fencer is already possible after
 a few intensive training days.  There is no real upper limit.  The only
@@ -203,7 +203,7 @@ the official word ranking list, which works terrificly.  Not only that
 it yields a plausible ranking, it also allows for precise calculations
 of chances in upcoming chess matches.
 
-Over the yeras, the Elo ratings have been adapted sucessfully to other
+Over the years, the Elo ratings have been adapted successfully to other
 sports such as Go, college football, and international soccer.  With the
 Felo program, they can now be used in fencing, too.  ``Felo'' is nothing
 else but ``fencing Elo''.  In contrast to other Elo sports, Felo ratings
@@ -252,8 +252,8 @@ experience with Felo ratings so far.
 @node Getting help
 @section Getting help
 
-If you have problems of questions regarding the Felo ratings in general
-and the Felo program in particular, there are the folling places where
+If you have problems or questions regarding the Felo ratings in general
+and the Felo program in particular, there are the following places where
 to ask:
 
 @table @uref
@@ -263,7 +263,7 @@ A web-based forum for the Felo program
 @item https://lists.sourceforge.net/lists/listinfo/felo-general
 The Felo mailing list.  This is explicitly not only for discussions
 about the program but also for discussions about the Felo rating
-concept.  By the way, you can get this maling list also as a so-called
+concept.  By the way, you can get this mailing list also as a so-called
 @uref{http://dir.gmane.org/gmane.sports.fencing.felo-rating,newsgroup}
 (including the possibility of using a web interface and getting an RSS
 feed).
@@ -292,7 +292,7 @@ was at all possible, and has pointed out errors (which I corrected).
 
 @item Stefan Mainka
 has archived the bout results in my university fencing group long before
-the Felo program came into existance.  For me, this was a great luck of
+the Felo program came into existence.  For me, this was a great luck of
 course because I could test the concept rather quickly.  I also thank
 the RWTH fencing group in general for allowing me to publish out Felo
 ratings on the (internal) web pages, which was pretty encouraging.
@@ -307,7 +307,7 @@ has translated the program to Spanish.
 
 @menu
 * Installation on Windows::     
-* Installation of auxilliary programs::  Only if you need plots.
+* Installation of auxiliary programs::  Only if you need plots.
 * Installation on Linux::       
 @end menu
 
@@ -323,7 +323,7 @@ an administrator.  In the latter case, it is installed for all users on
 this computer.
 
 Installation itself is very simple.  It should be sufficient to click on
-``Ok'' a couple of times.  The uninstallation is euqallay simple but
+``Ok'' a couple of times.  The uninstallation is equally simple but
 assure that you are logged in on the same account you used for the
 installation because otherwise, Felo may not be completely removed.
 
@@ -331,8 +331,8 @@ If you are not interested in graphical plots of the Felo ratings, you
 can proceed with @ref{Using Felo}.
 
 
-@node Installation of auxilliary programs
-@section Installation of auxilliary programs
+@node Installation of auxiliary programs
+@section Installation of auxiliary programs
 
 @menu
 * Gnuplot::                     The program for the plots.
@@ -371,7 +371,7 @@ files and start is (as administrator if possible).
 @node Installation on Linux
 @section Installation on Linux
 
-The program is avaiable at
+The program is available at
 @uref{http://sourceforge.net/project/showfiles.php?group_id=183431,
 Felo's project page} in two variants for Linux, namely as an RPM and as
 a tar ball.  The RPM contains Python as its only dependency, however, it
@@ -391,12 +391,12 @@ packages, too, so it shouldn't be a problem either.
 @chapter Using Felo
 
 Star the Felo program.  This opens the program window with an empty
-editor area.  There you can entrer the Felo file.  The Felo file
-contains all fencers and gouts of a fencing group for which Felo
+editor area.  There you can enter the Felo file.  The Felo file
+contains all fencers and bouts of a fencing group for which Felo
 ratings should be calculated.  Over time, the felo file will grow
 further and further since new bouts are constantly appended to it.
 
-At the moement you probably don't know yet how a Felo file looks like.
+At the moment you probably don't know yet how a Felo file looks like.
 No problem.  Just click an the menu ``File'' -- ``New''.  This loads a
 sample Felo file into the editor:
 
@@ -497,7 +497,7 @@ format of a bout is very straightforward:
 @noindent
 The three columns are separated by tab stops @key{Tab}.
 
-If you have a sequence of bouts of the same day, only the forst one
+If you have a sequence of bouts of the same day, only the first one
 needs to have a date.  This makes is possible to make the bout list
 somewhat clearer:
 
@@ -551,9 +551,9 @@ from@tie{}1:
 
 @unnumberedsubsec Single bouts in a team match
 
-Every single bout within a tema relay match is a quite ordinary single
+Every single bout within a team relay match is a quite ordinary single
 bout -- so why not use it for the Felo rating.  Unfortunately, it
-happens that a strong player beats a weak player with an extremly high
+happens that a strong player beats a weak player with an extremely high
 result, say,@tie{}18:1.  Mathematically, this doesn't effect the
 fairness and reliability of Felo ratings, however, beginners could
 become reluctant in taking part in a team match at all.  Therefore, you
@@ -597,7 +597,7 @@ This works in both direction of course.  If a fencer of your group
 reports to have won in another group or on a tournament against a 1452
 fencer 15:11, you can add it accordingly.
 
-By the way, it may be appropriate to makr bouts with foreign fencers
+By the way, it may be appropriate to mark bouts with foreign fencers
 with a @samp{*} as well because their Felo rating is not as credible
 and/or compatible as a local Felo rating.
 
@@ -606,7 +606,7 @@ and/or compatible as a local Felo rating.
 @section Calculating Felo ratings
 
 Calculating the current Felo numbers is almost trivial.  Click on the
-menu ``Calculate'' -- ``Calculare Felo ratings''.  A window with the
+menu ``Calculate'' -- ``Calculate Felo ratings''.  A window with the
 Felo ratings table for the current group opens.  Freshman are excluded
 from this list, @xref{Estimating freshmen}, as are fencers who doesn't
 want to have a Felo rating.
@@ -615,7 +615,7 @@ want to have a Felo rating.
 
 By clicking on ``copy to clipboard'', the table is copied to the Windows
 clipboard in a form which can easily be inserted into Word or Excel, in
-order to make it facnier, or to print or archive it.
+order to make it fancier, or to print or archive it.
 
 
 @node Putting the Felo ratings on the Web
@@ -652,7 +652,7 @@ is displayed.
 A special feature is the generation of plots on which the fencer can see
 the chronological development of his or her Felo rating.
 @strong{Attention:} Gnuplot, Ghostscript, and ImageMagick must be
-installed so that this works, @xref{Installation of auxilliary
+installed so that this works, @xref{Installation of auxiliary
 programs}.  On the screenshot below you can see the whole picture,
 i.@s{}e.@: with plot.
 
@@ -731,7 +731,7 @@ know what you're doing.  From now on, only bouts and new fencers are
 added to the file.
 
 If you haven't listed any bouts for far, you can use the preliminary
-initial values, too, however, you must expect some wild behavious during
+initial values, too, however, you must expect some wild behaviour during
 the first weeks, until the Felo ratings have found their true values.
 
 On the other hand, if you already have a lot of bouts data, you should
@@ -815,8 +815,8 @@ plot from becoming too tight due to a large time interval being covered.
 
 The following parameters are only interesting to Windows users.  On
 Linux, these programs are usually found without problems.  For
-information about installing these programms, @xref{Installation of
-auxilliary programs}.
+information about installing these programs, @xref{Installation of
+auxiliary programs}.
 
 @table @code
 
@@ -1001,7 +1001,7 @@ the same time.
 
 For all other sports with a sportsman vs.@: sportsman bout like tennis,
 badminton, table tennis, arm wrestling, and staring contest, there
-souldn't be problems.  If there is no real score but only winner and
+shouldn't be problems.  If there is no real score but only winner and
 loser, see above, in all other cases you simply put the result in the
 Felo file.
 
@@ -1015,7 +1015,7 @@ other hand, the more information, the better.
 @node Felo for programmers
 @section Felo for programmers
 
-This section is inteded for programmers who want to use Felo in their
+This section is intended for programmers who want to use Felo in their
 own programs.
 
 A graphical user interface is a nice thing to have but you cannot
@@ -1035,7 +1035,7 @@ usage: felo_rating.py [options]
 options:
   -h, --help            show this help message and exit
   -p, --plots           Generate plots with the Felo ratings
-  -b, --bootstrap       Try to estimage good initial values for all fencers
+  -b, --bootstrap       Try to estimate good initial values for all fencers
   --max-cycles=NUMBER   Maximal iteration steps during bootstrapping.
                         Default: 1000
   --estimate-freshmen   Try to estimate freshmen
@@ -1056,3 +1056,8 @@ Secondly, you can write a program in Python that imports the
 @code{felo_rating} module.  You can then use
 @uref{http://felo.sourceforge.net/api/,Felo's API} to write own programs
 with the Felo ratings.
+
+@c  LocalWords:  latin british def rmdefault ppl mathrel mskip pstexinfo RSS
+@c  LocalWords:  tex xmarksthespot filll logue logues Lochnerstra ifhtml asis
+@c  LocalWords:  Elo uninstallation YYYY Riker myname css tics wgnuplot exe
+@c  LocalWords:  stdout
