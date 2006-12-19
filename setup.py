@@ -35,7 +35,6 @@ except ImportError:
     from distutils.core import setup
 import distutils.dir_util
 import shutil, os.path, atexit, sys
-from glob import glob
 
 try:
     distutils.dir_util.remove_tree("build")
@@ -111,10 +110,10 @@ bout result list.  The program offers a graphical user interface
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Mathematics',
         ],
-      data_files = language_data_files,
+      data_files = language_data_files + [('bin', ["/home/bronger/src/felo/src/felo"])],
       platforms = "Linux, Windows",
       packages = ['felo'],
       package_dir = {'felo': 'src'},
-      package_data = {'felo': glob('auf*.dat') + glob('boilerplate*.felo') + glob('*.png') +
-                      glob('licence*.html') + glob('*.ico')}
+      package_data = {'felo': ['auf*.dat', 'boilerplate*.felo', '*.png',
+                      'licence*.html', '*.ico']}
       )
