@@ -154,17 +154,17 @@ e.@s{}g.@: for updating a club webpage automatically.
 The Felo program is Free Software.  In particular, this means that it
 can be distributed freely, and everybody is allowed to download and to
 change the source code.  Its author, however, would be very happy if you
--- in case you use the program -- would send him a postcard
-(T.@tie{}Bronger, Lochnerstraße@tie{}7, 52064@tie{}Aachen, Germany;
-please include the RWTH fencers in your greetings, we are glad to hear
-from fellow fencing groups).  Additionally, you can help by
+-- in case you use the program -- send him a postcard (T.@tie{}Bronger,
+Lochnerstraße@tie{}7, 52064@tie{}Aachen, Germany; please include the
+RWTH fencers in your greetings, we are glad to hear from fellow fencing
+groups).  Additionally, you can help by
 @uref{http://felo.sourceforge.net/translations.html,providing a
 translation to a foreign language}.
 
 @menu
 * Felo ratings::                That are Felo ratings?
-* Installation::                Installation of Felo.
 * Using Felo::                  How to determine Felo ratings.
+* Installation::                Installation of Felo.
 * Felo ratings -- some background::  Explanations for the really
                                   interested.
 @end menu
@@ -241,7 +241,7 @@ beginners
 lower limit
 @end table
 
-The tables shouldn't be taken too seriously because there isn't yet much
+The tables shouldn't be taken too seriously because there isn't much
 experience with Felo ratings so far.
 
 @menu
@@ -283,7 +283,9 @@ Here, you can submit feature requests.
 
 By and large, Felo is -- sigh -- the product of a lone fighter so far.
 (Please no pity, it was fun.)  However, I did have some help from
-others.
+others.  Help still is welcome, jst have a look at the
+@uref{http://felo.sourceforge.net/translations.html,Felo translation
+guide}.
 
 @table @asis
 @item Marc Ensenbach
@@ -297,94 +299,9 @@ course because I could test the concept rather quickly.  I also thank
 the RWTH fencing group in general for allowing me to publish out Felo
 ratings on the (internal) web pages, which was pretty encouraging.
 
-@item Roberto Pereira
-has translated the program to Spanish.
+@c @item Roberto Pereira
+@c has translated the program to Spanish.
 @end table
-
-
-@node Installation
-@chapter Installation
-
-@menu
-* Installation on Windows::     
-* Installation of auxiliary programs::  Only if you need plots.
-* Installation on Linux::       
-@end menu
-
-
-@node Installation on Windows
-@section Installation on Windows
-
-First, download the program from
-@uref{http://sourceforge.net/project/showfiles.php?group_id=183431,
-Felo's project page on Sourceforge} as an EXE file, and start it.
-There are two alternatives: You can start is as an ordinary user or as
-an administrator.  In the latter case, it is installed for all users on
-this computer.
-
-Installation itself is very simple.  It should be sufficient to click on
-``Ok'' a couple of times.  The uninstallation is equally simple but
-assure that you are logged in on the same account you used for the
-installation because otherwise, Felo may not be completely removed.
-
-If you are not interested in graphical plots of the Felo ratings, you
-can proceed with @ref{Using Felo}.
-
-
-@node Installation of auxiliary programs
-@section Installation of auxiliary programs
-
-@menu
-* Gnuplot::                     The program for the plots.
-* Ghostscript::                 For the conversion plot --> PDF.
-* ImageMagick::                 For the conversion PDF --> PNG.
-@end menu
-
-
-@node Gnuplot
-@subsection Gnuplot
-
-First you have to download
-@uref{http://sourceforge.net/project/showfiles.php?group_id=2055&package_id=1996,Gnuplot
-as a ZIP file}.  The file name is @file{gp400win32.zip} or something
-similar, where @file{400} is the version number.  Extract this ZIP file
-into the folder @file{C:\Programme\gnuplot}.
-
-
-@node Ghostscript
-@subsection Ghostscript
-
-Ghostscript can be downloaded from the
-@uref{ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs854/,FTP mirror
-for Ghostscript} (you need the EXE file).  It is important to be
-administrator when executing this file!
-
-
-@node ImageMagick
-@subsection ImageMagick
-
-On the @uref{http://www.imagemagick.org,homepage of ImageMagick} you
-click on ``Binary Releases'' -- ``Windows'', download one of the EXE
-files and start is (as administrator if possible).
-
-
-@node Installation on Linux
-@section Installation on Linux
-
-The program is available at
-@uref{http://sourceforge.net/project/showfiles.php?group_id=183431,
-Felo's project page} in two variants for Linux, namely as an RPM and as
-a tar ball.  The RPM contains Python as its only dependency, however, it
-also needs @uref{http://www.wxpython.org/,wxPython}, at least for the
-GUI part.  Since this has become a standard package, it shouldn't be a
-problem.
-
-If you are interested in having plots, you need the very same three
-programs as the Windows users, namely
-@uref{http://www.gnuplot.info,Gnuplot},
-@uref{http://www.cs.wisc.edu/~ghost/,Ghostscript}, and
-@uref{http://www.imagemagick.org,ImageMagick}.  They are standard
-packages, too, so it shouldn't be a problem either.
 
 
 @node Using Felo
@@ -400,7 +317,7 @@ At the moment you probably don't know yet how a Felo file looks like.
 No problem.  Just click an the menu ``File'' -- ``New''.  This loads a
 sample Felo file into the editor:
 
-@image{felo-screen-1-de,10cm,,Sample Felo file}
+@image{felo-screen-1,10cm,,Sample Felo file}
 
 A Felo file consists of three parts:
 
@@ -433,14 +350,14 @@ second column, the value of this parameter (e.@s{}g.@: ``foil'') is
 given.
 
 You may well leave the parameter part empty.  In this case, Felo assumes
-default values which will be sensible mostly.  For more info, @xref{List
+default values which will be sensible mostly.  For more info, @pxref{List
 of all parameters}.
 
 @item fencer list
 Here, you have to list all fencers of the group, one per row.  This
 part, too, has two columns, for the fencer's name and his or her
-@emph{initial} Felo rating.  AT the beginning, nobody has Felo number
-yet, but I'll explain below how to get them, @xref{Getting initial Felo
+@emph{initial} Felo rating.  At the beginning, nobody has a Felo rating
+yet, but I'll explain below how to get them, @pxref{Getting initial Felo
 ratings}.
 
 An important feature is that all fencers whose names are put in
@@ -607,10 +524,10 @@ and/or compatible as a local Felo rating.
 Calculating the current Felo numbers is almost trivial.  Click on the
 menu ``Calculate'' -- ``Calculate Felo ratings''.  A window with the
 Felo ratings table for the current group opens.  Freshman are excluded
-from this list, @xref{Estimating freshmen}, as are fencers who doesn't
+from this list, @pxref{Estimating freshmen}, as are fencers who doesn't
 want to have a Felo rating.
 
-@image{felo-screen-4-de,10cm,,Calculated Felo ratings}
+@image{felo-screen-4,10cm,,Calculated Felo ratings}
 
 By clicking on ``copy to clipboard'', the table is copied to the Windows
 clipboard in a form which can easily be inserted into Word or Excel, in
@@ -628,7 +545,7 @@ generating the Web page itself.
 Click on the menu ``Calculate'' -- ``Generate HTML''.  The following
 dialog window opens:
 
-@image{felo-screen-5-de,4cm,,Generate HTML dialog}
+@image{felo-screen-5,4cm,,Generate HTML dialog}
 
 @noindent
 First you should check whether the folder Felo wants to write the Web
@@ -651,7 +568,7 @@ is displayed.
 A special feature is the generation of plots on which the fencer can see
 the chronological development of his or her Felo rating.
 @strong{Attention:} Gnuplot, Ghostscript, and ImageMagick must be
-installed so that this works, @xref{Installation of auxiliary
+installed so that this works, @pxref{Installation of auxiliary
 programs}.  On the screenshot below you can see the whole picture,
 i.@s{}e.@: with plot.
 
@@ -663,7 +580,7 @@ By the way, the HTML file includes a CSS stylesheet called
 Web page.  I cannot discuss it in further detail here, people capable of
 CSS will know what to do anyway.
 
-@image{felo-screen-6-de,8cm,,HTML preview with plot}
+@image{felo-screen-6,8cm,,HTML preview with plot}
 
 
 @node Getting initial Felo ratings
@@ -671,8 +588,8 @@ CSS will know what to do anyway.
 
 There are two quite different situations where it is necessary to
 estimate an initial Felo rating: First, when the whole fencing group
-must get initial values, and secondly, when a freshman arrives at a
-group that has already Felo ratings.
+must get initial values, and secondly, when a freshman without a Felo
+rating arrives at a group with Felo ratings.
 
 @menu
 * Initial Felo ratings for the whole group::  The bootstrapping.
@@ -689,7 +606,7 @@ once.  It is necessary because the Felo system can only calculate
 @emph{changes} in the Felo rating, hence the initial value must come
 from somewhere else.
 
-So, the starting point are a bunch of fencing Felo-virgins.  Somebody of
+So, the starting point is a bunch of fencing Felo-virgins.  Somebody of
 the group who is trustable must estimate everybody with
 @emph{preliminary} initial values.  This shouldn't be too critical since
 Felo will recalculate all numbers anyway; more or less, it is only about
@@ -721,7 +638,7 @@ best initial values from the preliminary ones provided by you.
 
 For doing this, click on ``Calculate'' -- ``Bootstrapping'':
 
-@image{felo-screen-2-de,5cm,,clicking on bootstrapping}
+@image{felo-screen-2,5cm,,clicking on bootstrapping}
 
 Then you click on ``Yes'' and wait for a couple of seconds (at most).
 The new initial values are inserted into the file.  You should save the
@@ -754,7 +671,7 @@ symbolic@tie{}`@math{0}'.  After approx.@: ten 5@tie{}point@tie{}bouts
 estimate an initial value.  Just click on the menu ``Calculate'' --
 ``Estimate freshmen'':
 
-@image{felo-screen-3-de,5cm,,Estimate freshmen}
+@image{felo-screen-3,5cm,,Estimate freshmen}
 
 In this case, Obi Wan hasn't had a Felo rating yet.  After the
 ``Estimate freshmen'', his estimate is inserted into the
@@ -787,7 +704,7 @@ For example, the file @file{foil.felo} gets the groupname ``Foil''.
 @unnumberedsubsec Plot and HTML parameters
 
 These parameters modify the appearance of the plot and the handling of
-the HTML output, @xref{Putting the Felo ratings on the Web}.
+the HTML output, @pxref{Putting the Felo ratings on the Web}.
 
 @table @code
 
@@ -814,7 +731,7 @@ plot from becoming too tight due to a large time interval being covered.
 
 The following parameters are only interesting to Windows users.  On
 Linux, these programs are usually found without problems.  For
-information about installing these programs, @xref{Installation of
+information about installing these programs, @pxref{Installation of
 auxiliary programs}.
 
 @table @code
@@ -845,13 +762,13 @@ to remedy.
 
 @item 5 point bouts for estimate
 The number of 5@tie{}point bouts that a freshman must have in order to
-be estimated by Felo, @xref{Estimating freshmen}.  This bout number is
+be estimated by Felo, @pxref{Estimating freshmen}.  This bout number is
 only a guiding value as the exact number depends on the actual results.
 Besides, 10 or 15@tie{}point bouts count more.  @emph{(Default: 10)}
 
 @item threshold bootstrapping
 The minimal accuracy of the initial Felo ratings that Felo calculates
-during bootstrapping, @xref{Initial Felo ratings for the whole group}.
+during bootstrapping, @pxref{Initial Felo ratings for the whole group}.
 If the bootstrapping fails, you should increase this parameter,
 e.@s{}g.@: by a factor of@tie{}10.  @emph{(Default: 0.001)}
 
@@ -895,11 +812,96 @@ limit, his rating is set exactly to this limit.  @emph{(Default: 1200)}
 @item weighting team bout
 Single bouts within a team match -- or other bouts -- are weighted like
 5@tie{}point bouts if they are marked with@tie{}@samp{*},
-@xref{Additional data for bouts}.  This parameter is the number of
+@pxref{Additional data for bouts}.  This parameter is the number of
 typical 5@tie{}point bouts which are supposed to be equivalent to a bout
 marked with@tie{}@samp{*}.  @emph{(Default: 1.0)}
 
 @end table
+
+
+@node Installation
+@chapter Installation
+
+@menu
+* Installation on Windows::     
+* Installation of auxiliary programs::  Only if you need plots.
+* Installation on Linux::       
+@end menu
+
+
+@node Installation on Windows
+@section Installation on Windows
+
+First, download the program from
+@uref{http://sourceforge.net/project/showfiles.php?group_id=183431,
+Felo's project page on Sourceforge} as an EXE file, and start it.
+There are two alternatives: You can start is as an ordinary user or as
+an administrator.  In the latter case, it is installed for all users on
+this computer.
+
+Installation itself is very simple.  It should be sufficient to click on
+``Ok'' a couple of times.  The uninstallation is equally simple but
+assure that you are logged in on the same account you used for the
+installation because otherwise, Felo may not be completely removed.
+
+If you are not interested in graphical plots of the Felo ratings, you
+can proceed with @ref{Using Felo}.
+
+
+@node Installation of auxiliary programs
+@section Installation of auxiliary programs
+
+@menu
+* Gnuplot::                     The program for the plots.
+* Ghostscript::                 For the conversion plot --> PDF.
+* ImageMagick::                 For the conversion PDF --> PNG.
+@end menu
+
+
+@node Gnuplot
+@subsection Gnuplot
+
+First you have to download
+@uref{http://sourceforge.net/project/showfiles.php?group_id=2055&package_id=1996,Gnuplot
+as a ZIP file}.  The file name is @file{gp400win32.zip} or something
+similar, where @file{400} is the version number.  Extract this ZIP file
+into the folder @file{C:\Programme\gnuplot}.
+
+
+@node Ghostscript
+@subsection Ghostscript
+
+Ghostscript can be downloaded from the
+@uref{ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs854/,FTP mirror
+for Ghostscript} (you need the EXE file).  It is important to be
+administrator when executing this file!
+
+
+@node ImageMagick
+@subsection ImageMagick
+
+On the @uref{http://www.imagemagick.org,homepage of ImageMagick} you
+click on ``Binary Releases'' -- ``Windows'', download one of the EXE
+files and start is (as administrator if possible).
+
+
+@node Installation on Linux
+@section Installation on Linux
+
+The program is available at
+@uref{http://sourceforge.net/project/showfiles.php?group_id=183431,
+Felo's project page} in two variants for Linux, namely as an RPM and as
+a tar ball.  The RPM contains Python as its only dependency, however, it
+also needs @uref{http://www.wxpython.org/,wxPython}, at least for the
+GUI part.  Since this has become a standard package, it shouldn't be a
+problem.
+
+If you are interested in having plots, you need the very same three
+programs as the Windows users, namely
+@uref{http://www.gnuplot.info,Gnuplot},
+@uref{http://www.cs.wisc.edu/~ghost/,Ghostscript}, and
+@uref{http://www.imagemagick.org,ImageMagick}.  They are standard
+packages, too, so it shouldn't be a problem either.
 
 
 @node Felo ratings -- some background
@@ -935,7 +937,7 @@ article about the Elo rating system}.
 Let us call the difference between the result value and the expected
 result value the @emph{surprise}.  The surprise is multiplied by the
 total number of points in the bout, and the so-called k@tie{}factor,
-@xref{List of all parameters}.  The result is added to the old Felo
+@pxref{List of all parameters}.  The result is added to the old Felo
 rating.  This yields the new one.
 
 @end enumerate
