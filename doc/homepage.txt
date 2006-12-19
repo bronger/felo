@@ -28,9 +28,9 @@
 ..   DEALINGS IN THE SOFTWARE.
 ..
 
-=====================================
-Felo – estimating sport fencers
-=====================================
+===========================================
+Felo – estimate the fencing strength
+===========================================
 
 :Date: $Date$
 :Author: Torsten Bronger <bronger@physik.rwth-aachen.de>
@@ -63,7 +63,7 @@ welcome):
 Download
 ============
 
-For downloads, bugs reports, the mailinglist, the forum, please go to `Felo's
-project page`_.
+For downloads, screenshots, bugs reports, the mailinglist, the forum, please go
+to `Felo's project page`_.
 
 .. _`Felo's project page`: http://sourceforge.net/projects/felo/
