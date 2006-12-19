@@ -50,6 +50,12 @@ else:
 import felo_rating
 import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html, wx.lib.hyperlink
 
+if os.name == 'nt':
+    try:
+        os.chdir(os.path.expanduser('~'))
+    except OSError:
+        pass
+
 class HtmlPreviewFrame(wx.Frame):
     def __init__(self, parent, title, file):
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, size=(400, 600))
@@ -278,7 +284,7 @@ class Frame(wx.Frame):
             self.open_felo_file(sys.argv[1])
         self.editor.SetFocus()
     def OnWebHelp(self, event):
-        webbrowser.open(_("http://felo.sourceforge.net/felo-en/"))
+        webbrowser.open(_("http://felo.sourceforge.net/felo/"))
     def OnShowLicence(self, event):
         licence_window = HtmlPreviewFrame(self, _("Software licence"), datapath+"/"+_("licence.html"))
         licence_window.Show()
@@ -365,6 +371,7 @@ class Frame(wx.Frame):
         result = dialog.ShowModal()
         if result == wx.ID_OK:
             self.felo_filename = dialog.GetPath()
+            os.chdir(os.path.dirname(self.felo_filename))
             self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
             self.save_felo_file()
         dialog.Destroy()
@@ -384,8 +391,8 @@ class Frame(wx.Frame):
             return parameters, fencers, bouts
         return {}, {}, []
     def report_empty_bouts(self):
-        wx.MessageBox(_(u"I haven't found any bouts.  Please enter or open a complete Felo file "
-                        u"with fencers and bouts."),
+        wx.MessageBox(_(u"I haven't found any bouts.  Please enter or open a\n"
+                        u"complete Felo file with fencers and bouts."),
                       _(u"No bouts found"), wx.OK | wx.ICON_WARNING, self)
     def OnCalculateFeloRatings(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
@@ -415,10 +422,11 @@ class Frame(wx.Frame):
         if result != wx.ID_OK:
             return
         file_list = u""
-        html_filename = os.path.join(parameters["output folder"], base_filename+".html")
-        html_file = codecs.open(html_filename, "w", "utf-8")
-        file_list += base_filename+".html\n"
-        print>>html_file, u"""<?xml version="1.0" encoding="utf-8"?>
+        try:
+            html_filename = os.path.join(parameters["output folder"], base_filename+".html")
+            html_file = codecs.open(html_filename, "w", "utf-8")
+            file_list += base_filename+".html\n"
+            print>>html_file, u"""<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head><title>%(title)s</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -427,11 +435,15 @@ class Frame(wx.Frame):
 @import "felo.css";
 /*]]>*/
 </style></head><body>\n\n<h1>%(title)s</h1>\n<h2>%(date)s</h2>\n\n<table><tbody>""" % \
-            {"title": _(u"Felo ratings ")+parameters["groupname"], "date": _(u"as of ")+last_date}
-        try:
+                {"title": _(u"Felo ratings ")+parameters["groupname"], "date": _(u"as of ")+last_date}
             fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts, plot=make_plot)
         except felo_rating.ExternalProgramError, e:
             wx.MessageBox(e.description, _(u"External program not found"), wx.OK | wx.ICON_ERROR, self)
+            return
+        except IOError:
+            wx.MessageBox(_(u"Could not write to file or directory.\n(I tried to write to '%s'.)")
+                            % parameters["output folder"], _(u"Couldn't write file"),
+                          wx.OK | wx.ICON_ERROR, self)
             return
         for fencer in fencerlist:
             print>>html_file, u"<tr><td class='name'>%s</td><td class='felo-rating'>%d</td></tr>" % \
@@ -440,16 +452,18 @@ class Frame(wx.Frame):
         if make_plot:
             print>>html_file, u"<p class='felo-plot'><img class='felo-plot' src='%s.png' alt='%s' /></p>" % \
                 (base_filename, _(u"Felo ratings plot for ")+parameters["groupname"])
-            print>>html_file, _(u"<p class='printable-notice'>Also in a <a href='%s.pdf'>" \
-                "printable version</a>.</p>") % base_filename
             file_list += base_filename+".png\n"
-            file_list += base_filename+".pdf\n"
+            if os.path.isfile(os.path.join(parameters["output folder"], base_filename+".pdf")):
+                print>>html_file, _(u"<p class='printable-notice'>Also in a <a href='%s.pdf'>"
+                                    u"printable version</a>.</p>") % base_filename
+                file_list += base_filename+".pdf\n"
         print>>html_file, u"</body></html>"
         html_file.close()
         if HTML_preview:
             html_window = HtmlPreviewFrame(self, _(u"Preview HTML"), html_filename)
             html_window.Show()
-        wx.MessageBox(_(u"The following files must be uploaded to the web server:\n\n")+file_list,
+        wx.MessageBox(_(u"The following files must be uploaded from\n%s\nto the web server:\n\n") %
+                      parameters["output folder"] + file_list,
                       _(u"Upload file list"), wx.OK | wx.ICON_INFORMATION, self)
     def OnBootstrapping(self, event):
         parameters, fencers, bouts = self.parse_editor_contents()
