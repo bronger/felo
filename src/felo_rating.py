@@ -152,6 +152,10 @@ class Bout(object):
 
     It is not very active in the sense that is has many methods.  Actually it's
     just a container for the attributes of a bout.
+
+    :cvar date_pattern: regular expression pattern for parsing date strings.
+
+    :type date_pattern: SRE_Pattern
     """
     date_pattern = re.compile("\s*(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2})"
                               "(?:\\.(?P<index>\\d+))")
@@ -211,8 +215,10 @@ class Bout(object):
             self.index = int(index)
         except (ValueError):
             raise FeloFormatError(_("Invalid date string."))
-    date_string = property(__get_date_string, __set_date_string, doc="""The date of the bout in its
-        string representation YYYY-MM-TT.II, where ".II" is the optional index.""")
+    date_string = property(__get_date_string, __set_date_string,
+                           doc="""The date of the bout in its string representation YYYY-MM-TT.II,
+                                  where ".II" is the optional index.
+                                  @type: string""")
 
 apparent_expectation_values = \
     [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -1126,9 +1132,17 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         :rtype: string
         """
         if os.name == 'nt':
-            return "(I looked for it at '%s'.)  " % path
+            return _(u"(I looked for it at '%s'.)  ") % path
         else:
             return ""
+
+    bouts_base_filename = parameters["groupname"].lower()
+    tempdir = tempfile.gettempdir()
+    data_file_name = os.path.join(tempdir, bouts_base_filename + ".dat")
+    gnuplot_script_file_name = os.path.join(tempdir, bouts_base_filename + ".gp")
+    postscript_file_name = os.path.join(tempdir, bouts_base_filename + ".ps")
+    png_file_name = os.path.join(parameters["output folder"], bouts_base_filename + ".png")
+    pdf_file_name = os.path.join(parameters["output folder"], bouts_base_filename + ".pdf")
 
     visible_fencers = [fencer for fencer in fencers.values()
                        if not (fencer.hidden or fencer.freshman or fencer.foreign_fencer)]
@@ -1136,8 +1150,6 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         # Store the column index of the data file in the fencer object.  Needed
         # by Gnuplot.
         fencer.columnindex = index + 2
-    bouts_base_filename = parameters["groupname"].lower()
-    data_file_name = os.path.join(tempfile.gettempdir(), bouts_base_filename + ".dat")
     bouts.sort()
     if bootstrapping:
         for i in range(maxcycles):
@@ -1159,9 +1171,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         # Call Gnuplot, convert, and ps2pdf to generate the PNG and PDF plots.
         # Note: We don't generate HTML tables here.  These must be provided
         # separately.
-        gnuplot_script_file_name = os.path.join(tempfile.gettempdir(), bouts_base_filename + ".gp")
         gnuplot_script = codecs.open(gnuplot_script_file_name, "w", encoding="utf-8")
-        gnuplot_script.write(u"set term postscript color; set output '" + bouts_base_filename + ".ps';"
+        gnuplot_script.write(u"set term postscript color; set output '" + postscript_file_name + "';"
                              u"set key outside; set xtics rotate; set grid xtics;"
                              u"set xtics nomirror (%s);" % xtics[:-1] +
                              u"plot ")
@@ -1174,31 +1185,24 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         try:
             call([parameters["path of gnuplot"], gnuplot_script_file_name])
         except OSError:
-            raise ExternalProgramError(_(u'The program "Gnuplot" wasn\'t found.  %s'
+            raise ExternalProgramError(_(u'The program "gnuplot" wasn\'t found.  %s'
                                          u'However, it is needed for the plots.  '
                                          u'Please install it from http://www.gnuplot.info/.') %
                                        construct_supplement(parameters["path of gnuplot"]))
         os.remove(data_file_name)
         os.remove(gnuplot_script_file_name)
+        if os.path.isfile(pdf_file_name):
+            # Otherwise, convert doesn't generate a fresh PDF
+            os.remove(pdf_file_name)
         try:
-            call([parameters["path of convert"], bouts_base_filename+".ps", "-rotate", "90",
-                  parameters["output folder"] + "/" + bouts_base_filename+".png"])
+            call([parameters["path of convert"], postscript_file_name, "-rotate", "90", png_file_name])
+            call([parameters["path of convert"], postscript_file_name, pdf_file_name])
         except OSError:
             raise ExternalProgramError(_(u'The program "convert" of ImageMagick wasn\'t found.  %s'
                                          u'However, it is needed for the plots.  '
                                          u'Please install it from http://www.imagemagick.org/.') %
                                        construct_supplement(parameters["path of convert"]))
-        try:
-            gs_path = os.path.dirname(os.path.dirname(parameters["path of ps2pdf"]))
-            call([parameters["path of ps2pdf"], bouts_base_filename+".ps",
-                  parameters["output folder"] + "/" + bouts_base_filename+".pdf"],
-                 env={"PATH": os.environ["PATH"]+";"+os.path.join(gs_path, "bin")+
-                      ";"+os.path.join(gs_path, "lib")})
-        except OSError:
-            raise ExternalProgramError(_(u'The program "ps2pdf" of Ghostscript wasn\'t found.  %s'
-                                         u'However, it is needed for the plots.  '
-                                         u'Please install it from http://www.cs.wisc.edu/~ghost/.') %
-                                       construct_supplement(parameters["path of ps2pdf"]))
+        os.remove(postscript_file_name)
     if estimate_freshmen:
         return [fencer for fencer in fencers.values() if fencer.freshman]
     return visible_fencers
@@ -1275,7 +1279,7 @@ if __name__ == '__main__':
     option_parser.add_option("-p", "--plots", action="store_true", dest="plots",
                              help=_(u"Generate plots with the Felo ratings"), default=False)
     option_parser.add_option("-b", "--bootstrap", action="store_true", dest="bootstrap",
-                             help=_(u"Try to estimage good initial values for all fencers"), default=False)
+                             help=_(u"Try to estimate good initial values for all fencers"), default=False)
     option_parser.add_option("--max-cycles", type="int",
                              dest="max_cycles", help=_(u"Maximal iteration steps during bootstrapping."
                                                        "  Default: 1000"),
