@@ -603,8 +603,7 @@ def parse_felo_file(felo_file):
                                _(u"threshold bootstrapping"): "threshold bootstrapping",
                                _(u"weighting team bout"): "weighting team bout",
                                _(u"path of gnuplot"): "path of gnuplot",
-                               _(u"path of convert"): "path of convert",
-                               _(u"path of ps2pdf"): "path of ps2pdf"}
+                               _(u"path of convert"): "path of convert"}
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
     for native_name, value in parameters_native_language.items():
@@ -636,23 +635,16 @@ def parse_felo_file(felo_file):
     if os.name == 'nt':
         programs_path = os.environ["ProgramFiles"]
         parameters.setdefault("path of gnuplot", os.path.join(programs_path, r"gnuplot\bin\wgnuplot.exe"))
-        # ImageMagick and Ghostscript include a version number into their
-        # paths, thus I have to do some extra work.
+        # ImageMagick includes a version number into its path, thus I have to
+        # do some extra work.
         possible_paths = glob.glob(os.path.join(programs_path, "ImageMagick*"))
         if possible_paths:
             parameters.setdefault("path of convert", os.path.join(possible_paths[0], "convert.exe"))
         else:
             parameters.setdefault("path of convert", "convert")
-        # Now Ghostscript
-        possible_paths = glob.glob(os.path.join(programs_path, "gs", "gs*"))
-        if possible_paths:
-            parameters.setdefault("path of ps2pdf", os.path.join(possible_paths[0], "lib", "ps2pdf.bat"))
-        else:
-            parameters.setdefault("path of ps2pdf", "ps2pdf")
     else:
         parameters.setdefault("path of gnuplot", "gnuplot")
         parameters.setdefault("path of convert", "convert")
-        parameters.setdefault("path of ps2pdf", "ps2pdf")
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
     fencers = {}
@@ -1168,9 +1160,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
     xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, data_file_name)
     visible_fencers.sort()    # Descending by Felo rating
     if plot:
-        # Call Gnuplot, convert, and ps2pdf to generate the PNG and PDF plots.
-        # Note: We don't generate HTML tables here.  These must be provided
-        # separately.
+        # Call gnuplot and convert to generate the PNG and PDF plots.  Note: We
+        # don't generate HTML tables here.  These must be provided separately.
         gnuplot_script = codecs.open(gnuplot_script_file_name, "w", encoding="utf-8")
         gnuplot_script.write(u"set term postscript color; set output '" + postscript_file_name + "';"
                              u"set key outside; set xtics rotate; set grid xtics;"
