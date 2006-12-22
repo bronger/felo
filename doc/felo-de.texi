@@ -1052,6 +1052,43 @@ sich die Felo-Zahlen ändern.  Ist er zu groß, wackeln die Felo-Zahlen zu
 stark hin und her.  Ist er zu klein, dauert es zu lange, bis sich die
 Felo-Zahl eines Fechter auf der wahren Spielstärke eingependelt hat.
 
+@subheading Warum wird auch das Ergebnis berücksichtigt?
+
+Klassischerweise kommt es beim Fechten nur auf Sieg oder Niederlage an.
+Es scheint daher auf den ersten Blick ungewöhnlich, eventuell sogar
+irritierend, daß die Felo-Zahlen auch das Ergebnis berücksichtigen.
+
+Der Grund ist ganz einfach: Sie konvergieren so schneller, d.@s{}h.@:
+sie finden so viel schneller ihren korrekten Wert.  Das ist insbesondere
+dann günstig, wenn eine Fechtergruppe ganz neu mit Felo-Zahlen anfängt.
+Es ist aber auch gut, um die @emph{aktuelle} Fechtstärke anzugeben.  Ist
+man mal über einen gewissen Zeitraum ein bißchen besser in Form, geht
+die Felo-Zahl rauf.  Würde sie nur Siege und Niederlagen
+berücksichtigen, kann es gut sein, daß das einer solchen Felo-Zahl
+entgeht.
+
+Man kann eine reine Sieg/Niederlage-Felo-Zahl einfach dadurch
+realisieren, daß man die Punktzahl des Verlierers in der Felo-Datei auf
+Null setzt:
+
+@example
+2006-05-01      Anakin -- Elmer         5:0
+                Anakin -- Wile Coyote   5:0
+                Elmer -- Wile Coyote    5:0
+                Elmer -- Anakin         0:5
+                Wile Coyote -- Anakin   0:5
+                Elmer -- Wile Coyote    0:10
+                Anakin -- Wile Coyote   0:10
+@end example
+
+Allerdings sind die sich daraus ergebenen Felo-Zahlen nicht mehr ganz
+vergleichbar mit denen anderer Fechtgruppen, also aufgepaßt!  Außerdem
+ändert sich an der Rangfolge kaum etwas.  Man verliert viel und gewinnt
+wenig, daher rate ich davon ab.
+
+Die Felo-Zahlen, so wie sie sind, sind eine gute Kombination aus rascher
+Anpassung und akkurater Einschätzung.
+
 
 @node Globales Vergleichen von Felo-Zahlen
 @section Globales Vergleichen von Felo-Zahlen
