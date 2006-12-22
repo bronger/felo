@@ -135,14 +135,15 @@ freely under the terms of the @acronym{MIT} license.
 @node Top
 @top The Felo program for estimating sport fencers objectively
 
-Felo calculates Felo ratings for fencers.  Felo ratings give a good
-impression about a fencer's fencing strength.  The program is intended
-for fencing groups for having an additional incentive, or even for
-having a criterion for team selections and seedings.
+@uref{http://felo.sourceforge.net,Felo} calculates Felo ratings for
+fencers.  Felo ratings give a good impression about a fencer's fencing
+strength.  The program is intended for fencing groups for having an
+additional incentive, or even for having a criterion for team selections
+and seedings.
 
-Quite reliable ratings for a couple of fencer is already possible after
+Quite reliable ratings for a couple of fencers is already possible after
 a few intensive training days.  There is no real upper limit.  The only
-thing necessary is the the results of as many bouts as possibly must be
+thing necessary is that the results of as many bouts as possibly must be
 collected and typed into the computer; the calculation itself is very
 quick.
 
@@ -152,16 +153,17 @@ the core of this program in order to build own applications around it,
 e.@s{}g.@: for updating a club webpage automatically.
 
 The Felo program is Free Software.  In particular, this means that it
-can be distributed freely, and everybody is allowed to download and to
-change the source code.  Its author, however, would be very happy if you
--- in case you use the program -- send him a postcard (T.@tie{}Bronger,
-Lochnerstraße@tie{}7, 52064@tie{}Aachen, Germany; please include the
-RWTH fencers in your greetings, we are glad to hear from fellow fencing
-groups).  Additionally, you can help by
+can be distributed freely, and everybody is allowed to download the
+source code and to modify it.  Its author, however, would be very happy
+if you -- in case you use the program -- send him a postcard
+(T.@tie{}Bronger, Lochnerstraße@tie{}7, 52064@tie{}Aachen, Germany;
+please include the RWTH fencers in your greetings, we are glad to hear
+from fellow fencing groups).  Additionally, you can help by
 @uref{http://felo.sourceforge.net/translations.html,providing a
 translation to a foreign language}.
 
 @menu
+* Quick start::                 For the impatient.
 * Felo ratings::                That are Felo ratings?
 * Using Felo::                  How to determine Felo ratings.
 * Installation::                Installation of Felo.
@@ -186,22 +188,78 @@ and as @uref{http://felo.sourceforge.net/felo.pdf,@PDF{} file}.
 @end ifnottex
 
 
+@node Quick start
+@chapter Quick start
+
+@enumerate
+@item
+Download @uref{http://downloads.sourceforge.net/felo/Felo-1.0.exe,Felo}
+and install it.
+
+@item
+Start Felo.  In the editor window, you enter a row of equal signs.
+Then, you enter the fencers of your group.  The name, a tab stop
+@key{Tab}, and the initial estimate:
+
+@example
+====================================
+Alexander          1600
+Julia              1400
+Christian          1600
+Mike               1300
+...
+@end example
+
+@noindent
+The initial estimates typically lie between 1300 and 1800@tie{}points.
+The greater, the better the fencer.
+
+@item
+Enter another row of equal signs, and after it the bout results:
+
+@example
+====================================
+2006-05-01      Alexander -- Julia   5:3
+                Alexander -- Mike    5:1
+                Julia -- Mike        5:3
+                Julia -- Alexander   1:5
+                Mike -- Alexander    2:5
+                Julia -- Mike        5:10
+                Alexander -- Mike    9:10
+
+2006-05-08      Christian -- Mike    10:5
+                ...
+@end example
+
+@noindent
+Dates and result must be separated by tab stops @key{Tab}, and opponents
+by two dashes.
+
+@item
+Click in the menu on ``Calculate'' -- ``Calculate Felo ratings''.  A
+window opens with the current Felo ratings for all fencers.  After the
+next training day, you can append the new bout results and calculate the
+then current Felo ratings.  And so on.
+@end enumerate
+
+
 @node Felo ratings
 @chapter What are Felo ratings?
 
-Felo ratings are a wonderful new method to estimate the strength of
-sport fencers, without this annoying luck component which is typical of
-elimination tournaments and single bouts. The new Felo rating is
-calculated after every bout.  Thus, it is always present and
-up-to-date.  As a result, the fencer has a quite clear impression about
-how good he or she is currently.  Whithin a group, the Felo ratings are
-very accurate, however, they can even be compared globally.
+@uref{http://felo.sf.net,Felo} ratings are a wonderful new method to
+estimate the strength of sport fencers, without this annoying luck
+component which is typical of elimination tournaments and single
+bouts. The new Felo rating is calculated after every training day.
+Thus, it is always present and up-to-date.  As a result, the fencer has
+a quite clear impression about how good he or she is currently.  Whithin
+a group, the Felo ratings are very accurate, however, they can even be
+compared globally.
 
-The underlying idea is all but new.  It is inspired by the Elo ratings
-in chess.  There, they have been used for 35@tie{}years for determining
-the official word ranking list, which works terrificly.  Not only that
-it yields a plausible ranking, it also allows for precise calculations
-of chances in upcoming chess matches.
+The underlying idea isn't new.  It is inspired by the Elo ratings in
+chess.  There, they have been used for 40@tie{}years for determining the
+official word ranking list, which works terrificly.  Not only that it
+yields a plausible ranking, it also allows for precise calculations of
+chances in upcoming chess matches.
 
 Over the years, the Elo ratings have been adapted successfully to other
 sports such as Go, college football, and international soccer.  With the
@@ -270,12 +328,16 @@ feed).
 
 @item http://sourceforge.net/tracker/?group_id=183431&atid=905214
 Here, you can report bugs in the Felo program and its documentation.
-Additionally, you can browse through bugs that other have already
+Additionally, you can browse through bugs that others have already
 reported.
 
 @item http://sourceforge.net/tracker/?atid=905217&group_id=183431
 Here, you can submit feature requests.
 @end table
+
+Moreover, bronger@@physik.rwth-aachen.de is the email address of the
+current maintainer of Felo.  So in case you want to become a
+co-developer@tie{}@dots{}
 
 
 @node Acknowledgements
@@ -283,7 +345,7 @@ Here, you can submit feature requests.
 
 By and large, Felo is -- sigh -- the product of a lone fighter so far.
 (Please no pity, it was fun.)  However, I did have some help from
-others.  Help still is welcome, jst have a look at the
+others.  Help still is welcome, just have a look at the
 @uref{http://felo.sourceforge.net/translations.html,Felo translation
 guide}.
 
@@ -296,7 +358,7 @@ was at all possible, and has pointed out errors (which I corrected).
 has archived the bout results in my university fencing group long before
 the Felo program came into existence.  For me, this was a great luck of
 course because I could test the concept rather quickly.  I also thank
-the RWTH fencing group in general for allowing me to publish out Felo
+the RWTH fencing group in general for allowing me to publish our Felo
 ratings on the (internal) web pages, which was pretty encouraging.
 
 @c @item Roberto Pereira
@@ -306,6 +368,8 @@ ratings on the (internal) web pages, which was pretty encouraging.
 
 @node Using Felo
 @chapter Using Felo
+
+@section The Felo file -- fencers and bouts
 
 Start the Felo program.  This opens the program window with an empty
 editor area.  There you can enter the Felo file.  The Felo file
@@ -748,12 +812,6 @@ The full path to convert of ImageMagick.  On Windows, the file is called
 error message where it looked for it.  This should give you a clue how
 to remedy.
 
-@item path of ps2pdf
-The full path to ps2pdf of Ghostscript.  On Windows, the file is called
-@file{ps2pdf.bat}.  If Felo doesn't find the file, it says in the
-error message where it looked for it.  This should give you a clue how
-to remedy.
-
 @end table
 
 @unnumberedsubsec Parameters for estimating initial Felo ratings
@@ -833,10 +891,10 @@ marked with@tie{}@samp{*}.  @emph{(Default: 1.0)}
 @section Installation on Windows
 
 First, download the program from
-@uref{http://sourceforge.net/project/showfiles.php?group_id=183431,
-Felo's project page on Sourceforge} as an EXE file, and start it.
-There are two alternatives: You can start is as an ordinary user or as
-an administrator.  In the latter case, it is installed for all users on
+@uref{http://sourceforge.net/project/showfiles.php?group_id=183431&package_id=212989,
+Felo's project page on Sourceforge} as an EXE file, and start it.  There
+are two alternatives: You can start is as an ordinary user or as an
+administrator.  In the latter case, it is installed for all users on
 this computer.
 
 Installation itself is very simple.  It should be sufficient to click on
@@ -845,21 +903,13 @@ assure that you are logged in on the same account you used for the
 installation because otherwise, Felo may not be completely removed.
 
 If you are not interested in graphical plots of the Felo ratings, you
-can proceed with @ref{Using Felo}.
+can skip the rest of this chapter.
 
 
 @node Installation of auxiliary programs
 @section Installation of auxiliary programs
 
-@menu
-* Gnuplot::                     The program for the plots.
-* Ghostscript::                 For the conversion plot --> PDF.
-* ImageMagick::                 For the conversion PDF --> PNG.
-@end menu
-
-
-@node Gnuplot
-@subsection Gnuplot
+@subheading Gnuplot
 
 First you have to download
 @uref{http://sourceforge.net/project/showfiles.php?group_id=2055&package_id=1996,Gnuplot
@@ -867,18 +917,14 @@ as a ZIP file}.  The file name is @file{gp400win32.zip} or something
 similar, where @file{400} is the version number.  Extract this ZIP file
 into the folder @file{C:\Programme\gnuplot}.
 
-
-@node Ghostscript
-@subsection Ghostscript
+@subheading Ghostscript
 
 Ghostscript can be downloaded from the
 @uref{ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs854/,FTP mirror
 for Ghostscript} (you need the EXE file).  It is important to be
 administrator when executing this file!
 
-
-@node ImageMagick
-@subsection ImageMagick
+@subheading ImageMagick
 
 On the @uref{http://www.imagemagick.org,homepage of ImageMagick} you
 click on ``Binary Releases'' -- ``Windows'', download one of the EXE
@@ -1060,4 +1106,4 @@ rating programs.
 @c  LocalWords:  latin british def rmdefault ppl mathrel mskip pstexinfo RSS
 @c  LocalWords:  tex xmarksthespot filll logue logues Lochnerstra ifhtml asis
 @c  LocalWords:  Elo uninstallation YYYY Riker myname css tics wgnuplot exe
-@c  LocalWords:  stdout
+@c  LocalWords:  stdout pxref
