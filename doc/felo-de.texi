@@ -135,10 +135,11 @@ oder modifizieren unter den Bedingungen der @acronym{MIT}-Lizenz.
 @node Top
 @top Das Felo-Programm zum objektiven Einschätzen der Spielstärke beim Fechten
 
-Felo berechnet Felo-Zahlen für Fechter.  Felo-Zahlen geben einen guten
-Eindruck von der Spielstärke eines Fechters.  Das Programm ist gedacht
-für Fechtgruppen, um einen weiteren Trainings-Anreiz zu schaffen, oder
-sogar um ein Kriterium für Setzlisten oder Teamauswahl zu haben.
+@uref{http://felo.sourceforge.net,Felo} berechnet Felo-Zahlen für
+Fechter.  Felo-Zahlen geben einen guten Eindruck von der Spielstärke
+eines Fechters.  Das Programm ist gedacht für Fechtgruppen, um einen
+weiteren Trainings-Anreiz zu schaffen, oder sogar um ein Kriterium für
+Setzlisten oder Teamauswahl zu haben.
 
 Einigermaßen zuverlässige Zahlen sind schon bei einer handvoll Fechter
 nach einigen Trainingstagen möglich.  Nach oben die die Grenze nahezu
@@ -161,6 +162,7 @@ falls man Bock hat und eine Fremdsprache spricht, helfen, Felo in
 übersetzen}.
 
 @menu
+* Schnellstart::                Für die Ungeduldigen.
 * Felo-Zahlen::                 Was sind Felo-Zahlen?
 * Benutzen des Programms::      Wie man Felo-Zahlen bestimmt.
 * Installation::                Installation von Felo.
@@ -185,17 +187,73 @@ Diese Anleitung existiert auch als
 @end ifnottex
 
 
+@node Schnellstart
+@chapter Schnellstart
+
+@enumerate
+@item
+Lade @uref{http://downloads.sourceforge.net/felo/Felo-1.0.exe,Felo}
+herunter und installiere es.
+
+@item
+Starte Felo.  Im Editorfenster tippst du einige Gleichheitszeichen und
+dahinter die Fechter deiner Gruppe ein.  Immer Name, Tabstopp @key{Tab},
+und dann deren geschätzte Anfangszahl:
+
+@example
+====================================
+Alexander          1600
+Julia              1400
+Christian          1600
+Jens               1300
+...
+@end example
+
+Die geschätzten Anfangszahlen sollten sich so zwischen 1300 und
+1800@tie{}Punkten bewegen.  Je größer, desto besser der Fechter.
+
+@item
+Tippe nochmal ein paar Gleichheitszeichen in eine Zeile und gib dahinter
+die Gefechte ein:
+
+@example
+====================================
+2006-05-01      Alexander -- Julia   5:3
+                Alexander -- Jens    5:1
+                Julia -- Jens        5:3
+                Julia -- Alexander   1:5
+                Jens -- Alexander    2:5
+                Julia -- Jens        5:10
+                Alexander -- Jens    9:10
+
+2006-05-08      Christian -- Jens    10:5
+                ...
+@end example
+Dabei müssen die Tage, die Paarungen und die Ergebnisse mit Tabstopps
+@key{Tab} voneinander getrennt werden.  Speichere die Datei jetzt ab,
+z.@s{}B. unter @emph{florett.felo}.
+
+@item
+Klicke im Menü auf ,,Berechnen`` -- ,,Felo-Zahlen berechnen``.  Es
+öffnet sich ein Fenster mit den Felo-Zahlen der Fechter, die sich nach
+allen bisher eingegebenen Gefechten ergeben.  Nach dem nächsten
+Trainigstag hängst du die neuen Ergebnisse unten an und bekommst die
+dann aktuellen Felo-Zahlen.  Und so weiter.
+@end enumerate
+
+
 @node Felo-Zahlen
 @chapter Was sind Felo-Zahlen?
 
-Felo-Zahlen sind eine hinreißende neue Methode, momentane Spielstärken
-von Fechtern objektiv und unbestechlich einzuschätzen, ohne die lästige
-Glückskomponente, wie sie in K.O.-Runden oder Einzelgefechten üblich
-ist.  Die Felo-Zahl wird nach jedem Gefecht neu berechnet.  Sie ist also
-immer da und paßt sich stets an, wenn man sich verbessert oder
-verschlechtert.  So hat der Fechter einen Eindruck davon, wie gut er
-momentan ist.  Innerhalb einer Gruppe sind Felo-Zahlen sehr akkurat,
-aber im Prinzip kann man sie sogar global vergleichen.
+@uref{http://felo.sf.net,Felo-Zahlen} sind eine hinreißende neue
+Methode, momentane Spielstärken von Fechtern objektiv und unbestechlich
+einzuschätzen, ohne die lästige Glückskomponente, wie sie in K.O.-Runden
+oder Einzelgefechten üblich ist.  Die Felo-Zahl wird nach jedem
+Trainingstag neu berechnet.  Sie ist also immer da und paßt sich stets
+an, wenn man sich verbessert oder verschlechtert.  So hat der Fechter
+einen Eindruck davon, wie gut er momentan ist.  Innerhalb einer Gruppe
+sind Felo-Zahlen sehr akkurat, aber im Prinzip kann man sie sogar global
+vergleichen.
 
 Die Idee dahinter ist nicht neu.  Inspiriert ist das ganze von den
 Elo-Zahlen beim Schachspiel.  Sie werden seit 35@tie{}Jahren benutzt, um
@@ -209,7 +267,7 @@ Nationalmannschafts-Fußball übertragen worden.  Mit dem Felo-Programm
 kann man sie nun auch im Fechten benutzen.  ,,Felo`` ist also nichts
 anderes als ,,Fechter-Elo``.  Im Gegensatz zu den anderen Elo-Sportarten
 berücksichtigen die Felo-Zahlen auch den Spielstand.  Ein 15:14 geht
-also anderes in die Rechnung ein als ein 15:0.  Klingt
+also anders in die Rechnung ein als ein 15:0.  Klingt
 selbstverständlich, aber beim Schach gibt's nur gewinnen, verlieren und
 unentschieden.
 
@@ -256,12 +314,12 @@ Felo-Zahlen bislang noch nicht groß ist.
 @section Hilfe bekommen
 
 Wenn man Probleme oder Fragen zum Programm Felo oder den Felo-Zahlen
-auftauchen, die diese Anleitung nicht beantworten kann, gibt folgende
+auftauchen, die diese Anleitung nicht beantworten kann, gibt es folgende
 Anlaufstellen:
 
 @table @uref
 @item http://sourceforge.net/forum/forum.php?forum_id=638727
-Ein Web-basiertes Forum zum Felo-Programm
+Ein Web-basiertes Forum zum Felo-Programm.
 
 @item https://lists.sourceforge.net/lists/listinfo/felo-general
 Die Felo-Mailingliste.  Hier wird ausdrücklich nicht nur dieses Programm
@@ -277,7 +335,16 @@ einsehen.
 
 @item http://sourceforge.net/tracker/?atid=905217&group_id=183431
 Hier kann man Verbesserungsvorschläge einreichen.
+
 @end table
+
+Alle diese Dinge laufen auf Englisch.  Es wird vermutlich niemandem bei
+einem nicht-Englischen Beitrag der Kopf abgebissen (von mir ganz sicher
+nicht), aber man sollte sich schon dran halten.
+
+Außerdem ist bronger@@physik.rwth-aachen.de die Email-Adresse des
+aktuellen Betreuers von Felo.  Falls du also Mit-Entwickler werden
+möchtest@tie{}@dots{}
 
 
 @node Danksagungen
@@ -289,7 +356,7 @@ Allerdings hatte ich schon ein bißchen Hilfe.
 
 @table @asis
 @item Marc Ensenbach
-hat mit als gelernter Mathematiker bestätigt, daß das was ich mache,
+hat mir als gelernter Mathematiker bestätigt, daß das was ich mache,
 weitgehend sinnvoll ist, und gleichzeitig Fehler gefunden, die ich
 dann ausgemerzt habe.
 
@@ -307,6 +374,8 @@ recht personenbezogenen Daten ins (interne) Web stellen wollte.
 
 @node Benutzen des Programms
 @chapter Benutzen des Programms
+
+@section Die Felo-Datei -- Fechter und Gefechte
 
 Starte das Programm Felo.  Es öffnet sich das Programmfenster mit einer
 leeren Editor-Fläche.  Darin kannst du die Felo-Datei eingeben.  Die
@@ -568,19 +637,15 @@ das folgende Dialogfenster:
 @noindent
 Als erstes sollte man das Verzeichnis überprüfen, in dem die HTML-Datei
 abgelegt wird.  Per Voreinstellung ist das dasselbe Verzeichnis, in dem
-die Felo-Datei liegt.  In unserem Fall ist es @file{C:\Programme\Felo},
-weil die Felo-Datei noch nicht abgespeichert wurde.  Das ist nicht
-unbedingt ein guter Ort.  Man kann nun die Datei in einem geeigneteren
-Verzeichnis speichern oder das Verzeichnis ausdrücklich angeben.
-Letzteres geht mit dem Parameter ,,Ausgabeordner``.  Man kann
-z.@s{}B. in der Felo-Datei bei den Parametern
+die Felo-Datei liegt.  Mit dem Parameter ,,Ausgabeordner`` kann man das
+in der Felo-Datei aber auch direkt angeben.  Beispielsweise werden mit
 
 @smallexample
 Ausgabeordner           C:\Dokumente und Einstellungen\bronger\Eigene Dateien
 @end smallexample
 
 @noindent
-eintragen.  Dann werden die im ,,Eigene-Dateien``-Ordner abgelegt.
+die Web-Dateien im ,,Eigene-Dateien``-Ordner abgelegt.
 
 Aber wieder zurück zum Dialogfenster oben.  Klicke ich dort auf
 ,,Okay``, dann wird die HTML-Datei mit der Ergebnisliste in das vorher
@@ -783,11 +848,6 @@ Der vollständige Pfad zum convert-Programm von ImageMagick.  Unter
 Windows heißt diese Datei @file{convert.exe}.  Wenn Felo Gnuplot nicht
 findet, sagt es in einer Fehlermeldung, wo es gesucht hat.
 
-@item Pfad von ps2pdf
-Der vollständige Pfad zum ps2pdf-Programm von Ghostscript.  Unter
-Windows heißt diese Datei @file{ps2pdf.bat}.  Wenn Felo ps2pdf nicht
-findet, sagt es in einer Fehlermeldung, wo es gesucht hat.
-
 @end table
 
 @unnumberedsubsec Parameter für die Schätzung von Anfangs-Zahlen
@@ -852,12 +912,15 @@ genau auf dieses Minimum gesetzt.  @emph{(Vorgabewert: 1200)}
 
 @item Gewichtung von Team-Gefechten
 Einzelgefechte im Rahmen eines Team-Wettkampfes werden nicht wie normale
-Gefechte gewichtet.  Normalerweise wird ein 15:14 nämlich stärker
-gewichtet als ein 15:0.  Bei Teamwettkämpfen wird -- letztlich aus
-psychologischen Gründen, weil Anfänger da gerne mal 17:0 abgestraft
-werden -- jedes Gefecht gleich gewichtet.  Dieses Parameter gibt an,
-wievielen typischen 5er-Gefechten ein solches Gefecht bei der Gewichtung
-entsprechen soll.  @emph{(Vorgabewert: 1.0)}
+Gefechte gewichtet, wenn sie mit @samp{*} markiert wurden,
+@pxref{Zusatz-Infos zum Eingeben von Gefechten}.
+
+Normalerweise wird ein 15:14 nämlich stärker gewichtet als ein 15:0.
+Bei Teamwettkämpfen wird -- letztlich aus psychologischen Gründen, weil
+Anfänger da gerne mal 17:0 abgestraft werden -- jedes Gefecht gleich
+gewichtet.  Dieses Parameter gibt an, wievielen typischen 5er-Gefechten
+ein solches Gefecht bei der Gewichtung entsprechen soll.
+@emph{(Vorgabewert: 1.0)}
 
 @end table
 
@@ -876,9 +939,9 @@ entsprechen soll.  @emph{(Vorgabewert: 1.0)}
 @section Installation unter Windows
 
 Als erstes lädt man sich das Programm von
-@uref{http://sourceforge.net/project/showfiles.php?group_id=183431, der
-Projektseite auf Sourceforge} als EXE-Datei herunter und startet diese.
-Es gibt dabei zwei Möglichkeiten.  Entweder man tut das als
+@uref{http://sourceforge.net/project/showfiles.php?group_id=183431&package_id=212989,
+der Projektseite auf Sourceforge} als EXE-Datei herunter und startet
+diese.  Es gibt dabei zwei Möglichkeiten.  Entweder man tut das als
 @emph{Administrator}.  In diesem Fall wird Felo für @emph{alle} Benutzer
 installiert.  Oder man startet die EXE-Datei, während man als
 @emph{normaler Benutzer} eingeloggt ist.  Dann wird Felo nur für diesen
@@ -891,8 +954,8 @@ bei der Installation eingeloggt zu sein, ansonsten könnte es passieren,
 daß Felo nicht restlos entfernt wird.
 
 Wenn du kein Interesse daran hast, auch grafische Plots mit den
-Felo-Zahlen der Fechtgruppe zu machen, kannst du gleich bei
-@ref{Benutzen des Programms} weiterlesen.
+Felo-Zahlen der Fechtgruppe zu machen, kannst du den Rest dieses
+Kapitels überspringen.
 
 
 @node Installation von Zusatzprogrammen
@@ -902,15 +965,7 @@ Die folgenden drei kostenlosen Zusatzprogramme werden nur benötigt, wenn
 man auch grafische Plots, die den zeitlichen Verlauf der Felo-Zahl
 darstellen, haben möchte.
 
-@menu
-* Gnuplot::                     Das Programm für die Plots.
-* Ghostscript::                 Für die Umwandlung Plot --> PDF.
-* ImageMagick::                 Für die Umwandlung PDF --> PNG.
-@end menu
-
-
-@node Gnuplot
-@subsection Gnuplot
+@subheading Gnuplot
 
 Als ersten muß man sich
 @uref{http://sourceforge.net/project/showfiles.php?group_id=2055&package_id=1996,Gnuplot
@@ -919,17 +974,14 @@ wobei @file{400} die Versionnummer ist.  Diese ZIP-Datei entpackt man am
 besten in das Verzeichnis @file{C:\Programme\gnuplot}.
 
 
-@node Ghostscript
-@subsection Ghostscript
+@subheading Ghostscript
 
 Ghostscript kann man auf dem
 @uref{ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs854/,FTP Mirror
 für Ghostscript} herunterladen (man braucht die EXE-Datei).  Es ist
 wichtig, daß man diese Datei als Administrator ausführt!
 
-
-@node ImageMagick
-@subsection ImageMagick
+@subheading ImageMagick
 
 Auf der @uref{http://www.imagemagick.org,Homepage von ImageMagick}
 klickt man links auf ``Binary Releases'' -- ``Windows'', lädt dann eine
