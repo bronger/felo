@@ -41,7 +41,8 @@
   this module was read from.
 :var distribution_version: the version number of the current distribution of
   this module
-:var separator: column separator in a Felo file
+:var column_separator: column separator in a Felo file
+:var part_separator: string of characters that can serve as part separators
 :var apparent_expectation_values: This list of lists is the solution for the
   winning-hit problem.  The winner of a bout is rated too highly because he
   ends the bout with his point.  This array contains the actually "measured"
@@ -55,7 +56,8 @@
 
 :type datapath: string
 :type distribution_version: string
-:type separator: string
+:type column_separator: string
+:type part_separator: string
 :type apparent_expectation_values: list
 """
 __docformat__ = "restructuredtext en"
@@ -85,7 +87,8 @@ else:
 _ = t.ugettext
 
 
-separator = "\s*\t+\s*"
+column_separator = u"\s*\t+\s*"
+part_separator = u"-=_:;,+*'~\"`´/\\%$!"
 
 def clean_up_line(line):
     """Removes leading and trailing whitespace and comments from the line.
@@ -129,12 +132,12 @@ def parse_items(input_file, linenumber=0):
       - `LineError`: if a line has not the "name <TAB> value" format
     """
     items = {}
-    line_pattern = re.compile("\s*(?P<name>[^\t]+?)"+separator+"(?P<value>.+?)\s*\\Z")
+    line_pattern = re.compile("\s*(?P<name>[^\t]+?)"+column_separator+"(?P<value>.+?)\s*\\Z")
     for line in input_file:
         linenumber += 1
         line = clean_up_line(line)
         if not line: continue
-        if line[0] in u"-=._:;,+*'~\"`´/\\%$!": break
+        if line[0] in part_separator: break
         match = line_pattern.match(line)
         if not match:
             raise LineError(_('Line must follow the pattern "name <TAB> value".'), input_file.name, linenumber)
@@ -208,13 +211,13 @@ class Bout(object):
     def __set_date_string(self, date_string):
         match = Bout.date_pattern(date_string)
         if not match:
-            raise FeloFormatError(_("Invalid date string."))
+            raise FeloFormatError(_(u"Invalid date string."))
         year, month, day, index = match.groups("0")
         try:
             self.date = datetime.date(int(year), int(month), int(day))
             self.index = int(index)
         except (ValueError):
-            raise FeloFormatError(_("Invalid date string."))
+            raise FeloFormatError(_(u"Invalid date string."))
     date_string = property(__get_date_string, __set_date_string,
                            doc="""The date of the bout in its string representation YYYY-MM-TT.II,
                                   where ".II" is the optional index.
@@ -521,8 +524,8 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
       - `LineError`: if a line does not follow the Felo file syntax
     """
     line_pattern = re.compile("\\s*(?:(?:(?P<year>\\d{4})-(?P<month>\\d{1,2})-(?P<day>\\d{1,2}))?"
-                              "(?:\\.?(?P<index>\\d+))?"+separator+")?"+
-                              "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)"+separator+
+                              "(?:\\.?(?P<index>\\d+))?"+column_separator+")?"+
+                              "(?P<first>.+?)\\s*--\\s*(?P<second>.+?)"+column_separator+
                               "(?P<points_first>\\d+):(?P<points_second>\\d+)\\s*"+
                               "(?P<fenced_to>(?:/\\d+)|\\*)?\\s*\\Z")
     bouts = []
@@ -544,8 +547,16 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
             if fenced_to == "*":
                 fenced_to = "/0"
             fenced_to = int(fenced_to[1:])
-        if fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
-            raise LineError(_("One fencer has more points than the winning points."), input_file.name, linenumber)
+        if False:
+            # Implementing the whole-bout method
+            if points_first < points_second:
+                points_first = 0
+                points_second = 1.46 * points_second - 0.54
+            else:
+                points_first = 1.46 * points_first - 0.54
+                points_second = 0
+        elif fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
+            raise LineError(_(u"One fencer has more points than the winning points."), input_file.name, linenumber)
         if first_fencer not in fencers:
             if first_fencer.find("<") == -1:
                 raise LineError(_('Fencer "%s" is unknown.') % first_fencer, input_file.name, linenumber)
@@ -699,7 +710,7 @@ def write_felo_file(filename, parameters, fencers, bouts):
     :type bouts: list
     """
     felo_file = codecs.open(filename, "w", "utf-8")
-    print>>felo_file, _("# Parameters")
+    print>>felo_file, _(u"# Parameters")
     print>>felo_file
     parameterslist = parameters.items()
     # sort case-insensitively
@@ -708,9 +719,9 @@ def write_felo_file(filename, parameters, fencers, bouts):
         print>>felo_file, fill_with_tabs(name, 4) + str(value)
     print>>felo_file
     print>>felo_file, 52 * "="
-    print>>felo_file, _("# Initial Felo ratings")
-    print>>felo_file, _("# Names of fencers who want to be hidden")
-    print>>felo_file, _("# in parentheses")
+    print>>felo_file, _(u"# Initial Felo ratings")
+    print>>felo_file, _(u"# Names of fencers who want to be hidden")
+    print>>felo_file, _(u"# in parentheses")
     print>>felo_file
     fencerslist = fencers.items()
     fencerslist.sort()
@@ -722,7 +733,7 @@ def write_felo_file(filename, parameters, fencers, bouts):
         print>>felo_file, fill_with_tabs(name, 3) + str(fencer.initial_felo_rating)
     print>>felo_file
     print>>felo_file, 52 * "="
-    print>>felo_file, _("# Bouts")
+    print>>felo_file, _(u"# Bouts")
     print>>felo_file
     bouts.sort()
     for i, bout in enumerate(bouts):
@@ -766,10 +777,10 @@ def write_back_fencers(felo_file_contents, fencers):
     fencer_limits = []
     for linenumber, line in enumerate(lines):
         cleaned_line = clean_up_line(line)
-        if cleaned_line and cleaned_line[0] in u"-=._:;,+*'~\"`´/\\%$!":
+        if cleaned_line and cleaned_line[0] in part_separator:
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
-        raise FeloFormatError(_("Felo file invalid because there are not exactly two boundary lines."))
+        raise FeloFormatError(_(u"Felo file invalid because there are not exactly two boundary lines.  %s") % fencer_limits)
     fencer_lines = []
     while lines[fencer_limits[0] + 1].lstrip().startswith("#") or lines[fencer_limits[0] + 1].lstrip() == "":
         fencer_limits[0] += 1
@@ -1156,7 +1167,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             else:
                 break
         if i == maxcycles - 1:
-            raise BootstrappingError(_("The bootstrapping didn't converge."))
+            raise BootstrappingError(_(u"The bootstrapping didn't converge."))
     xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, data_file_name)
     visible_fencers.sort()    # Descending by Felo rating
     if plot:
