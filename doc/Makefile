@@ -22,11 +22,11 @@ api/index.html: ../src/felo_rating.py
 felo-manual.zip: felo/index.html
 	zip -9 -r felo-manual felo
 
-felo/index.html: felo.texi
+felo/index.html: felo.texi felo.css
 	LC_ALL=de_DE ; makeinfo --html --css-include=felo.css felo.texi
 	cp *.png felo.css felo/
 
-felo.html: felo.texi
+felo.html: felo.texi felo.css
 	LC_ALL=de_DE ; makeinfo --html --css-include=felo.css --no-split felo.texi
 
 felo.pdf: felo.ltx felo-t2l.cfg
@@ -44,11 +44,11 @@ felo.ltx: felo.texi
 felo-de-handbuch.zip: felo-de/index.html
 	zip -9 -r felo-de-handbuch felo-de
 
-felo-de/index.html: felo-de.texi
+felo-de/index.html: felo-de.texi felo.css
 	LC_ALL=de_DE ; makeinfo --html --css-include=felo.css felo-de.texi
 	cp *.png felo.css felo-de/
 
-felo-de.html: felo-de.texi
+felo-de.html: felo-de.texi felo.css
 	LC_ALL=de_DE ; makeinfo --html --css-include=felo.css --no-split felo-de.texi
 
 felo-de.pdf: felo-de.ltx felo-de-t2l.cfg
