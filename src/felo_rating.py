@@ -142,12 +142,7 @@ def parse_items(input_file, linenumber=0):
         if not match:
             raise LineError(_('Line must follow the pattern "name <TAB> value".'), input_file.name, linenumber)
         name, value = match.groups()
-        try:
-            items[name] = value
-            items[name] = float(value)
-            items[name] = int(value)
-        except ValueError:
-            pass
+        items[name] = value
     return items, linenumber
 
 class Bout(object):
@@ -620,6 +615,13 @@ def parse_felo_file(felo_file):
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
     for native_name, value in parameters_native_language.items():
+        try:
+            new_value = value
+            new_value = float(value)
+            new_value = int(value)
+        except ValueError:
+            pass
+        value = new_value
         if native_name in english_parameter_names:
             parameters[english_parameter_names[native_name]] = value
         elif native_name in english_parameter_names.values():
@@ -663,17 +665,17 @@ def parse_felo_file(felo_file):
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
     fencers = {}
-    for name, initial_felo_rating in initial_felo_ratings.items():
-        initial_total_weighting = 0.0
-        if isinstance(initial_felo_rating, basestring):
-            try:
-                # An initial total weighting is also available, in parenthesis
-                position_opening_parenthesis = initial_felo_rating.index("(")
-                initial_total_weighting = float(initial_felo_rating[position_opening_parenthesis+1:-1])
-                initial_felo_rating = int(initial_felo_rating[:position_opening_parenthesis])
-            except ValueError:
-                raise FeloFormatError(_(u"Felo rating of \"%s\" is invalid.") % name)
-        current_fencer = Fencer(name, initial_felo_rating, parameters, initial_total_weighting)
+    felo_pattern = re.compile(r"(?P<initial>\d+)\s*(?:\(\s*(?P<weighting>[\d.]+)\s*\))?\s*(?:,\s*(?P<max>\d+))?")
+    for name, value in initial_felo_ratings.items():
+        try:
+            initial_felo_rating, initial_total_weighting, maximal_felo_rating = \
+                felo_pattern.match(value).groups("0")
+            initial_felo_rating, initial_total_weighting, maximal_felo_rating = \
+                int(initial_felo_rating), float(initial_total_weighting), int(maximal_felo_rating)
+        except (AttributeError, ValueError):
+            raise FeloFormatError(_(u"Felo rating of \"%s\" is invalid.") % name)
+        current_fencer = Fencer(name, initial_felo_rating, parameters, initial_total_weighting,
+                                maximal_felo_rating)
         fencers[current_fencer.name] = current_fencer
 
     bouts = parse_bouts(felo_file, linenumber, fencers, parameters)
@@ -938,7 +940,7 @@ class Fencer(object):
     :type fencers_with_preliminary_felo_rating: set
     """
     fencers_with_preliminary_felo_rating = set()
-    def __init__(self, name, felo_rating, parameters, initial_total_weighting=0):
+    def __init__(self, name, felo_rating, parameters, initial_total_weighting=0, maximal_felo_rating=0):
         """Class constructor.
 
         :Parameters:
@@ -971,6 +973,8 @@ class Fencer(object):
                 raise Error("Foreign fencer '%s' has invalid Felo rating" % name)
         self.freshman = felo_rating == 0
         if not self.freshman:
+            if maximal_felo_rating:
+                self.felo_rating = maximal_felo_rating
             self.felo_rating = self.initial_felo_rating = self.felo_rating_preliminary = felo_rating
         else:
             self.total_felo_rating_opponents = 0.0
