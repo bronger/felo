@@ -614,7 +614,9 @@ def parse_felo_file(felo_file):
                                _(u"threshold bootstrapping"): "threshold bootstrapping",
                                _(u"weighting team bout"): "weighting team bout",
                                _(u"path of gnuplot"): "path of gnuplot",
-                               _(u"path of convert"): "path of convert"}
+                               _(u"path of convert"): "path of convert",
+                               _(u"fencers per plot"): "fencers per plot",
+                               _(u"overlap in plots"): "overlap in plots"}
     parameters_native_language, linenumber = parse_items(felo_file)
     parameters = {}
     for native_name, value in parameters_native_language.items():
@@ -643,6 +645,8 @@ def parse_felo_file(felo_file):
     parameters.setdefault("min distance of plot tics", 7)
     parameters.setdefault("earliest date in plot", "1980-01-01")
     parameters.setdefault("maximal days in plot", "366")
+    parameters.setdefault("fencers per plot", 30)
+    parameters.setdefault("overlap in plots", 5)
     if os.name == 'nt':
         programs_path = os.environ["ProgramFiles"]
         parameters.setdefault("path of gnuplot", os.path.join(programs_path, r"gnuplot\bin\wgnuplot.exe"))
@@ -1049,8 +1053,9 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
 
     :Return:
       - list (not a dictionary!) of all visible fencers, sorted by descending
-        Felo number
-      - If C{estimate_freshmen} is True, a list with all freshmen
+        Felo number, or, if C{estimate_freshmen} is True, a list with all
+        freshmen
+      - the suffixes of the generated plots
 
     :rtype: list, list
 
@@ -1141,11 +1146,9 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
 
     bouts_base_filename = parameters["groupname"].lower()
     tempdir = tempfile.gettempdir()
-    data_file_name = os.path.join(tempdir, bouts_base_filename + ".dat")
-    gnuplot_script_file_name = os.path.join(tempdir, bouts_base_filename + ".gp")
-    postscript_file_name = os.path.join(tempdir, bouts_base_filename + ".ps")
-    png_file_name = os.path.join(parameters["output folder"], bouts_base_filename + ".png")
-    pdf_file_name = os.path.join(parameters["output folder"], bouts_base_filename + ".pdf")
+    tempfile_prefix = os.path.join(tempdir, bouts_base_filename)
+    destination_file_prefix = os.path.join(parameters["output folder"], bouts_base_filename)
+    data_file_name = tempfile_prefix + ".dat"
 
     visible_fencers = [fencer for fencer in fencers.values()
                        if not (fencer.hidden or fencer.freshman or fencer.foreign_fencer)]
@@ -1170,19 +1173,40 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             raise BootstrappingError(_(u"The bootstrapping didn't converge."))
     xtics = calculate_felo_ratings_core(parameters, fencers, bouts, plot, data_file_name)
     visible_fencers.sort()    # Descending by Felo rating
+    suffixes = []
     if plot:
+        reduced_window_width = parameters["fencers per plot"] - parameters["overlap in plots"]
+        if reduced_window_width < 1:
+            reduced_window_width = 1
+        if parameters["fencers per plot"] < len(visible_fencers):
+            A = int(len(visible_fencers) / reduced_window_width)
+            if (A - 1) * reduced_window_width + parameters["fencers per plot"] < len(visible_fencers):
+                number_windows = A + 1
+            else:
+                number_windows = A
+            suffixes = ["-%d" % (i+1) for i in range(number_windows)]
+        else:
+            number_windows = 1
+            suffixes = [""]
         # Call gnuplot and convert to generate the PNG and PDF plots.  Note: We
         # don't generate HTML tables here.  These must be provided separately.
+        gnuplot_script_file_name = tempfile_prefix + ".gp"
         gnuplot_script = codecs.open(gnuplot_script_file_name, "w", encoding="utf-8")
-        gnuplot_script.write(u"set term postscript color; set output '" + postscript_file_name + "';"
+        gnuplot_script.write(u"set term postscript color;"
                              u"set key outside; set xtics rotate; set grid xtics;"
-                             u"set xtics nomirror (%s);" % xtics[:-1] +
-                             u"plot ")
-        for i, fencer in enumerate(visible_fencers):
-            gnuplot_script.write(u"'%s' using 1:%d with lines lw 5 title '%s'" %
-                                 (data_file_name, fencer.columnindex, fencer.name))
-            if i < len(visible_fencers) - 1:
-                gnuplot_script.write(", ")
+                             u"set xtics nomirror (%s)" % xtics[:-1])
+        for i in range(number_windows):
+            gnuplot_script.write(u"; set output '%s'; plot " % (tempfile_prefix + suffixes[i] + ".ps"))
+            lower_limit = reduced_window_width * i
+            upper_limit = reduced_window_width * i + parameters["fencers per plot"]
+            if upper_limit > len(visible_fencers):
+                upper_limit = len(visible_fencers)
+            for j in range(lower_limit, upper_limit):
+                fencer = visible_fencers[j]
+                gnuplot_script.write(u"'%s' using 1:%d with lines lw 5 title '%s'" %
+                                     (data_file_name, fencer.columnindex, fencer.name))
+                if j < upper_limit - 1:
+                    gnuplot_script.write(", ")
         gnuplot_script.close()
         try:
             call([parameters["path of gnuplot"], gnuplot_script_file_name])
@@ -1193,21 +1217,25 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                                        construct_supplement(parameters["path of gnuplot"]))
         os.remove(data_file_name)
         os.remove(gnuplot_script_file_name)
-        if os.path.isfile(pdf_file_name):
-            # Otherwise, convert doesn't generate a fresh PDF
-            os.remove(pdf_file_name)
-        try:
-            call([parameters["path of convert"], postscript_file_name, "-rotate", "90", png_file_name])
-            call([parameters["path of convert"], postscript_file_name, pdf_file_name])
-        except OSError:
-            raise ExternalProgramError(_(u'The program "convert" of ImageMagick wasn\'t found.  %s'
-                                         u'However, it is needed for the plots.  '
-                                         u'Please install it from http://www.imagemagick.org/.') %
-                                       construct_supplement(parameters["path of convert"]))
-        os.remove(postscript_file_name)
+        for suffix in suffixes:
+            postscript_file_name = tempfile_prefix + suffix + ".ps"
+            png_file_name = destination_file_prefix + suffix + ".png"
+            pdf_file_name = destination_file_prefix + suffix + ".pdf"
+            if os.path.isfile(pdf_file_name):
+                # Otherwise, convert doesn't generate a fresh PDF
+                os.remove(pdf_file_name)
+            try:
+                call([parameters["path of convert"], postscript_file_name, "-rotate", "90", png_file_name])
+                call([parameters["path of convert"], postscript_file_name, pdf_file_name])
+            except OSError:
+                raise ExternalProgramError(_(u'The program "convert" of ImageMagick wasn\'t found.  %s'
+                                             u'However, it is needed for the plots.  '
+                                             u'Please install it from http://www.imagemagick.org/.') %
+                                           construct_supplement(parameters["path of convert"]))
+            os.remove(tempfile_prefix + suffix + ".ps")
     if estimate_freshmen:
-        return [fencer for fencer in fencers.values() if fencer.freshman]
-    return visible_fencers
+        return [fencer for fencer in fencers.values() if fencer.freshman], suffixes
+    return visible_fencers, suffixes
 
 def expectation_value(first_fencer, second_fencer):
     """Returns the expected winning value of the first given fencer in a bout
