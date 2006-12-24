@@ -784,7 +784,7 @@ def write_back_fencers(felo_file_contents, fencers):
         if cleaned_line and cleaned_line[0] in part_separator:
             fencer_limits.append(linenumber)
     if len(fencer_limits) != 2:
-        raise FeloFormatError(_(u"Felo file invalid because there are not exactly two boundary lines.  %s") % fencer_limits)
+        raise FeloFormatError(_(u"Felo file invalid because there are not exactly two boundary lines."))
     fencer_lines = []
     while lines[fencer_limits[0] + 1].lstrip().startswith("#") or lines[fencer_limits[0] + 1].lstrip() == "":
         fencer_limits[0] += 1
