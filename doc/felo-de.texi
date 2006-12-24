@@ -198,7 +198,7 @@ herunter und installiere es.
 @item
 Starte Felo.  Im Editorfenster tippst du einige Gleichheitszeichen und
 dahinter die Fechter deiner Gruppe ein.  Immer Name, Tabstopp @key{Tab},
-und dann deren geschätzte Anfangszahl:
+und dann deren (von @emph{dir}) geschätzte Anfangszahl:
 
 @example
 ====================================
@@ -209,6 +209,7 @@ Jens               1300
 ...
 @end example
 
+@noindent
 Die geschätzten Anfangszahlen sollten sich so zwischen 1300 und
 1800@tie{}Punkten bewegen.  Je größer, desto besser der Fechter.
 
@@ -229,6 +230,8 @@ die Gefechte ein:
 2006-05-08      Christian -- Jens    10:5
                 ...
 @end example
+
+@noindent
 Dabei müssen die Tage, die Paarungen und die Ergebnisse mit Tabstopps
 @key{Tab} voneinander getrennt werden.  Speichere die Datei jetzt ab,
 z.@s{}B. unter @emph{florett.felo}.
@@ -829,6 +832,13 @@ in den Plot aufgenommen werden.  Das verhindert, daß der Zeitraum, der
 durch den Plot abgedeckt wird, immer mehr anwächst und sich alles immer
 dichter drängt.  @emph{(Vorgabewert: 366)}
 
+@item Fechter pro Plot
+Maximale Zahl von Fechtern in einem Plot.  @emph{(Vorgabewert: 30)}
+
+@item Plot-Überlapp
+Zahl der Fechter, die bei mehreren Plots in beiden benachbarten Plots
+auftauchen.  @emph{(Vorgabewert: 5)}
+
 @end table
 
 Die folgenden Parameter sind nur unter Windows interessant.  Unter Linux
@@ -1071,7 +1081,7 @@ Man kann eine reine Sieg/Niederlage-Felo-Zahl einfach dadurch
 realisieren, daß man die Punktzahl des Verlierers in der Felo-Datei auf
 Null setzt:
 
-@example
+@smallexample
 2006-05-01      Anakin -- Elmer         5:0
                 Anakin -- Wile Coyote   5:0
                 Elmer -- Wile Coyote    5:0
@@ -1079,8 +1089,9 @@ Null setzt:
                 Wile Coyote -- Anakin   0:5
                 Elmer -- Wile Coyote    0:10
                 Anakin -- Wile Coyote   0:10
-@end example
+@end smallexample
 
+@noindent
 Allerdings sind die sich daraus ergebenen Felo-Zahlen nicht mehr ganz
 vergleichbar mit denen anderer Fechtgruppen, also aufgepaßt!  Außerdem
 ändert sich an der Rangfolge kaum etwas.  Man verliert viel und gewinnt
@@ -1120,9 +1131,9 @@ um zu wissen, wie gut man Gruppen Felo-technisch durch gemeinsame
 Fechter und/oder Turniere verbinden kann (so gut sie auch innerhalb
 einer Gruppe funktionieren).
 
-Übrigens lassen sich verschiedene Waffengattung nie richtig miteinander
-verbinden, weil sie ja nie gegeneinander fechten können.  Da ist man
-dann allein auf die realistische Einschätzung angewiesen.
+Übrigens lassen sich verschiedene Waffengattungen nie richtig
+miteinander verbinden, weil sie ja nie gegeneinander fechten können.  Da
+ist man dann allein auf die realistische Einschätzung angewiesen.
 
 
 @node Felo und andere Sportarten

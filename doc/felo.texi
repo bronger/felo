@@ -791,6 +791,13 @@ The maximal number of day being included in the plot.  This prevents the
 plot from becoming too tight due to a large time interval being covered.
 @emph{(Default: 366)}
 
+@item fencers per plot
+Maximal number of fencers in one plot.  @emph{(Default: 30)}
+
+@item overlap in plots
+Number of fencers who are present in both of two adjacent plots.
+@emph{(Default: 5)}
+
 @end table
 
 The following parameters are only interesting to Windows users.  On
