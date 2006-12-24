@@ -551,9 +551,9 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
             # Implementing the whole-bout method
             if points_first < points_second:
                 points_first = 0
-                points_second = 1.46 * points_second - 0.54
+                points_second = 1.46 * points_second - 0.54
             else:
-                points_first = 1.46 * points_first - 0.54
+                points_first = 1.46 * points_first - 0.54
                 points_second = 0
         elif fenced_to > 0 and (points_first > fenced_to or points_second > fenced_to):
             raise LineError(_(u"One fencer has more points than the winning points."), input_file.name, linenumber)
