@@ -199,7 +199,7 @@ and install it.
 @item
 Start Felo.  In the editor window, you enter a row of equal signs.
 Then, you enter the fencers of your group.  The name, a tab stop
-@key{Tab}, and the initial estimate:
+@key{Tab}, and the initial estimate (as estimated by @emph{you}):
 
 @example
 ====================================
@@ -992,16 +992,51 @@ This k@tie{}factor is some sort of damping parameter.  If it is too
 high, the Felo ratings will oscillate too heavily.  If it is too low,
 the Felo ratings will converge too slowly.
 
+@subheading Why does the Felo rating take the score into account?
+
+Some find it unusual or even irritating that the Felo ratings uses the
+complete score rather than just using win or loss.
+
+The rationale for this is very simple: It makes Felo ratings converge
+very quickly, i.@s{}e.@:, they find their true value much earlier.  This
+is advantageous when a fencing groups starts with Felo ratings, so that
+everybody has a real Felo rating quite soon.  Similarly, it means that
+the Felo ratings reflect changes in your abilities or condition rather
+accurately.  If Felo counted only wins and losses, such subtle
+developments would not be noticable.
+
+You may realise a pure win/loss Felo rating by setting the points of the
+loser to zero:
+
+@smallexample
+2006-05-01      Anakin -- Elmer         5:0
+                Anakin -- Wile Coyote   5:0
+                Elmer -- Wile Coyote    5:0
+                Elmer -- Anakin         0:5
+                Wile Coyote -- Anakin   0:5
+                Elmer -- Wile Coyote    0:10
+                Anakin -- Wile Coyote   0:10
+@end smallexample
+
+@noindent
+But this makes the Felo ratings slighly incompatible with those of other
+groups, so be careful!  Moreover, it changes the ranking only quite
+rarely.  So you gain little and lose much, therefore, I don't recommend
+it.
+
+The Felo ratings -- as they are -- are a good combination of rapid
+adaption and accuracy.
+
 
 @node Universal comparison of Felo ratings
 @section Universal comparison of Felo ratings
 
-Felo ratings can only compare relatively fencers within a fencing
-group.  In order to compare between groups (e.@s{}g.@: between two
-fencing clubs), the initial values must have been estimated
-realistically and carefully.  Unfortunately, descriptions like ``above
-1600 are the strong leisure fencers'' are not very precise.  The
-comparison should work quite well nevertheless.
+Felo ratings can only compare relatively fencers within a fencing group.
+In order to compare between groups (e.@s{}g.@: between two fencing
+clubs), the initial values must have been estimated realistically and
+carefully.  Unfortunately, descriptions like ``above 1600 are the strong
+leisure fencers'' are not very precise.  The comparison should work
+quite well nevertheless.
 
 Of course, it is much better if some fencers fence in both groups.  They
 connect the groups statistically and make the Felo ratings compatible.
