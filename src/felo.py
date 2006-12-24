@@ -123,7 +123,7 @@ class ResultFrame(wx.Frame):
             html.SetStandardFonts()
         html.SetPage(result_html)
         grid.Add(html, flag=wx.EXPAND)
-        button = wx.Button(self, wx.ID_OK, _("Copy to clipboard"))
+        button = wx.Button(self, wx.ID_OK, _(u"Copy to clipboard"))
         self.Bind(wx.EVT_BUTTON, self.OnCopyClipboard, button)
         grid.Add(button, flag=wx.ALIGN_CENTER_HORIZONTAL)
         self.SetSizer(grid)
@@ -153,10 +153,10 @@ class HTMLDialog(wx.Dialog):
         vbox_checkboxes.Add(self.HTML_preview)
         vbox_main.Add(vbox_checkboxes, flag=wx.ALL, border=20)
         hbox_buttons = wx.BoxSizer(wx.HORIZONTAL)
-        ok_button = wx.Button(self, wx.ID_OK, _("Okay"))
+        ok_button = wx.Button(self, wx.ID_OK, _(u"Okay"))
         ok_button.SetDefault()
         hbox_buttons.Add(ok_button)
-        cancel_button = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
+        cancel_button = wx.Button(self, wx.ID_CANCEL, _(u"Cancel"))
         hbox_buttons.Add(cancel_button, flag=wx.LEFT, border=10)
         vbox_main.Add(hbox_buttons, flag=wx.ALIGN_CENTER)
         hbox_top = wx.BoxSizer(wx.HORIZONTAL)
@@ -275,7 +275,7 @@ class Frame(wx.Frame):
 
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        self.felo_filename = _("unnamed.felo")
+        self.felo_filename = _(u"unnamed.felo")
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
         self.editor.Bind(wx.stc.EVT_STC_CHANGE, self.OnChange)
         self.felo_file_changed = False
@@ -286,7 +286,7 @@ class Frame(wx.Frame):
     def OnWebHelp(self, event):
         webbrowser.open(_("http://felo.sourceforge.net/felo/"))
     def OnShowLicence(self, event):
-        licence_window = HtmlPreviewFrame(self, _("Software licence"), datapath+"/"+_("licence.html"))
+        licence_window = HtmlPreviewFrame(self, _(u"Software licence"), datapath+"/"+_("licence.html"))
         licence_window.Show()
     def OnReportBug(self, event):
         webbrowser.open("http://sourceforge.net/tracker/?func=add&group_id=183431&atid=905214")
@@ -327,7 +327,7 @@ class Frame(wx.Frame):
     def OnNew(self, event):
         if self.AssureSave() == wx.ID_CANCEL:
             return
-        self.felo_filename = _("unnamed.felo")
+        self.felo_filename = _(u"unnamed.felo")
         self.editor.ClearAll()
         self.SetTitle(u"Felo – "+os.path.split(self.felo_filename)[1])
         self.editor.SetText(self.read_utf8_file(datapath+"/"+_("boilerplate.felo")))
@@ -358,7 +358,7 @@ class Frame(wx.Frame):
             return True
         return False
     def OnSave(self, event):
-        if self.felo_filename == _("unnamed.felo"):
+        if self.felo_filename == _(u"unnamed.felo"):
             return self.OnSaveAs(event)
         else:
             self.save_felo_file()
@@ -401,7 +401,7 @@ class Frame(wx.Frame):
         if not bouts:
             self.report_empty_bouts()
             return
-        fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts)
+        fencerlist, __ = felo_rating.calculate_felo_ratings(parameters, fencers, bouts)
         result_frame = ResultFrame(_(u"Felo ratings ") + parameters["groupname"], fencerlist)
         result_frame.Show()
     def OnGenerateHTML(self, event):
@@ -436,7 +436,7 @@ class Frame(wx.Frame):
 /*]]>*/
 </style></head><body>\n\n<h1>%(title)s</h1>\n<h2>%(date)s</h2>\n\n<table><tbody>""" % \
                 {"title": _(u"Felo ratings ")+parameters["groupname"], "date": _(u"as of ")+last_date}
-            fencerlist = felo_rating.calculate_felo_ratings(parameters, fencers, bouts, plot=make_plot)
+            fencerlist, suffixes = felo_rating.calculate_felo_ratings(parameters, fencers, bouts, plot=make_plot)
         except felo_rating.ExternalProgramError, e:
             wx.MessageBox(e.description, _(u"External program not found"), wx.OK | wx.ICON_ERROR, self)
             return
@@ -449,14 +449,14 @@ class Frame(wx.Frame):
             print>>html_file, u"<tr><td class='name'>%s</td><td class='felo-rating'>%d</td></tr>" % \
                 (fencer.name, fencer.felo_rating)
         print>>html_file, u"</tbody></table>"
-        if make_plot:
+        for suffix in suffixes:
             print>>html_file, u"<p class='felo-plot'><img class='felo-plot' src='%s.png' alt='%s' /></p>" % \
-                (base_filename, _(u"Felo ratings plot for ")+parameters["groupname"])
-            file_list += base_filename+".png\n"
-            if os.path.isfile(os.path.join(parameters["output folder"], base_filename+".pdf")):
+                (base_filename+suffix, _(u"Felo ratings plot for ")+parameters["groupname"])
+            file_list += base_filename + suffix + ".png\n"
+            if os.path.isfile(os.path.join(parameters["output folder"], base_filename+suffix+".pdf")):
                 print>>html_file, _(u"<p class='printable-notice'>Also in a <a href='%s.pdf'>"
-                                    u"printable version</a>.</p>") % base_filename
-                file_list += base_filename+".pdf\n"
+                                    u"printable version</a>.</p>") % (base_filename+suffix)
+                file_list += base_filename + suffix + ".pdf\n"
         print>>html_file, u"</body></html>"
         html_file.close()
         if HTML_preview:
