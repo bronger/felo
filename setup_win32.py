@@ -55,7 +55,7 @@ for language in languages:
 setup(name = 'Felo',
       windows = [{'script': 'src/felo.py',
                   'icon_resources': [(1, 'src/felo.ico')]}],
-      description = 'Calculation Felo ratings for estimating sport fencers',
+      description = 'Felo',
       version = '1.0',
       long_description = \
       """Felo ratings are a wonderful new method to estimate fencers.  The Felo
