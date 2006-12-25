@@ -665,13 +665,18 @@ def parse_felo_file(felo_file):
 
     initial_felo_ratings, linenumber = parse_items(felo_file, linenumber)
     fencers = {}
-    felo_pattern = re.compile(r"(?P<initial>\d+)\s*(?:\(\s*(?P<weighting>[\d.]+)\s*\))?\s*(?:,\s*(?P<max>\d+))?")
+    felo_pattern = re.compile(ur"(?P<initial>\d+)\s*(?:(?:\(\s*(?P<weighting>[\d\.]+)\s*\))|(?P<exclam>!))?"
+                              ur"\s*(?:,\s*(?P<max>\d+))?\s*\Z")
     for name, value in initial_felo_ratings.items():
         try:
-            initial_felo_rating, initial_total_weighting, maximal_felo_rating = \
+            initial_felo_rating, initial_total_weighting, exclam, maximal_felo_rating = \
                 felo_pattern.match(value).groups("0")
             initial_felo_rating, initial_total_weighting, maximal_felo_rating = \
                 int(initial_felo_rating), float(initial_total_weighting), int(maximal_felo_rating)
+            if exclam == "!":
+                # The initial Felo number is "old", so assure that the fencer
+                # is not treated as a freshmen
+                initial_total_weighting = parameters["5 point bouts freshmen"]
         except (AttributeError, ValueError):
             raise FeloFormatError(_(u"Felo rating of \"%s\" is invalid.") % name)
         current_fencer = Fencer(name, initial_felo_rating, parameters, initial_total_weighting,
@@ -800,6 +805,8 @@ def write_back_fencers(felo_file_contents, fencers):
         line = fill_with_tabs(name, 3) + str(fencer.initial_felo_rating)
         if fencer.initial_total_weighting != 0:
             line += " (%g)" % fencer.initial_total_weighting
+        if fencer.initial_maximal_felo_rating != 0:
+            line += ", %g" % fencer.initial_maximal_felo_rating
         fencer_lines.append(line)
     fencer_lines.append(u"")
     return "\n".join(lines[:fencer_limits[0]+1] + fencer_lines + lines[fencer_limits[1]:]) + "\n"
@@ -963,6 +970,7 @@ class Fencer(object):
         self.total_weighting = self.initial_total_weighting = self.total_weighting_preliminary = \
             initial_total_weighting
         self.__k_factor = self.parameters["k factor others"]
+        self.maximal_felo_rating = 0
         self.foreign_fencer = name.find("<") != -1
         if self.foreign_fencer:
             try:
@@ -972,6 +980,7 @@ class Fencer(object):
             except (ValueError, AttributeError):
                 raise Error("Foreign fencer '%s' has invalid Felo rating" % name)
         self.freshman = felo_rating == 0
+        self.initial_maximal_felo_rating = maximal_felo_rating
         if not self.freshman:
             if maximal_felo_rating:
                 self.felo_rating = maximal_felo_rating
@@ -999,6 +1008,7 @@ class Fencer(object):
     def __set_felo_rating(self, felo_rating):
         if not self.freshman and not self.foreign_fencer:
             self.__felo_rating = max(felo_rating, self.parameters["minimal felo rating"])
+            self.maximal_felo_rating = max(self.maximal_felo_rating, self.felo_rating)
             if self.__felo_rating >= self.parameters["felo rating top fencers"]:
                 self.__k_factor = self.parameters["k factor top fencers"]
     felo_rating_exact = property(__get_felo_rating_exact, __set_felo_rating,
