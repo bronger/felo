@@ -1128,9 +1128,9 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                     bout.date_string[:10] >= parameters["earliest date in plot"] and \
                     current_daynumber - current_bout_daynumber <= parameters["maximal days in plot"]:
                 data_file.write(str(current_bout_daynumber))
+                # Generate tic marks not too densely; labels must be at least
+                # the the minimal tic distance apart.
                 if current_bout_daynumber - last_xtics_daynumber >= parameters["min distance of plot tics"]:
-                    # Generate tic marks not too densely; labels must be at
-                    # least the the minimal tic distance apart.
                     last_xtics_daynumber = current_bout_daynumber
                     xtics += bout.date.strftime(str(_(u"'%Y-%m-%d'"))) + " %d," % current_bout_daynumber
                 for fencer in visible_fencers:
@@ -1279,7 +1279,7 @@ def prognosticate_bout(first_fencer, second_fencer, fenced_to):
       - `first_fencer`: first fencer, for whom the winning chance is to be
         calculated.
       - `second_fencer`: second fencer, opponent in the bout.
-      - `fenced_to`: number of winning points in the bout.  Can be e.g. 5, 10, or
+      - `fenced_to`: number of winning points in the bout.  Must be 5, 10, or
         15.
 
     :type first_fencer: Fencer
