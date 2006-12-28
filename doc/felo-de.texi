@@ -1077,25 +1077,20 @@ die Felo-Zahl rauf.  Würde sie nur Siege und Niederlagen
 berücksichtigen, kann es gut sein, daß das einer solchen Felo-Zahl
 entgeht.
 
-Man kann eine reine Sieg/Niederlage-Felo-Zahl einfach dadurch
-realisieren, daß man die Punktzahl des Verlierers in der Felo-Datei auf
-Null setzt:
+Es gibt noch ein weiteres mathematisches Problem mit reinen
+Sieg/Niederlage-Zahlen: Die Wahrscheinlichkeit, ein 15-Punkte-Gefecht zu
+gewinnen, ist deutlich extremer als bei einem 5-Punkte-Gefechte.  Daher
+liegen die Zahlen weiter auseinander, wenn man nur die
+15-Punkte-Gefechte zählt, als wenn man nur die 5-Punkte-Gefechte zählt.
+Darüber zu mitteln wäre so, als wenn man die Körpergröße mal bis zur
+Schulter und mal bis zum Scheitel mißt, und über alle diese Werte
+mittelt.  Das ist natürlich offensichtlicher Unfug.
 
-@smallexample
-2006-05-01      Anakin -- Elmer         5:0
-                Anakin -- Wile Coyote   5:0
-                Elmer -- Wile Coyote    5:0
-                Elmer -- Anakin         0:5
-                Wile Coyote -- Anakin   0:5
-                Elmer -- Wile Coyote    0:10
-                Anakin -- Wile Coyote   0:10
-@end smallexample
-
-@noindent
-Allerdings sind die sich daraus ergebenen Felo-Zahlen nicht mehr ganz
-vergleichbar mit denen anderer Fechtgruppen, also aufgepaßt!  Außerdem
-ändert sich an der Rangfolge kaum etwas.  Man verliert viel und gewinnt
-wenig, daher rate ich davon ab.
+Man muß also die Resultate erstmal kompatibel machen.  Das geht auch,
+allerdings läuft es darauf hinaus, die Einzeltrefferwahrscheinlichkeit
+abzuschätzen, und schon ist man wieder beim Punkteergebnis, bloß mit
+wesentlich kleinerer Genauigkeit.  Man gewinnt also wenig (wenn
+überhaupt) und verliert viel.
 
 Die Felo-Zahlen, so wie sie sind, sind eine gute Kombination aus rascher
 Anpassung und akkurater Einschätzung.
@@ -1239,4 +1234,4 @@ Programme mit Felo-Zahlen zu schreiben.
 @c  LocalWords:  Tics Mindestdatum wgnuplot exe convert pdf pxref Mindest dolle
 @c  LocalWords:  Wettblinzeln Ostereiertitschen rating help plots bootstrap max
 @c  LocalWords:  fuer cycles estimate freshmen write back zurueck version
-@c  LocalWords:  output stdout Roberto Pereira
+@c  LocalWords:  output stdout Roberto Pereira Einzeltrefferwahrscheinlichkeit

@@ -1010,26 +1010,23 @@ is advantageous when a fencing groups starts with Felo ratings, so that
 everybody has a real Felo rating quite soon.  Similarly, it means that
 the Felo ratings reflect changes in your abilities or condition rather
 accurately.  If Felo counted only wins and losses, such subtle
-developments would not be noticable.
+developments would not be noticeable.
 
-You may realise a pure win/loss Felo rating by setting the points of the
-loser to zero:
+There is another mathematical issue with pure win/loss ratings.
+Normally, you have bouts with 5, 10, and 15 win points.  Sometimes, even
+other values are possible.  Unfortunately, they are incompatible because
+the win/loss probability in a 15@tie{}point bout is more extreme than
+that in a 5@tie{}point bout.  Consequently, the ratings calculated from
+5@tie{}point bouts only are much closer together than for longer bouts.
+Putting them all into one ratings would mean you measure tallnesses both
+to the head and to the shoulders, and calculate an average tallness from
+the whole set of values.  This is ridiculous obviously.
 
-@smallexample
-2006-05-01      Anakin -- Elmer         5:0
-                Anakin -- Wile Coyote   5:0
-                Elmer -- Wile Coyote    5:0
-                Elmer -- Anakin         0:5
-                Wile Coyote -- Anakin   0:5
-                Elmer -- Wile Coyote    0:10
-                Anakin -- Wile Coyote   0:10
-@end smallexample
-
-@noindent
-But this makes the Felo ratings slighly incompatible with those of other
-groups, so be careful!  Moreover, it changes the ranking only quite
-rarely.  So you gain little and lose much, therefore, I don't recommend
-it.
+Thus, you'd have to make the results compatible first.  Mathematically,
+this works, however, it means that you estimate the single-hit
+probability for every bout.  Thus, you end up with the single hit again,
+just with less accuracy.  So you gain little (if anything at all) and
+lose much.
 
 The Felo ratings -- as they are -- are a good combination of rapid
 adaption and accuracy.
@@ -1148,4 +1145,4 @@ rating programs.
 @c  LocalWords:  latin british def rmdefault ppl mathrel mskip pstexinfo RSS
 @c  LocalWords:  tex xmarksthespot filll logue logues Lochnerstra ifhtml asis
 @c  LocalWords:  Elo uninstallation YYYY Riker myname css tics wgnuplot exe
-@c  LocalWords:  stdout pxref
+@c  LocalWords:  stdout pxref tallnesses
