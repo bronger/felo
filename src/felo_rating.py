@@ -543,7 +543,7 @@ def parse_bouts(input_file, linenumber, fencers, parameters):
                 fenced_to = "/0"
             fenced_to = int(fenced_to[1:])
         if False:
-            # Implementing the whole-bout method
+            # Implementing the whole-bout method (poor man's solution)
             if points_first < points_second:
                 points_first = 0
                 points_second = 1.46 * points_second - 0.54
@@ -1306,7 +1306,7 @@ def prognosticate_bout(first_fencer, second_fencer, fenced_to):
             if abs(expectation_first - result_first) < 0.0051:
                 break
     if points_first == points_second:
-        if winning_chance_first > 0.5:
+        if expectation_first > 0.5:
             points_second -= 1
         else:
             points_first -= 1
