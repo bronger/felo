@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Felo 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-01-06 03:56+0100\n"
-"PO-Revision-Date: 2007-01-06 04:12+0100\n"
+"PO-Revision-Date: 2007-01-06 10:21+0100\n"
 "Last-Translator: Pierre Gergondet <pierre.gergondet@via.ecp.fr>\n"
 "Language-Team: French <none@none.com>\n"
 "MIME-Version: 1.0\n"
@@ -198,7 +198,7 @@ msgstr "Licence du logiciel"
 
 #: felo.py:289
 msgid "licence.html"
-msgstr "licence-fr.html"
+msgstr "licence.html"
 
 #: felo.py:301
 #, python-format
