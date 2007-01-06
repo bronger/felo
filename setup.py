@@ -73,7 +73,7 @@ if os.path.isfile(real_rpmmacros_name) and not os.path.isfile(temp_rpmmacros_nam
         shutil.copy(distutils_rpmmacros_name, real_rpmmacros_name)
     atexit.register(restore_rpmmacros)
 
-languages = ("de",)
+languages = ("de", "fr")
 language_data_files = []
 for language in languages:
     language_path = os.path.join("share", "locale", language, "LC_MESSAGES")

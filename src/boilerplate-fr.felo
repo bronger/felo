@@ -1,0 +1,143 @@
+# Ceci n'est qu'un fichier d'exemple. Vous pouvez
+# l'utiliser comme un modèle pour vos propres
+# fichiers. Toute ligne commencant par un "#" est 
+# ignorée par le programme.
+
+# Première partie: les paramètres
+
+groupname			foil
+earliest date in plot		2006-11-02
+
+====================================================
+# Second Part: Notes initiales
+# Le noms des escrimeurs qui souhaitent demeurer
+# cachés est mis entre paranthèses
+
+Bugs			1400
+Wile Coyote		1500
+Elmer			1400
+(Anakin)		1700
+Obi Wan			1600
+
+====================================================
+# Troisième partie: les assauts
+
+2006-05-01	Anakin -- Elmer		5:3
+		Anakin -- Wile Coyote	5:1
+		Elmer -- Wile Coyote	5:3
+		Elmer -- Anakin		1:5
+		Wile Coyote -- Anakin	2:5
+		Elmer -- Wile Coyote	5:10
+		Anakin -- Wile Coyote	9:10
+
+2006-08-01	Elmer -- Wile Coyote	10:5
+		Wile Coyote -- Elmer	10:3
+		Bugs -- Elmer		10:8
+		Wile Coyote -- Bugs	10:6
+
+2006-09-06	Obi Wan -- Anakin	3:7
+		Anakin -- Elmer		12:4
+		Obi Wan -- Elmer	10:0
+
+# Le 8 Septembre 2006 s'est déroulé une petite
+# compétition entre équipe; sont listés ici les
+# assauts singuliers, ils sont donc marqués d'une
+# "*". De plus, pour ce jour, l'ordre des assauts
+# est connu, c'est pourquoi ils ont en plus un
+# index.
+
+2006-10-08.1	Wile Coyote -- Obi Wan	0:3 *
+	   2	Anakin -- Obi Wan	6:2 *
+	   3	Wile Coyote -- Elmer	3:0 *
+	   4	Wile Coyote -- Obi Wan	2:7 *
+	   5	Anakin -- Elmer	   	4:0 *
+	   6	Anakin -- Obi Wan	3:6 *
+	   7	Wile Coyote -- Elmer	3:0 *
+
+2006-10-09	Bugs -- Wile Coyote	3:2
+		Bugs -- Anakin	    	1:3
+		Bugs -- Wile Coyote	4:1
+
+2006-10-10.1	Elmer -- Bugs		5:1 *
+	   2	Anakin -- Wile Coyote	8:5 *
+	   3	Elmer -- Anakin		5:5 *
+	   4	Anakin -- Bugs		11:5*
+	   5	Elmer -- Anakin		0:5 *
+	   6	Elmer -- Wile Coyote	7:5 *
+
+2006-10-11	Wile Coyote -- Elmer	1:5
+		Wile Coyote -- Bugs	5:2
+		Elmer -- Bugs		5:1
+		Elmer -- Wile Coyote	5:3
+		Bugs -- Elmer		1:5
+		Bugs -- Wile Coyote	5:3
+		Elmer -- Wile Coyote	1:5
+
+2006-10-12.1	Anakin -- Elmer		5:0 *
+	   2	Wile Coyote -- Anakin	3:10*
+	   3	Wile Coyote -- Elmer	5:5 *
+	   4	Anakin -- Elmer		8:0 *
+	   5	Wile Coyote -- Anakin	3:10*
+	   6	Wile Coyote -- Elmer	3:5 *
+
+2006-11-01.1	Elmer -- Anakin		1:10
+	   3	Elmer -- Wile Coyote	10:8
+	   5	Anakin -- Wile Coyote	10:3
+	   6	Anakin -- Elmer		10:5
+	   7	Anakin -- Bugs		10:1
+	   8	Wile Coyote -- Elmer	6:10
+	   9	Wile Coyote -- Anakin	4:5
+	   10	Wile Coyote -- Bugs	10:7
+	   11	Elmer -- Bugs		10:6
+
+2006-11-02.1	Bugs -- Anakin		3:8 *
+	   2	Bugs -- Elmer		0:6 *
+	   3	Obi Wan -- Anakin	4:9 *
+	   4	Obi Wan -- Elmer	8:4 *
+	   5	Obi Wan -- Anakin	3:3 *
+	   6	Wile Coyote -- Anakin	0:7 *
+	   7	Bugs -- Wile Coyote	1:5 *
+	   8	Wile Coyote -- Anakin	0:5 *
+	   9	Obi Wan -- Wile Coyote	19:2*
+	   10	Bugs -- Elmer		2:8 *
+	   11	Bugs -- Anakin		2:5 *
+	   12	Obi Wan -- Elmer	13:2*
+
+2006-11-16	Anakin -- Wile Coyote	5:4
+		Wile Coyote -- Elmer	10:4
+		Wile Coyote -- Bugs	10:6
+
+2006-11-23	Wile Coyote -- Anakin	3:5
+		Wile Coyote -- Elmer	5:2
+
+2006-11-30	Bugs -- Wile Coyote	3:0
+		Bugs -- Anakin		1:3
+		Bugs -- Elmer		2:3
+		Bugs -- Obi Wan		1:3
+		Bugs -- Anakin		1:3
+		Bugs -- Wile Coyote	0:3
+		Bugs -- Anakin		3:2
+		Bugs -- Elmer		3:2
+		Bugs -- Obi Wan		0:3
+		Bugs -- Anakin		2:3
+		Wile Coyote -- Elmer	3:2
+		Wile Coyote -- Obi Wan	3:2
+		Wile Coyote -- Anakin	2:3
+		Anakin -- Elmer		3:2
+		Anakin -- Obi Wan	3:1
+		Elmer -- Wile Coyote	2:3
+		Elmer -- Obi Wan	0:3
+		Elmer -- Anakin		0:3
+		Wile Coyote -- Obi Wan	1:3
+		Wile Coyote -- Anakin	1:3
+		Obi Wan -- Anakin	1:3
+
+2006-12-07.1	Elmer -- Wile Coyote	0:5 *
+	   3	Obi Wan -- Bugs		8:2 *
+	   4	Elmer -- Obi Wan	2:6 *
+	   5	Wile Coyote -- Bugs	4:1 *
+	   6	Obi Wan -- Wile Coyote	4:1 *
+	   7	Elmer -- Anakin		1:14*
+	   8	Obi Wan -- Bugs		7:2 *
+	   9	Obi Wan -- Wile Coyote	4:3 *
+	   10	Obi Wan -- Anakin	4:5 *

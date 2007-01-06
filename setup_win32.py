@@ -46,7 +46,7 @@ try:
 except:
     pass
 
-languages = ("de",)
+languages = ("de", "fr")
 language_data_files = []
 for language in languages:
     language_path = "po/" + language + "/LC_MESSAGES"

@@ -1,6 +1,6 @@
 .PHONY: update
 
-all: de.gmo
+all: de.gmo fr.gmo
 
 %.gmo : %.po
 	cd ../src ; xgettext --output=../po/felo.pot felo.py felo_rating.py
