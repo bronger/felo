@@ -1006,7 +1006,7 @@ complete score rather than just using win or loss.
 
 The rationale for this is very simple: It makes Felo ratings converge
 very quickly, i.@s{}e.@:, they find their true value much earlier.  This
-is advantageous when a fencing groups starts with Felo ratings, so that
+is advantageous when a fencing group starts with Felo ratings, so that
 everybody has a real Felo rating quite soon.  Similarly, it means that
 the Felo ratings reflect changes in your abilities or condition rather
 accurately.  If Felo counted only wins and losses, such subtle
