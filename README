@@ -39,7 +39,7 @@ General checklist:
 
 * If new translations arrived, update po/Makefile and both setup scripts.
   Remember to have also the licence and the boilerplate in this language (not
-  necessary, but nice).  Idelly, the documentation, too.  :-)
+  necessary, but nice).  Ideally, the documentation, too.  :-)
 
 * If new strings to-be-translated have been insterted into the Python source
   codes, remove all .gmo files in po/ and call make there in order to update
