@@ -118,18 +118,28 @@ Section "Felo"
   File /r "..\dist\*"
   File "..\src\felo.ico"
   WriteRegStr SHCTX "Software\Felo" "" "$INSTDIR"
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "DisplayName" "Felo"
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "UninstallString" "$INSTDIR\uninstall.exe"
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "DisplayIcon" "$INSTDIR\felo.ico"
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "Publisher" "Torsten Bronger, Aachen"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "DisplayName" "Felo"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "UninstallString" "$INSTDIR\uninstall.exe"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "DisplayIcon" "$INSTDIR\felo.ico"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "Publisher" "Torsten Bronger, Aachen"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
               "HelpLink" "http://sourceforge.net/forum/forum.php?forum_id=638727"
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "URLInfoAbout" "http://felo.sourceforge.net"
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "DisplayVersion" "1.0"
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "VersionMajor" 1
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "VersionMinor" 0
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "NoModify" 1
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" "NoRepair" 1
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "URLInfoAbout" "http://felo.sourceforge.net"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "DisplayVersion" "1.0"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "VersionMajor" 1
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "VersionMinor" 0
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "NoModify" 1
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Felo" \
+              "NoRepair" 1
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
