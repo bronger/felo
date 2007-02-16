@@ -1362,9 +1362,9 @@ There is NO WARRANTY, to the extent permitted by law.""")
         for i, felo_filename in enumerate(felo_filenames):
             parameters, given_parameters, fencers, bouts = \
                 parse_felo_file(codecs.open(felo_filename, encoding="utf-8"))
-            resultslist = calculate_felo_ratings(parameters, fencers, bouts, options.plots,
-                                                 options.estimate_freshmen,
-                                                 options.bootstrap, options.max_cycles)
+            resultslist, _ = calculate_felo_ratings(parameters, fencers, bouts, options.plots,
+                                                    options.estimate_freshmen,
+                                                    options.bootstrap, options.max_cycles)
             if options.write_back and (options.bootstrap or options.estimate_freshmen):
                 for fencer in fencers.values():
                     if (options.bootstrap and not fencer.freshman) or \
