@@ -850,10 +850,10 @@ class Error(Exception):
 
         :type description: string
         """
-        self.description = description
         if isinstance(description, unicode):
             # FixMe: The following must be made OS-dependent
             description = description.encode("utf-8")
+        self.description = description
         Exception.__init__(self, description)
 
 class LineError(Error):
