@@ -1220,7 +1220,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         gnuplot_script_file_name = tempfile_prefix + ".gp"
         gnuplot_script = codecs.open(gnuplot_script_file_name, "w", encoding="utf-8")
         gnuplot_script.write(u"set term postscript color;"
-                             u"set key outside; set xtics rotate; set grid xtics;"
+                             u"set key outside; set xtics rotate; set grid xtics ytics;"
                              u"set xtics nomirror (%s)" % xtics[:-1])
         for i in range(number_windows):
             gnuplot_script.write(u"; set output '%s'; plot " % (tempfile_prefix + suffixes[i] + ".ps"))
