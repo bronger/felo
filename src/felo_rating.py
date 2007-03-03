@@ -1109,13 +1109,19 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             # xtics holds the Gnuplot command for the x axis labels (i.e. the dates).
             xtics = ""
             last_xtics_daynumber = 0
+        today_active_fencers = set()
+        first_data_row = True
         for i, bout in enumerate(bouts):
             set_preliminary_felo_ratings(fencers, bout, parameters)
+            today_active_fencers.add(bout.first_fencer)
+            today_active_fencers.add(bout.second_fencer)
             if i == len(bouts) - 1 or bout.date_string != bouts[i+1].date_string:
                 # Not one *day* is over but one set of bouts which took place with
                 # unknown order.
                 adopt_preliminary_felo_ratings()
             current_bout_daynumber = bout.date.toordinal()
+            last_bout_of_this_day = \
+                i == len(bouts) - 1 or bouts[i+1].date.toordinal() != current_bout_daynumber
             year, month, day, __, __, __, __, __, __ = time.localtime()
             current_daynumber = datetime.date(year, month, day).toordinal()
             # There are three conditions so that plot points are created: We
@@ -1124,7 +1130,7 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
             # anyway); the Felo ratings must be after the minimal date given in
             # the parameters section; *and* the Felo ratings must not be older
             # than the maximal days in the plot.
-            if plot and (i == len(bouts) - 1 or bouts[i+1].date.toordinal() != current_bout_daynumber) and \
+            if plot and last_bout_of_this_day and \
                     bout.date_string[:10] >= parameters["earliest date in plot"] and \
                     current_daynumber - current_bout_daynumber <= parameters["maximal days in plot"]:
                 data_file.write(str(current_bout_daynumber))
@@ -1134,8 +1140,15 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
                     last_xtics_daynumber = current_bout_daynumber
                     xtics += bout.date.strftime(str(_(u"'%Y-%m-%d'"))) + " %d," % current_bout_daynumber
                 for fencer in visible_fencers:
-                    data_file.write("\t" + str(fencer.felo_rating_exact))
+                    if fencer.name in today_active_fencers or first_data_row or i == len(bouts) - 1:
+                        value = str(fencer.felo_rating_exact)
+                    else:
+                        value = "NaN"
+                    data_file.write("\t" + value)
                 data_file.write(os.linesep)
+                first_data_row = False
+            if last_bout_of_this_day:
+                today_active_fencers = set()
         if plot:
             data_file.close()
             return xtics
