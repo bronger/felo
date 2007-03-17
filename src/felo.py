@@ -31,7 +31,7 @@
 
 __version__ = "$Revision$"
 # $HeadURL$
-distribution_version = "1.0"
+distribution_version = "1.0.1"
 
 import re, os, codecs, sys, time, StringIO, textwrap, platform, webbrowser, shutil
 datapath = os.path.abspath(os.path.dirname(sys.argv[0]))
@@ -47,6 +47,7 @@ if os.name == 'nt':
     gettext.install('felo', datapath + "/po", unicode=True)
 else:
     gettext.install('felo', unicode=True)
+preferred_encoding = locale.getpreferredencoding()
 import felo_rating
 import wx, wx.grid, wx.py.editor, wx.py.editwindow, wx.html, wx.lib.hyperlink
 
@@ -412,7 +413,8 @@ class Frame(wx.Frame):
             self.report_empty_bouts()
             return
         bouts.sort()
-        last_date = time.strftime(_(u"%x"), time.strptime(bouts[-1].date_string[:10], "%Y-%m-%d"))
+        last_date = time.strftime(_(u"%x"), time.strptime(bouts[-1].date_string[:10], "%Y-%m-%d")). \
+            decode(preferred_encoding)
         base_filename = parameters["groupname"].lower()
         html_dialog = HTMLDialog(parameters["output folder"])
         result = html_dialog.ShowModal()
