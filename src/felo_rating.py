@@ -69,7 +69,7 @@ __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_fe
 
 __version__ = "$Revision$"
 # $HeadURL$
-distribution_version = "1.0"
+distribution_version = "1.0.1"
 
 import codecs, re, os.path, datetime, time, shutil, glob, tempfile
 # This strange construction is necessary because on Windows, the file may be
@@ -79,13 +79,13 @@ datapath = os.path.abspath(__file__)
 while not os.path.isdir(datapath):
     datapath = os.path.dirname(datapath)
 from subprocess import call, Popen, PIPE
-import gettext
+import gettext, locale
 if os.name == 'nt':
     t = gettext.translation('felo', datapath+"/po", fallback=True)
 else:
     t = gettext.translation('felo', fallback=True)
 _ = t.ugettext
-
+preferred_encoding = locale.getpreferredencoding()
 
 column_separator = u"\s*\t+\s*"
 part_separator = u"-=_:;,+*'~\"`´/\\%$!"
@@ -852,7 +852,7 @@ class Error(Exception):
         """
         if isinstance(description, unicode):
             # FixMe: The following must be made OS-dependent
-            description = description.encode("utf-8")
+            description = description.encode(preferred_encoding)
         self.description = description
         Exception.__init__(self, description)
 
@@ -1218,8 +1218,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         # Call gnuplot and convert to generate the PNG and PDF plots.  Note: We
         # don't generate HTML tables here.  These must be provided separately.
         gnuplot_script_file_name = tempfile_prefix + ".gp"
-        gnuplot_script = codecs.open(gnuplot_script_file_name, "w", encoding="utf-8")
-        gnuplot_script.write(u"set term postscript color;"
+        gnuplot_script = codecs.open(gnuplot_script_file_name, "w", encoding="latin-1", errors="replace")
+        gnuplot_script.write(u"set term postscript color; set encoding iso_8859_1;"
                              u"set key outside; set xtics rotate; set grid xtics ytics;"
                              u"set xtics nomirror (%s)" % xtics[:-1])
         for i in range(number_windows):
