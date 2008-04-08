@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Felo 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-06 03:56+0100\n"
+"POT-Creation-Date: 2007-03-17 15:49+0100\n"
 "PO-Revision-Date: 2007-01-06 10:21+0100\n"
 "Last-Translator: Pierre Gergondet <pierre.gergondet@via.ecp.fr>\n"
 "Language-Team: French <none@none.com>\n"
@@ -15,52 +15,52 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: felo.py:126
+#: felo.py:127
 msgid "Copy to clipboard"
 msgstr "Copier vers le presse-papier"
 
-#: felo.py:140
+#: felo.py:141
 msgid "HTML export"
 msgstr "Exporter en HTML"
 
-#: felo.py:145
+#: felo.py:146
 #, python-format
 msgid "The web files will be written to the folder \"%s\"."
 msgstr "Les fichiers web seront écrit dans le dossier \"%s\"."
 
-#: felo.py:149
+#: felo.py:150
 msgid "with plot"
 msgstr "avec un graphique"
 
-#: felo.py:151
+#: felo.py:152
 msgid "preview the HTML"
 msgstr "prévisulation de le HTML"
 
-#: felo.py:156
+#: felo.py:157
 msgid "Okay"
 msgstr "D'accord"
 
-#: felo.py:159
+#: felo.py:160
 msgid "Cancel"
 msgstr "Annuler"
 
-#: felo.py:169
+#: felo.py:170
 msgid "About Felo"
 msgstr "À propos de Felo"
 
-#: felo.py:173
+#: felo.py:174
 msgid "version "
 msgstr "version "
 
-#: felo.py:174
+#: felo.py:175
 msgid ", revision "
 msgstr ", révision "
 
-#: felo.py:179
+#: felo.py:180
 msgid "Estimate fencing strengths of sport fencers"
 msgstr "Évaluer la force des escrimeurs"
 
-#: felo.py:181
+#: felo.py:182
 msgid ""
 "Brought to you by the sport fencing group at the\n"
 "University of Technology Aachen (RWTH), Germany."
@@ -68,7 +68,7 @@ msgstr ""
 "Mis à votre disposition par le groupe d'escrime de\n"
 "l'Université de Technologie d'Aix-la-Chapelle (RWTH), Allemagne."
 
-#: felo.py:185
+#: felo.py:186
 msgid ""
 "For bug reports, suggestions, documentation, the\n"
 "source code, and the mailinglist visit Felo's homepage at"
@@ -76,170 +76,170 @@ msgstr ""
 "Pour les rapports de bug, les suggestions, la documentation,\n"
 "le code source, et la liste de diffusion, visitez la page de Felo"
 
-#: felo.py:192
+#: felo.py:193
 msgid "English translation by Torsten Bronger."
 msgstr "Traduction française par Pierre Gergondet."
 
-#: felo.py:234
+#: felo.py:235
 msgid "&New"
 msgstr "&Nouveau"
 
-#: felo.py:235
+#: felo.py:236
 msgid "&Open"
 msgstr "&Ouvrir"
 
-#: felo.py:236
+#: felo.py:237
 msgid "&Save"
 msgstr "&Sauvegarder"
 
-#: felo.py:237
+#: felo.py:238
 msgid "Save &as"
 msgstr "Sauvegarder &en tant que"
 
-#: felo.py:239
+#: felo.py:240
 msgid "&Quit"
 msgstr "&Quitter"
 
-#: felo.py:240
+#: felo.py:241
 msgid "&File"
 msgstr "&Fichier"
 
-#: felo.py:246
+#: felo.py:247
 msgid "&Undo"
 msgstr "&Annuler"
 
-#: felo.py:247
+#: felo.py:248
 msgid "&Redo"
 msgstr "&Refaire"
 
-#: felo.py:249
+#: felo.py:250
 msgid "Cu&t"
 msgstr "Coupe&r"
 
-#: felo.py:250
+#: felo.py:251
 msgid "&Copy"
 msgstr "Co&pier"
 
-#: felo.py:251
+#: felo.py:252
 msgid "&Paste"
 msgstr "&Coller"
 
-#: felo.py:252
+#: felo.py:253
 msgid "Cle&ar"
 msgstr "&Nettoyer"
 
-#: felo.py:254
+#: felo.py:255
 msgid "Select a&ll"
 msgstr "&Tout sélectionner"
 
-#: felo.py:255
+#: felo.py:256
 msgid "&Edit"
 msgstr "&Editer"
 
-#: felo.py:258
+#: felo.py:259
 msgid "Calculate &Felo ratings"
 msgstr "Calculer les notes de &Felo"
 
-#: felo.py:259
+#: felo.py:260
 msgid "Generate &HTML"
 msgstr "Générer l'&HTML"
 
-#: felo.py:260
+#: felo.py:261
 msgid "&Bootstrapping"
 msgstr "&Bootstrapping"
 
-#: felo.py:261
+#: felo.py:262
 msgid "&Estimate freshmen"
 msgstr "É&valuer les nouveaux"
 
-#: felo.py:262
+#: felo.py:263
 msgid "&Calculate"
 msgstr "&Calculer"
 
-#: felo.py:265
+#: felo.py:266
 msgid "Online &help"
 msgstr "&Aide en ligne"
 
-#: felo.py:266
+#: felo.py:267
 msgid "Report &bug"
 msgstr "Rapporter un &bug"
 
-#: felo.py:267
+#: felo.py:268
 msgid "Felo &forum"
 msgstr "&Forum de Felo"
 
-#: felo.py:268
+#: felo.py:269
 msgid "Felo &webpage"
 msgstr "&Site de Felo"
 
-#: felo.py:270
+#: felo.py:271
 msgid "Show &licence"
 msgstr "Montrer la &licence"
 
-#: felo.py:271
+#: felo.py:272
 msgid "&About Felo"
 msgstr "&A propos de Felo"
 
-#: felo.py:272
+#: felo.py:273
 msgid "&Help"
 msgstr "&Aide"
 
-#: felo.py:278 felo.py:330 felo.py:361
+#: felo.py:279 felo.py:331 felo.py:362
 msgid "unnamed.felo"
 msgstr "sansnom.felo"
 
-#: felo.py:287
+#: felo.py:288
 msgid "http://felo.sourceforge.net/felo/"
 msgstr "http://felo.sourceforge.net/felo/"
 
-#: felo.py:289
+#: felo.py:290
 msgid "Software licence"
 msgstr "Licence du logiciel"
 
-#: felo.py:289
+#: felo.py:290
 msgid "licence.html"
 msgstr "licence.html"
 
-#: felo.py:301
+#: felo.py:302
 #, python-format
 msgid "The file \"%s\" has changed.  Save it?"
 msgstr "Le fichier \"%s\" a été modifié. Le sauvegarder ?"
 
-#: felo.py:302
+#: felo.py:303
 msgid "File changed"
 msgstr "Fichier modifié"
 
-#: felo.py:319
+#: felo.py:320
 #, python-format
 msgid "Could not open file because folder '%s' doesn't exist."
 msgstr "N'a pas pu ouvrir le fichier parceque le dossier '%s' n'existe pas."
 
-#: felo.py:320
+#: felo.py:321
 msgid "Folder not found"
 msgstr "Dossier non trouvé"
 
-#: felo.py:333
+#: felo.py:334
 msgid "boilerplate.felo"
 msgstr "boilerplate-fr.felo"
 
-#: felo.py:337 felo.py:367
+#: felo.py:338 felo.py:368
 msgid "Felo file (*.felo)|*.felo|All files (*.*)|*.*"
 msgstr "Fichier Felo (*.felo)|*.felo|Tous les fichiers (*.*)|*.*"
 
-#: felo.py:339 felo.py:369
+#: felo.py:340 felo.py:370
 msgid "Select Felo file"
 msgstr "Choisir un fichier Felo"
 
-#: felo.py:386
+#: felo.py:387
 #, python-format
 msgid "Error in line %d: %s"
 msgstr "Erreur à la ligne %d: %s"
 
-#: felo.py:387 felo.py:389
+#: felo.py:388 felo.py:390
 msgid "Parsing error"
 msgstr "Analyse des erreurs"
 
-#: felo.py:394
+#: felo.py:395
 msgid ""
 "I haven't found any bouts.  Please enter or open a\n"
 "complete Felo file with fencers and bouts."
@@ -247,28 +247,28 @@ msgstr ""
 "Je n'ai trouvé aucun assaut. Veuillez taper ou ouvrir un\n"
 "fichier Felo complet avec des escrimeurs et des assauts."
 
-#: felo.py:396
+#: felo.py:397
 msgid "No bouts found"
 msgstr "Pas d'assaut trouvé"
 
-#: felo.py:405 felo.py:438
+#: felo.py:406 felo.py:440
 msgid "Felo ratings "
 msgstr "Notes de Felo "
 
-#: felo.py:415
+#: felo.py:416
 #, python-format
 msgid "%x"
 msgstr "%x"
 
-#: felo.py:438
+#: felo.py:440
 msgid "as of "
 msgstr "pour ce qui est de "
 
-#: felo.py:441
+#: felo.py:443
 msgid "External program not found"
 msgstr "Programme externe non trouvé"
 
-#: felo.py:444
+#: felo.py:446
 #, python-format
 msgid ""
 "Could not write to file or directory.\n"
@@ -277,15 +277,15 @@ msgstr ""
 "N'a pas pu écrire dans le fichier ou le répertoire.\n"
 "(J'ai essayé d'écrire dans '%s'.)"
 
-#: felo.py:445
+#: felo.py:447
 msgid "Couldn't write file"
 msgstr "N'a pas pu écrire le fichier"
 
-#: felo.py:454
+#: felo.py:456
 msgid "Felo ratings plot for "
 msgstr "Graphique des notes de Felo pour "
 
-#: felo.py:457
+#: felo.py:459
 #, python-format
 msgid ""
 "<p class='printable-notice'>Also in a <a href='%s.pdf'>printable version</a>."
@@ -294,11 +294,11 @@ msgstr ""
 "<p class='printable-notice'>Aussi disponible en <a href='%s.pdf'>une version "
 "imprimable</a>"
 
-#: felo.py:463
+#: felo.py:465
 msgid "Preview HTML"
 msgstr "Prévisualiser le HTML"
 
-#: felo.py:465
+#: felo.py:467
 #, python-format
 msgid ""
 "The following files must be uploaded from\n"
@@ -311,25 +311,27 @@ msgstr ""
 "vers le serveur web:\n"
 "\n"
 
-#: felo.py:467
+#: felo.py:469
 msgid "Upload file list"
 msgstr "Envoyer la liste de fichier"
 
-#: felo.py:475
+#: felo.py:477
 msgid ""
 "The bootstrapping will change the fencer data.  Are you sure that you wish "
 "to continue?"
-msgstr "Le bootstrapping affectera les données sur les escrimeurs. Souhaitez-vous vraiment continuer ?"
+msgstr ""
+"Le bootstrapping affectera les données sur les escrimeurs. Souhaitez-vous "
+"vraiment continuer ?"
 
-#: felo.py:477 felo.py:481
+#: felo.py:479 felo.py:483
 msgid "Bootstrapping"
 msgstr "Bootstrapping"
 
-#: felo.py:481
+#: felo.py:483
 msgid "I'm bootstrapping, please be patient"
 msgstr "Je suis en train de bootstrapper, soyez patient."
 
-#: felo.py:494
+#: felo.py:496
 msgid ""
 "The bootstrapping didn't converge.  You may want to increase\n"
 "the value for the 'threshold bootstrapping' parameter."
@@ -337,11 +339,11 @@ msgstr ""
 "Le bootstrapping n'a pas convergé. Vous devriez peut être\n"
 "augmenter la valeur de seuil du bootstrapping."
 
-#: felo.py:496
+#: felo.py:498
 msgid "Bootstrapping didn't converge"
 msgstr "Le bootstrapping n'a pas convergé"
 
-#: felo.py:505
+#: felo.py:507
 msgid ""
 "Estimating the freshmen will change their initial Felo numbers.  Are you "
 "sure that you wish to continue?"
@@ -349,7 +351,7 @@ msgstr ""
 "Évaluer les nouveaux changera leurs numéros Felo originaux. Êtes-vous "
 "certain de vouloir continuer ?"
 
-#: felo.py:507
+#: felo.py:509
 msgid "Estimating freshmen"
 msgstr "Nouveaux en cours d'évaluation"
 
@@ -497,20 +499,20 @@ msgstr "Supprimer d'abord le fichier (.bak) de sauvegarde."
 msgid ", line "
 msgstr ", ligne "
 
-#: felo_rating.py:1135
+#: felo_rating.py:1141
 msgid "'%Y-%m-%d'"
 msgstr "%Y-%m-%d"
 
-#: felo_rating.py:1157
+#: felo_rating.py:1170
 #, python-format
 msgid "(I looked for it at '%s'.)  "
 msgstr "(Je l'ai cherché dans '%s'.) "
 
-#: felo_rating.py:1187
+#: felo_rating.py:1200
 msgid "The bootstrapping didn't converge."
 msgstr "Le bootstrapping n'a pas convergé."
 
-#: felo_rating.py:1228
+#: felo_rating.py:1241
 #, python-format
 msgid ""
 "The program \"gnuplot\" wasn't found.  %sHowever, it is needed for the "
@@ -519,7 +521,7 @@ msgstr ""
 "Le programme \"gnuplot\" n'a pas été trouvé. %sCependant, il est nécessaire "
 "pour les graphiques. Installez le depuis http://www.gnuplot.info/."
 
-#: felo_rating.py:1245
+#: felo_rating.py:1258
 #, python-format
 msgid ""
 "The program \"convert\" of ImageMagick wasn't found.  %sHowever, it is "
@@ -529,54 +531,54 @@ msgstr ""
 "est néccessaire pourles graphiques. Installez le depuis http://www."
 "imagemagick.org/."
 
-#: felo_rating.py:1324
+#: felo_rating.py:1337
 msgid "Generate plots with the Felo ratings"
 msgstr "Générer un graphique à partir des notes Felo"
 
-#: felo_rating.py:1326
+#: felo_rating.py:1339
 msgid "Try to estimate good initial values for all fencers"
 msgstr ""
 "Essayer d'estimer les bonnes valeurs initiales pour tous les escrimeurs"
 
-#: felo_rating.py:1328
+#: felo_rating.py:1341
 msgid "Maximal iteration steps during bootstrapping.  Default: 1000"
 msgstr "Nombre maximum d'itération pour le bootstrapping. Par défaut: 1000"
 
-#: felo_rating.py:1330
+#: felo_rating.py:1343
 msgid "NUMBER"
 msgstr "NOMBRE"
 
-#: felo_rating.py:1332
+#: felo_rating.py:1345
 msgid "Try to estimate freshmen"
 msgstr "Essayer d'évaluer les nouveaux"
 
-#: felo_rating.py:1334
+#: felo_rating.py:1347
 msgid "Write the new initial values back into the Felo file"
 msgstr "Écrire les nouvelles valeurs initiales dans le fichier Felo"
 
-#: felo_rating.py:1337
+#: felo_rating.py:1350
 msgid "Print out version number and copying information"
 msgstr "Affiche le numéro de version et les informations sur le copyright"
 
-#: felo_rating.py:1341
+#: felo_rating.py:1354
 msgid "Name of the output file.  Default: output to the screen (stdout)"
 msgstr "Nom du fichier de sortie. Par défaut: affichage vers l'écran (stdout)"
 
-#: felo_rating.py:1342
+#: felo_rating.py:1355
 msgid "FILENAME"
 msgstr "NOMDEFICHIER"
 
-#: felo_rating.py:1346
+#: felo_rating.py:1359
 #, python-format
 msgid ", revision %s"
 msgstr ", révision %s"
 
-#: felo_rating.py:1348
+#: felo_rating.py:1361
 #, python-format
 msgid "Copyright %s 2006 Torsten Bronger, Aachen, Germany"
 msgstr "Copyright %s 2006 Torsten Bronger, Aix-la-Chapelle, Allemagne"
 
-#: felo_rating.py:1349
+#: felo_rating.py:1362
 msgid ""
 "This is free software.  You may redistribute copies of it under the terms "
 "of\n"
@@ -588,10 +590,10 @@ msgstr ""
 "license.php>.\n"
 "Il n'y a aucune garantie, dans toute la mesure autorisée par la loi."
 
-#: felo_rating.py:1353
+#: felo_rating.py:1366
 msgid "Written by Torsten Bronger <bronger@physik.rwth-aachen.de>."
 msgstr "Écrit par Torsten Bronger <bronger@physik.rwth-aachen.de>."
 
-#: felo_rating.py:1357
+#: felo_rating.py:1370
 msgid "You cannot bootstrap and estimate freshmen at the same time."
 msgstr "Vous ne pouvez pas bootstraper et estimer les nouveaux simultanément."
