@@ -1104,6 +1104,16 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
 
         :rtype: string
         """
+        def add_active_fencers(fencer, today_active_fencers):
+            if "/" not in fencer:
+                today_active_fencers.add(fencer)
+            else:
+                # We have a team actually.  FixMe: Not yet supported by the
+                # rest of the program
+                fencers = fencer.split("/")
+                for fencer in fencers:
+                    today_active_fencers.add(fencer.strip())
+                    
         if plot:
             data_file = open(data_file_name, "w")
             # xtics holds the Gnuplot command for the x axis labels (i.e. the dates).
@@ -1113,8 +1123,8 @@ def calculate_felo_ratings(parameters, fencers, bouts, plot=False, estimate_fres
         first_data_row = True
         for i, bout in enumerate(bouts):
             set_preliminary_felo_ratings(fencers, bout, parameters)
-            today_active_fencers.add(bout.first_fencer)
-            today_active_fencers.add(bout.second_fencer)
+            add_active_fencers(bout.first_fencer, today_active_fencers)
+            add_active_fencers(bout.second_fencer, today_active_fencers)
             if i == len(bouts) - 1 or bout.date_string != bouts[i+1].date_string:
                 # Not one *day* is over but one set of bouts which took place with
                 # unknown order.
