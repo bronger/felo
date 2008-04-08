@@ -56,7 +56,7 @@ setup(name = 'Felo',
       windows = [{'script': 'src/felo.py',
                   'icon_resources': [(1, 'src/felo.ico')]}],
       description = 'Felo',
-      version = '1.0',
+      version = '1.0.1',
       long_description = \
       """Felo ratings are a wonderful new method to estimate fencers.  The Felo
 program calculates these ratings for a given group of fencers.  The
