@@ -31,7 +31,7 @@
 
 __version__ = "$Revision$"
 # $HeadURL$
-distribution_version = "1.0.1"
+distribution_version = "1.0.2"
 
 import re, os, codecs, sys, time, StringIO, textwrap, platform, webbrowser, shutil
 datapath = os.path.abspath(os.path.dirname(sys.argv[0]))

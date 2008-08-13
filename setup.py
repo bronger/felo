@@ -77,11 +77,11 @@ languages = ("de", "fr")
 language_data_files = []
 for language in languages:
     language_path = os.path.join("share", "locale", language, "LC_MESSAGES")
-    language_data_files.append((language_path, [os.path.join("/home/bronger/src/felo/po", language, "felo.mo")]))
+    language_data_files.append((language_path, [os.path.join("po", language, "felo.mo")]))
 
 setup(name = 'felo',
       description = 'Calculate Felo ratings for estimating sport fencers',
-      version = '1.0.1',
+      version = '1.0.2',
       long_description = \
       """Felo ratings are a wonderful new method to estimate fencers.  The
 Felo program calculates these ratings for a given group of fencers.
@@ -110,7 +110,7 @@ bout result list.  The program offers a graphical user interface
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Mathematics',
         ],
-      data_files = language_data_files + [('bin', ["/home/bronger/src/felo/src/felo"])],
+      data_files = language_data_files + [('bin', ["src/felo"])],
       platforms = "Linux, Windows",
       packages = ['felo'],
       package_dir = {'felo': 'src'},
