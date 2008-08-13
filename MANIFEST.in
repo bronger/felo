@@ -1,0 +1,5 @@
+include COPYING *.py
+recursive-include po *.po felo.pot Makefile
+recursive-include nsis *
+recursive-include doc *
+recursive-include src felo *.ico *.png *.felo *.cfg *.svg *.html *.bmp *.cfg *.dat

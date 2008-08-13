@@ -76,12 +76,14 @@ if os.path.isfile(real_rpmmacros_name) and not os.path.isfile(temp_rpmmacros_nam
 languages = ("de", "fr")
 language_data_files = []
 for language in languages:
-    language_path = os.path.join("share", "locale", language, "LC_MESSAGES")
-    language_data_files.append((language_path, [os.path.join("/home/bronger/src/felo/po", language, "felo.mo")]))
+    # FixMe: Should actually go to /usr/local/share/locale, but the current
+    # Felo doesn't find the files there.
+    language_path = os.path.join("/usr/share/locale", language, "LC_MESSAGES")
+    language_data_files.append((language_path, [os.path.join("po", language, "felo.mo")]))
 
 setup(name = 'felo',
       description = 'Calculate Felo ratings for estimating sport fencers',
-      version = '1.0.1',
+      version = '1.0.2',
       long_description = \
       """Felo ratings are a wonderful new method to estimate fencers.  The
 Felo program calculates these ratings for a given group of fencers.
@@ -95,9 +97,7 @@ bout result list.  The program offers a graphical user interface
       download_url = 'http://sourceforge.net/projects/felo/',
       keywords = 'fencing sports Felo rating',
       license = 'MIT License',
-      options = {'bsdist_rpm': { 'release': '1', 'provides': 'felo', 'requires': 'python >= 2.4' },
-                 'install': { 'prefix': '/usr' }
-                 },
+      options = {'bsdist_rpm': { 'release': '1', 'provides': 'felo', 'requires': 'python >= 2.4' }},
       classifiers = [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -110,7 +110,7 @@ bout result list.  The program offers a graphical user interface
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Mathematics',
         ],
-      data_files = language_data_files + [('bin', ["/home/bronger/src/felo/src/felo"])],
+      data_files = language_data_files + [('/usr/local/bin', ["src/felo"])],
       platforms = "Linux, Windows",
       packages = ['felo'],
       package_dir = {'felo': 'src'},
