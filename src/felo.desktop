@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Name=Felo
+Comment=Calculating sport fencer strengths
+Comment[de]=Stärke von Sportfechtern berechnen
+GenericName=Sport statistics
+GenericName[de]=Sport-Statistiken
+Exec=felo %u
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=felo-icon
+Categories=Application;Education;Sports;
+StartupWMClass=Felo
+StartupNotify=false
