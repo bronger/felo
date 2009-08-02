@@ -32,4 +32,4 @@ if [ `id -u` -eq 0 ]; then
 	echo "You must not launch Felo as root, it is INSECURE"
 fi
 
-exec -a felo /usr/bin/python -OO /usr/lib/python2.4/site-packages/felo/felo.py $@
+exec -a felo /usr/bin/python /usr/share/python-support/felo/felo/felo.py $@

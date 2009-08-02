@@ -33,53 +33,8 @@ try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
-import distutils.dir_util
-import shutil, os.path, atexit, sys
 
-try:
-    distutils.dir_util.remove_tree("build")
-except:
-    pass
-
-# The following code may be very specific to my own home configuration,
-# although I hope that it's useful to other who try to create Felo packages,
-# too.
-#
-# The goal is to override an existing local RPM configuration.  Distutils only
-# works together with a widely untouched configuration, so I have to disable
-# any extisting one represented by the file ~/.rpmmacros.  I look for this file
-# and move it to ~/.rpmmacros.original.  After setup.py is terminated, this
-# renaming is reverted.
-#
-# Additionally, if a file ~/.rpmmacros.distutis exists, it is used for
-# ~/.rpmmacros while setup.py is running.  So you can still make use of things
-# like "%vendor" or "%packager".
-
-home_dir = os.environ['HOME']
-real_rpmmacros_name = os.path.join(home_dir, '.rpmmacros')
-distutils_rpmmacros_name = os.path.join(home_dir, '.rpmmacros.distutils')
-temp_rpmmacros_name = os.path.join(home_dir, '.rpmmacros.original')
-
-def restore_rpmmacros():
-    shutil.move(temp_rpmmacros_name, real_rpmmacros_name)
-
-# I check whether temp_rpmmacros_name exists for two reasons: First, I don't
-# want to overwrite it, and secondly, I don't want this renaming to take place
-# twice.  This would happen otherwise, because setup.py is called more than
-# once per building session.
-if os.path.isfile(real_rpmmacros_name) and not os.path.isfile(temp_rpmmacros_name):
-    shutil.move(real_rpmmacros_name, temp_rpmmacros_name)
-    if os.path.isfile(distutils_rpmmacros_name):
-        shutil.copy(distutils_rpmmacros_name, real_rpmmacros_name)
-    atexit.register(restore_rpmmacros)
-
-languages = ("de", "fr")
-language_data_files = []
-for language in languages:
-    # FixMe: Should actually go to /usr/local/share/locale, but the current
-    # Felo doesn't find the files there.
-    language_path = os.path.join("/usr/share/locale", language, "LC_MESSAGES")
-    language_data_files.append((language_path, [os.path.join("po", language, "felo.mo")]))
+from DistUtilsExtra.command import *
 
 setup(name = 'felo',
       description = 'Calculate Felo ratings for estimating sport fencers',
@@ -110,10 +65,12 @@ bout result list.  The program offers a graphical user interface
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Mathematics',
         ],
-      data_files = language_data_files + [('/usr/local/bin', ["src/felo"])],
+      data_files = [('/usr/bin', ["src/felo"]), ('/usr/share/pixmaps/', ["src/felo-icon.png"]),
+                    ('/usr/share/applications/', ["src/felo.desktop"]),
+                    ('/usr/share/info', ["doc/felo.info"] + ["doc/felo-screen-%d.png" % i for i in range(1, 7)])],
       platforms = "Linux, Windows",
       packages = ['felo'],
       package_dir = {'felo': 'src'},
-      package_data = {'felo': ['auf*.dat', 'boilerplate*.felo', '*.png',
-                      'licence*.html', '*.ico']}
+      package_data = {'felo': ['auf*.dat', 'boilerplate*.felo', 'licence*.html', '*.png']},
+      cmdclass = {"build": build_extra.build_extra, "build_i18n": build_i18n.build_i18n}
       )
