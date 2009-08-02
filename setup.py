@@ -38,7 +38,7 @@ from DistUtilsExtra.command import *
 
 setup(name = 'felo',
       description = 'Calculate Felo ratings for estimating sport fencers',
-      version = '1.0.2',
+      version = '1.0.3',
       long_description = \
       """Felo ratings are a wonderful new method to estimate fencers.  The
 Felo program calculates these ratings for a given group of fencers.

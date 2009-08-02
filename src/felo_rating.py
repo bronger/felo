@@ -69,7 +69,7 @@ __all__ = ["Bout", "Fencer", "parse_felo_file", "write_felo_file", "calculate_fe
 
 __version__ = "$Revision$"
 # $HeadURL$
-distribution_version = "1.0.2"
+distribution_version = "1.0.3"
 
 import codecs, re, os.path, datetime, time, shutil, glob, tempfile
 # This strange construction is necessary because on Windows, the file may be
