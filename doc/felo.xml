@@ -1,0 +1,107 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook V4.2//EN"
+                   "http://www.oasis-open.org/docbook/sgml/4.2/docbook.dtd">
+<!--
+%%
+%%======================================================================
+%%    felo.xml - Part of the Felo Program
+%%    Copyright 2008 Torsten Bronger <bronger@physik.rwth-aachen.de>
+%%
+%%    Felo is free software; you can redistribute it and/or modify it under
+%%    the terms of the MIT licence:
+%%
+%%    Permission is hereby granted, free of charge, to any person obtaining a
+%%    copy of this software and associated documentation files (the "Software"),
+%%    to deal in the Software without restriction, including without limitation
+%%    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+%%    and/or sell copies of the Software, and to permit persons to whom the
+%%    Software is furnished to do so, subject to the following conditions:
+%%
+%%    The above copyright notice and this permission notice shall be included in
+%%    all copies or substantial portions of the Software.
+%%
+%%    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%%    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%%    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+%%    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%%    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+%%    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+%%    DEALINGS IN THE SOFTWARE.
+%%
+%%======================================================================
+%%
+-->
+
+<refentry id="felo">
+  <refentryinfo>
+    <author>
+      <firstname>Torsten</firstname>
+      <surname>Bronger</surname>
+      <email>bronger@physik.rwth-aachen.de</email>
+    </author>
+    <date>2009/08/02</date>
+  </refentryinfo>
+
+  <refmeta>
+    <refentrytitle>Felo</refentrytitle>
+    <manvolnum>1</manvolnum>
+    <refmiscinfo>2009/08/02 &ndash; &#169; 2006&ndash;2008 Torsten Bronger</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>Felo</refname><refpurpose>estimating the strength of sportsmen</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>felo</command>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    
+    <para><productname>Felo</productname> is a GUI program which estimates the
+relative strength of sportsmen, expressed in the so-called Felo numbers.  It
+was written particularly with fencing having in mind, however, it can also be
+used for a couple of other sports.  It it an extension of the famous chess ELO
+rating system.</para>
+
+    <para>Felo produces tables for the Felo numbers, and graphical plots with
+the development of the Felo numbers over time.</para>
+  </refsect1>
+
+  <refsect1>
+    <title>See also</title>
+
+    <para>Comprehensive docmentation of Felo can be found on its Info pages, or
+online on
+its <ulink url="http://felo.sourceforge.net/felo/">homepage</ulink>.</para>
+  </refsect1>
+
+  <refsect1>
+    <title>Author</title>
+
+    <simpara>Written by Torsten
+Bronger <email>bronger@users.sourceforge.net</email>.</simpara>
+    
+  </refsect1>
+
+  <refsect1>
+    <title>Reporting Bugs</title>
+
+    <simpara>Please report bugs on <ulink url=
+"http://sourceforge.net/projects/felo">Felo's project page at
+Sourceforge</ulink>.</simpara>
+  </refsect1>
+
+  <refsect1>
+    <title>Copyright</title>
+
+    <simpara>Copyright &copy; 2006&ndash;2008 Torsten Bronger</simpara>
+    
+    <simpara>This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.</simpara>
+  </refsect1>
+
+</refentry>
