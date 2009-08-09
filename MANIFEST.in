@@ -1,5 +1,5 @@
-include COPYING *.py
-recursive-include po *.po felo.pot Makefile
+include COPYING *.py felo.desktop
+recursive-include po *.po felo.pot Makefile POTFILES.in
 recursive-include nsis *
 recursive-include doc *
 recursive-include src felo *.ico *.png *.felo *.cfg *.svg *.html *.bmp *.cfg *.dat
