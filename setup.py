@@ -66,7 +66,7 @@ bout result list.  The program offers a graphical user interface
         'Topic :: Scientific/Engineering :: Mathematics',
         ],
       data_files = [('/usr/bin', ["src/felo"]), ('/usr/share/pixmaps/', ["src/felo-icon.png"]),
-                    ('/usr/share/applications/', ["src/felo.desktop"]),
+                    ('/usr/share/applications/', ["felo.desktop"]),
                     ('/usr/share/info', ["doc/felo.info"] + ["doc/felo-screen-%d.png" % i for i in range(1, 7)])],
       platforms = "Linux, Windows",
       packages = ['felo'],
