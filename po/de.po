@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Felo 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-17 15:49+0100\n"
-"PO-Revision-Date: 2007-03-18 17:16+0100\n"
+"PO-Revision-Date: 2009-08-10 11:27+0200\n"
 "Last-Translator: Torsten Bronger <bronger@physik.rwth-aachen.de>\n"
 "Language-Team: German <bronger@physik.rwth-aachen.de>\n"
 "MIME-Version: 1.0\n"
@@ -256,7 +256,6 @@ msgid "Felo ratings "
 msgstr "Felo-Zahlen "
 
 #: felo.py:416
-#, python-format
 msgid "%x"
 msgstr "%d.&nbsp;%B&nbsp;%Y"
 
