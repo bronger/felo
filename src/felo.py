@@ -384,7 +384,8 @@ class Frame(wx.Frame):
             parameters, __, fencers, bouts = felo_rating.parse_felo_file(felo_file_contents)
         except felo_rating.LineError, e:
             self.editor.GotoLine(e.linenumber - 1)
-            wx.MessageBox(_(u"Error in line %d: %s") % (e.linenumber, e.naked_description),
+            wx.MessageBox(_(u"Error in line %(linenumber)d: %(description)s") %
+                          {"linenumber": e.linenumber, "description": e.naked_description},
                           _(u"Parsing error"), wx.OK | wx.ICON_ERROR, self)
         except felo_rating.FeloFormatError, e:
             wx.MessageBox(e.description, _(u"Parsing error"), wx.OK | wx.ICON_ERROR, self)

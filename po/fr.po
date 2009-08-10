@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Felo 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-17 15:49+0100\n"
-"PO-Revision-Date: 2007-01-06 10:21+0100\n"
+"POT-Creation-Date: 2009-08-10 17:11+0200\n"
+"PO-Revision-Date: 2009-08-10 17:11+0200\n"
 "Last-Translator: Pierre Gergondet <pierre.gergondet@via.ecp.fr>\n"
 "Language-Team: French <none@none.com>\n"
 "MIME-Version: 1.0\n"
@@ -232,14 +232,14 @@ msgstr "Choisir un fichier Felo"
 
 #: felo.py:387
 #, python-format
-msgid "Error in line %d: %s"
-msgstr "Erreur à la ligne %d: %s"
+msgid "Error in line %(linenumber)d: %(description)s"
+msgstr "Erreur à la ligne %(linenumber)d: %(description)s"
 
-#: felo.py:388 felo.py:390
+#: felo.py:389 felo.py:391
 msgid "Parsing error"
 msgstr "Analyse des erreurs"
 
-#: felo.py:395
+#: felo.py:396
 msgid ""
 "I haven't found any bouts.  Please enter or open a\n"
 "complete Felo file with fencers and bouts."
@@ -247,28 +247,28 @@ msgstr ""
 "Je n'ai trouvé aucun assaut. Veuillez taper ou ouvrir un\n"
 "fichier Felo complet avec des escrimeurs et des assauts."
 
-#: felo.py:397
+#: felo.py:398
 msgid "No bouts found"
 msgstr "Pas d'assaut trouvé"
 
-#: felo.py:406 felo.py:440
+#: felo.py:407 felo.py:441
 msgid "Felo ratings "
 msgstr "Notes de Felo "
 
-#: felo.py:416
+#: felo.py:417
 #, python-format
 msgid "%x"
 msgstr "%x"
 
-#: felo.py:440
+#: felo.py:441
 msgid "as of "
 msgstr "pour ce qui est de "
 
-#: felo.py:443
+#: felo.py:444
 msgid "External program not found"
 msgstr "Programme externe non trouvé"
 
-#: felo.py:446
+#: felo.py:447
 #, python-format
 msgid ""
 "Could not write to file or directory.\n"
@@ -277,15 +277,15 @@ msgstr ""
 "N'a pas pu écrire dans le fichier ou le répertoire.\n"
 "(J'ai essayé d'écrire dans '%s'.)"
 
-#: felo.py:447
+#: felo.py:448
 msgid "Couldn't write file"
 msgstr "N'a pas pu écrire le fichier"
 
-#: felo.py:456
+#: felo.py:457
 msgid "Felo ratings plot for "
 msgstr "Graphique des notes de Felo pour "
 
-#: felo.py:459
+#: felo.py:460
 #, python-format
 msgid ""
 "<p class='printable-notice'>Also in a <a href='%s.pdf'>printable version</a>."
@@ -294,11 +294,11 @@ msgstr ""
 "<p class='printable-notice'>Aussi disponible en <a href='%s.pdf'>une version "
 "imprimable</a>"
 
-#: felo.py:465
+#: felo.py:466
 msgid "Preview HTML"
 msgstr "Prévisualiser le HTML"
 
-#: felo.py:467
+#: felo.py:468
 #, python-format
 msgid ""
 "The following files must be uploaded from\n"
@@ -311,11 +311,11 @@ msgstr ""
 "vers le serveur web:\n"
 "\n"
 
-#: felo.py:469
+#: felo.py:470
 msgid "Upload file list"
 msgstr "Envoyer la liste de fichier"
 
-#: felo.py:477
+#: felo.py:478
 msgid ""
 "The bootstrapping will change the fencer data.  Are you sure that you wish "
 "to continue?"
@@ -323,15 +323,15 @@ msgstr ""
 "Le bootstrapping affectera les données sur les escrimeurs. Souhaitez-vous "
 "vraiment continuer ?"
 
-#: felo.py:479 felo.py:483
+#: felo.py:480 felo.py:484
 msgid "Bootstrapping"
 msgstr "Bootstrapping"
 
-#: felo.py:483
+#: felo.py:484
 msgid "I'm bootstrapping, please be patient"
 msgstr "Je suis en train de bootstrapper, soyez patient."
 
-#: felo.py:496
+#: felo.py:497
 msgid ""
 "The bootstrapping didn't converge.  You may want to increase\n"
 "the value for the 'threshold bootstrapping' parameter."
@@ -339,11 +339,11 @@ msgstr ""
 "Le bootstrapping n'a pas convergé. Vous devriez peut être\n"
 "augmenter la valeur de seuil du bootstrapping."
 
-#: felo.py:498
+#: felo.py:499
 msgid "Bootstrapping didn't converge"
 msgstr "Le bootstrapping n'a pas convergé"
 
-#: felo.py:507
+#: felo.py:508
 msgid ""
 "Estimating the freshmen will change their initial Felo numbers.  Are you "
 "sure that you wish to continue?"
@@ -351,7 +351,7 @@ msgstr ""
 "Évaluer les nouveaux changera leurs numéros Felo originaux. Êtes-vous "
 "certain de vouloir continuer ?"
 
-#: felo.py:509
+#: felo.py:510
 msgid "Estimating freshmen"
 msgstr "Nouveaux en cours d'évaluation"
 
@@ -499,20 +499,20 @@ msgstr "Supprimer d'abord le fichier (.bak) de sauvegarde."
 msgid ", line "
 msgstr ", ligne "
 
-#: felo_rating.py:1141
+#: felo_rating.py:1151
 msgid "'%Y-%m-%d'"
 msgstr "%Y-%m-%d"
 
-#: felo_rating.py:1170
+#: felo_rating.py:1180
 #, python-format
 msgid "(I looked for it at '%s'.)  "
 msgstr "(Je l'ai cherché dans '%s'.) "
 
-#: felo_rating.py:1200
+#: felo_rating.py:1210
 msgid "The bootstrapping didn't converge."
 msgstr "Le bootstrapping n'a pas convergé."
 
-#: felo_rating.py:1241
+#: felo_rating.py:1251
 #, python-format
 msgid ""
 "The program \"gnuplot\" wasn't found.  %sHowever, it is needed for the "
@@ -521,7 +521,7 @@ msgstr ""
 "Le programme \"gnuplot\" n'a pas été trouvé. %sCependant, il est nécessaire "
 "pour les graphiques. Installez le depuis http://www.gnuplot.info/."
 
-#: felo_rating.py:1258
+#: felo_rating.py:1268
 #, python-format
 msgid ""
 "The program \"convert\" of ImageMagick wasn't found.  %sHowever, it is "
@@ -531,54 +531,54 @@ msgstr ""
 "est néccessaire pourles graphiques. Installez le depuis http://www."
 "imagemagick.org/."
 
-#: felo_rating.py:1337
+#: felo_rating.py:1347
 msgid "Generate plots with the Felo ratings"
 msgstr "Générer un graphique à partir des notes Felo"
 
-#: felo_rating.py:1339
+#: felo_rating.py:1349
 msgid "Try to estimate good initial values for all fencers"
 msgstr ""
 "Essayer d'estimer les bonnes valeurs initiales pour tous les escrimeurs"
 
-#: felo_rating.py:1341
+#: felo_rating.py:1351
 msgid "Maximal iteration steps during bootstrapping.  Default: 1000"
 msgstr "Nombre maximum d'itération pour le bootstrapping. Par défaut: 1000"
 
-#: felo_rating.py:1343
+#: felo_rating.py:1353
 msgid "NUMBER"
 msgstr "NOMBRE"
 
-#: felo_rating.py:1345
+#: felo_rating.py:1355
 msgid "Try to estimate freshmen"
 msgstr "Essayer d'évaluer les nouveaux"
 
-#: felo_rating.py:1347
+#: felo_rating.py:1357
 msgid "Write the new initial values back into the Felo file"
 msgstr "Écrire les nouvelles valeurs initiales dans le fichier Felo"
 
-#: felo_rating.py:1350
+#: felo_rating.py:1360
 msgid "Print out version number and copying information"
 msgstr "Affiche le numéro de version et les informations sur le copyright"
 
-#: felo_rating.py:1354
+#: felo_rating.py:1364
 msgid "Name of the output file.  Default: output to the screen (stdout)"
 msgstr "Nom du fichier de sortie. Par défaut: affichage vers l'écran (stdout)"
 
-#: felo_rating.py:1355
+#: felo_rating.py:1365
 msgid "FILENAME"
 msgstr "NOMDEFICHIER"
 
-#: felo_rating.py:1359
+#: felo_rating.py:1369
 #, python-format
 msgid ", revision %s"
 msgstr ", révision %s"
 
-#: felo_rating.py:1361
+#: felo_rating.py:1371
 #, python-format
 msgid "Copyright %s 2006 Torsten Bronger, Aachen, Germany"
 msgstr "Copyright %s 2006 Torsten Bronger, Aix-la-Chapelle, Allemagne"
 
-#: felo_rating.py:1362
+#: felo_rating.py:1372
 msgid ""
 "This is free software.  You may redistribute copies of it under the terms "
 "of\n"
@@ -590,10 +590,10 @@ msgstr ""
 "license.php>.\n"
 "Il n'y a aucune garantie, dans toute la mesure autorisée par la loi."
 
-#: felo_rating.py:1366
+#: felo_rating.py:1376
 msgid "Written by Torsten Bronger <bronger@physik.rwth-aachen.de>."
 msgstr "Écrit par Torsten Bronger <bronger@physik.rwth-aachen.de>."
 
-#: felo_rating.py:1370
+#: felo_rating.py:1380
 msgid "You cannot bootstrap and estimate freshmen at the same time."
 msgstr "Vous ne pouvez pas bootstraper et estimer les nouveaux simultanément."
