@@ -7,9 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Felo 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-10 17:11+0200\n"
+"POT-Creation-Date: 2009-08-10 21:40+0200\n"
 "PO-Revision-Date: 2009-08-10 18:29+0200\n"
-"Last-Translator: Pierre Gergondet <pierre.gergondet.ubuntubug411514@via.ecp.fr>\n"
+"Last-Translator: Pierre Gergondet <pierre.gergondet.ubuntubug411514@via.ecp."
+"fr>\n"
 "Language-Team: French <none@none.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -251,24 +252,24 @@ msgstr ""
 msgid "No bouts found"
 msgstr "Pas d'assaut trouvé"
 
-#: felo.py:407 felo.py:441
+#: felo.py:407 felo.py:442
 msgid "Felo ratings "
 msgstr "Notes de Felo "
 
-#: felo.py:417
-#, python-format
+#: felo.py:418
+#, no-python-format
 msgid "%x"
 msgstr "%x"
 
-#: felo.py:441
+#: felo.py:442
 msgid "as of "
 msgstr "pour ce qui est de "
 
-#: felo.py:444
+#: felo.py:445
 msgid "External program not found"
 msgstr "Programme externe non trouvé"
 
-#: felo.py:447
+#: felo.py:448
 #, python-format
 msgid ""
 "Could not write to file or directory.\n"
@@ -277,15 +278,15 @@ msgstr ""
 "N'a pas pu écrire dans le fichier ou le répertoire.\n"
 "(J'ai essayé d'écrire dans '%s'.)"
 
-#: felo.py:448
+#: felo.py:449
 msgid "Couldn't write file"
 msgstr "N'a pas pu écrire le fichier"
 
-#: felo.py:457
+#: felo.py:458
 msgid "Felo ratings plot for "
 msgstr "Graphique des notes de Felo pour "
 
-#: felo.py:460
+#: felo.py:461
 #, python-format
 msgid ""
 "<p class='printable-notice'>Also in a <a href='%s.pdf'>printable version</a>."
@@ -294,11 +295,11 @@ msgstr ""
 "<p class='printable-notice'>Aussi disponible en <a href='%s.pdf'>une version "
 "imprimable</a>"
 
-#: felo.py:466
+#: felo.py:467
 msgid "Preview HTML"
 msgstr "Prévisualiser le HTML"
 
-#: felo.py:468
+#: felo.py:469
 #, python-format
 msgid ""
 "The following files must be uploaded from\n"
@@ -311,11 +312,11 @@ msgstr ""
 "vers le serveur web:\n"
 "\n"
 
-#: felo.py:470
+#: felo.py:471
 msgid "Upload file list"
 msgstr "Envoyer la liste de fichier"
 
-#: felo.py:478
+#: felo.py:479
 msgid ""
 "The bootstrapping will change the fencer data.  Are you sure that you wish "
 "to continue?"
@@ -323,15 +324,15 @@ msgstr ""
 "Le bootstrapping affectera les données sur les escrimeurs. Souhaitez-vous "
 "vraiment continuer ?"
 
-#: felo.py:480 felo.py:484
+#: felo.py:481 felo.py:485
 msgid "Bootstrapping"
 msgstr "Bootstrapping"
 
-#: felo.py:484
+#: felo.py:485
 msgid "I'm bootstrapping, please be patient"
 msgstr "Je suis en train de bootstrapper, soyez patient."
 
-#: felo.py:497
+#: felo.py:498
 msgid ""
 "The bootstrapping didn't converge.  You may want to increase\n"
 "the value for the 'threshold bootstrapping' parameter."
@@ -339,11 +340,11 @@ msgstr ""
 "Le bootstrapping n'a pas convergé. Vous devriez peut être\n"
 "augmenter la valeur de seuil du bootstrapping."
 
-#: felo.py:499
+#: felo.py:500
 msgid "Bootstrapping didn't converge"
 msgstr "Le bootstrapping n'a pas convergé"
 
-#: felo.py:508
+#: felo.py:509
 msgid ""
 "Estimating the freshmen will change their initial Felo numbers.  Are you "
 "sure that you wish to continue?"
@@ -351,7 +352,7 @@ msgstr ""
 "Évaluer les nouveaux changera leurs numéros Felo originaux. Êtes-vous "
 "certain de vouloir continuer ?"
 
-#: felo.py:510
+#: felo.py:511
 msgid "Estimating freshmen"
 msgstr "Nouveaux en cours d'évaluation"
 

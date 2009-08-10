@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-10 17:11+0200\n"
+"POT-Creation-Date: 2009-08-10 21:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,50 +246,50 @@ msgstr ""
 msgid "No bouts found"
 msgstr ""
 
-#: felo.py:407 felo.py:441
+#: felo.py:407 felo.py:442
 msgid "Felo ratings "
 msgstr ""
 
-#: felo.py:417
-#, python-format
+#: felo.py:418
+#, no-python-format
 msgid "%x"
 msgstr ""
 
-#: felo.py:441
+#: felo.py:442
 msgid "as of "
 msgstr ""
 
-#: felo.py:444
+#: felo.py:445
 msgid "External program not found"
 msgstr ""
 
-#: felo.py:447
+#: felo.py:448
 #, python-format
 msgid ""
 "Could not write to file or directory.\n"
 "(I tried to write to '%s'.)"
 msgstr ""
 
-#: felo.py:448
+#: felo.py:449
 msgid "Couldn't write file"
 msgstr ""
 
-#: felo.py:457
+#: felo.py:458
 msgid "Felo ratings plot for "
 msgstr ""
 
-#: felo.py:460
+#: felo.py:461
 #, python-format
 msgid ""
 "<p class='printable-notice'>Also in a <a href='%s.pdf'>printable version</a>."
 "</p>"
 msgstr ""
 
-#: felo.py:466
+#: felo.py:467
 msgid "Preview HTML"
 msgstr ""
 
-#: felo.py:468
+#: felo.py:469
 #, python-format
 msgid ""
 "The following files must be uploaded from\n"
@@ -298,41 +298,41 @@ msgid ""
 "\n"
 msgstr ""
 
-#: felo.py:470
+#: felo.py:471
 msgid "Upload file list"
 msgstr ""
 
-#: felo.py:478
+#: felo.py:479
 msgid ""
 "The bootstrapping will change the fencer data.  Are you sure that you wish "
 "to continue?"
 msgstr ""
 
-#: felo.py:480 felo.py:484
+#: felo.py:481 felo.py:485
 msgid "Bootstrapping"
 msgstr ""
 
-#: felo.py:484
+#: felo.py:485
 msgid "I'm bootstrapping, please be patient"
 msgstr ""
 
-#: felo.py:497
+#: felo.py:498
 msgid ""
 "The bootstrapping didn't converge.  You may want to increase\n"
 "the value for the 'threshold bootstrapping' parameter."
 msgstr ""
 
-#: felo.py:499
+#: felo.py:500
 msgid "Bootstrapping didn't converge"
 msgstr ""
 
-#: felo.py:508
+#: felo.py:509
 msgid ""
 "Estimating the freshmen will change their initial Felo numbers.  Are you "
 "sure that you wish to continue?"
 msgstr ""
 
-#: felo.py:510
+#: felo.py:511
 msgid "Estimating freshmen"
 msgstr ""
 

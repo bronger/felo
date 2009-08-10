@@ -414,6 +414,7 @@ class Frame(wx.Frame):
             self.report_empty_bouts()
             return
         bouts.sort()
+        # xgettext:no-python-format
         last_date = time.strftime(_(u"%x"), time.strptime(bouts[-1].date_string[:10], "%Y-%m-%d")). \
             decode(preferred_encoding)
         base_filename = parameters["groupname"].lower()
