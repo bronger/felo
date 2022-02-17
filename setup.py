@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# This file is Python 2.7.
 #
 #    setup.py - Distutils setup script for Felo
 #

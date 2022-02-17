@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python2.7
 #
 #    felo_rating.py - Core library of the Felo program
 #
